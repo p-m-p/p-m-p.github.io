@@ -1,0 +1,238 @@
+<!doctype html>
+<!--[if IE 7]><html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Phil Parsons - Resume</title>
+  <link href='//fonts.googleapis.com/css?family=Old+Standard+TT:400' rel='stylesheet'>
+  <link rel="stylesheet" media="all" href="css/screen.css">
+  <script src="js/modernizr.custom.min.js"></script>
+</head>
+<body>
+  <div id="page">
+
+    <header id="banner" role="banner">
+      <a id="avatar" href="https://twitter.com/#!/phil_parsons">
+        <img src="//www.gravatar.com/avatar/<?php echo md5("phil@profilepicture.co.uk");?>" alt="Greyscale image of Phil Parsons' face">
+      </a>
+      <hgroup>
+        <h1>Phil Parsons</h1>
+        <h2>Web Application Developer</h2>
+      </hgroup>
+      <div id="elsewhere">
+        <a href="http://www.profilepicture.co.uk">Personal site</a> |
+        <a href="http://www.github.com/p-m-p">Github account</a>
+      </div>
+    </header>
+
+    <section>
+      <article id="main" role="main">
+        <section class="info-section">
+          <h2>Profile</h2>
+          <p>
+            I love to code JavaScript, big time! In fact, I just love to code and
+            <a href="http://javascriptshow.com/episodes/1">I've been told I'm pretty good at it</a>.
+            I'm constantly looking for new challenges and enjoy nothing more than pushing the boundaries
+            of what can be done with technology, especially on the web. I often contribute open 
+            source software and have had my code featured on popular publications; 
+            JavaScript Weekly, Speckyboy, Codrops, Unheap and CodeVisually to name just a few.  
+            I live in the terminal where I work in tmux and code in Vim.
+          </p>
+        </section>
+
+        <section class="info-section">
+          <h2>Work experience</h2>
+          <ol>
+            <li class="work-experience">
+              <header>
+                <h3>Lead Frontend Engineer</h3>
+                <h4 class="company-name">Geckoboard</h4>
+              </header>
+              <p>
+                Leading the development of the Geckoboard frontend framework to 
+                deliver slick user interfaces and a lasting user experience.
+                Design and build of JavaScript components using Backbone and 
+                handlebars to consume data from both internal and third
+                party APIs. Crafting data visualisations with SVG, Canvas and 
+                HTML5/CSS3.
+              </p>
+              <footer class="work-experience-meta">
+                <span class="technologies">
+                  JavaScript, jQuery, Backbone, Handlebars, HTML5, CSS3, Ruby &amp; Rails, MySQL 
+                </span>
+                <span class="length-service">
+                  July 2012 - Present
+                </span>
+              </footer>
+            </li>
+            <li class="work-experience">
+              <header>
+                <h3>Senior developer</h3>
+                <h4 class="company-name">Versone Technologies</h4>
+              </header>
+              <p>
+                Building rich user interfaces for single page, ajax driven
+                applications with JavaScript and ColdFusion. Design and
+                development of the client-side application architecture including
+                the interaction with internal and third party APIs. Mentoring
+                other development and delivery team members with all aspects
+                of programming and deployment best practice.
+              </p>
+              <footer class="work-experience-meta">
+                <span class="technologies">
+                  JavaScript, jQuery, HTML5, CSS3, ColdFusion, MySQL, Java, C#
+                </span>
+                <span class="length-service">
+                  January 2012 - July 2012
+                </span>
+              </footer>
+            </li>
+            <li class="work-experience">
+              <header>
+                <h3>Frontend/Application developer</h3>
+                <h4 class="company-name">Versone Technologies</h4>
+              </header>
+              <p>
+                Working across the delivery and product development teams
+                to build user interfaces and server-side components for new product
+                modules and enhancements to existing product features. Working
+                with customers to deliver bespoke components and public facing
+                web applications.
+              </p>
+              <footer class="work-experience-meta">
+                <span class="technologies">
+                  JavaScript, jQuery, HTML, CSS, ColdFusion, MySQL, Java
+                </span>
+                <span class="length-service">
+                  June 2009 - January 2012
+                </span>
+              </footer>
+            </li>
+            <li class="work-experience">
+              <header>
+                <h3>Freelance developer</h3>
+                <h4 class="company-name">Self Employed</h4>
+              </header>
+              <p>
+                Working with small business and professional clients to design and
+                build websites, email marketing campaigns and additional features for existing
+                platforms such as third party payment integration.
+              </p>
+              <footer class="work-experience-meta">
+                <span class="technologies">
+                  JavaScript, jQuery, HTML, CSS, PHP, MySQL, Wordpress
+                </span>
+                <span class="length-service">
+                  October 2006 - June 2009
+                </span>
+              </footer>
+            </li>
+            <li class="work-experience">
+              <header>
+                <h3>Mechanical and Electrical Engineer</h3>
+                <h4 class="company-name">GSK, Rover, MRM</h4>
+              </header>
+              <p>
+                From an early age I've enjoyed disassembling things to see how they
+                work. As I grew older I learnt how to put them back together and made
+                a living out of it. Around 2004 I discovered the internet and ever
+                since I have been taking that apart.
+              </p>
+              <footer class="work-experience-meta">
+                <span class="length-service">
+                  1996 - 2008
+                </span>
+              </footer>
+            </li>
+          </ol>
+        </section>
+
+        <section class="info-section">
+          <h2>Education</h2>
+          <ul>
+            <li class="education-item">
+              <h3>BSc Hons Computing &amp; IT</h3>
+              <p>
+                I'm currently in what would be my third year of this degree and have
+                achieved credit in my completed modules to gain a minimum
+                result of 2:1 with expected 1st class.
+              </p>
+            </li>
+            <li class="education-item">
+              <h3>HNC Mechanical and Electrical engineering</h3>
+              <p>
+                I completed this qualification as part of a technical apprenticeship.
+              </p>
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <aside id="sidebar">
+        <a id="download" href="phil-parsons-resume.pdf">Download as PDF</a>
+
+        <section id="skills" class="extra-info">
+          <h2 class="info-segment-title">Skills</h1>
+          <ul class="skill-bars">
+            <li class="skill-bar">
+              <h3 class="skill">
+                <span class="skill-level" data-level="95"></span>
+                <span class="skill-title">JavaScript &amp; jQuery</span>
+              </h3>
+              <div class="skill-total">95%</div>
+            </li>
+            <li class="skill-bar">
+              <h3 class="skill">
+                <span class="skill-level" data-level="85"></span>
+                <span class="skill-title">HTML, CSS &amp; SASS</span>
+              </h3>
+              <div class="skill-total">85%</div>
+            </li>
+            <li class="skill-bar">
+              <h3 class="skill">
+                <span class="skill-level" data-level="90"></span>
+                <span class="skill-title">PHP &amp; ColdFusion</span>
+              </h3>
+              <div class="skill-total">90%</div>
+            </li>
+            <li class="skill-bar">
+              <h3 class="skill">
+                <span class="skill-level" data-level="70"></span>
+                <span class="skill-title">Ruby &amp; Rails</span>
+              </h3>
+              <div class="skill-total">70%</div>
+            </li>
+            <li class="skill-bar">
+              <h3 class="skill">
+                <div class="skill-level" data-level="80"></div>
+                <span class="skill-title">Photoshop</span>
+              </h3>
+              <div class="skill-total">80%</div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="extra-info">
+          <h2>Projects</h2>
+          <p>A list of some of my popular open source projects</p>
+          <ul id="github-projects">
+            <li id="github-loading">Just loading data from github&hellip;</li>
+          </ul>
+        </section>
+
+      </aside>
+
+    </section>
+
+    <footer>
+
+    </footer>
+
+  </div>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/jquery-1.7.2.min.js"><\/script>')</script>
+  <script src="js/resume.js"></script>
+</body>
+</html>

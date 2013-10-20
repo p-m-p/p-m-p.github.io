@@ -1,0 +1,252 @@
+/* very minimal reset */
+body, ol, ul, li, p, h1, h2, h3, h4, article, section, hgroup {
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  border: 0;
+}
+
+body {
+  font: normal .85em/1.4 helvetica, Arial, sans-serif;
+  color: #666;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Old Standard TT', Georgia, serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #222;
+  margin: 0 0 .4em;
+  line-height: 1;
+}
+
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.4em; }
+h4 { font-size: 1em; }
+
+img { border: none; }
+
+ul, ol, li { list-style: none; }
+
+#page {
+  max-width: 940px;
+  min-width: 320px;
+  padding: 0 10px 20px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.lt-ie9 #page { min-width: 800px; }
+
+#banner {
+  border-bottom: dashed 1px #ccc;
+  overflow: hidden;
+  padding: 20px 0;
+  position: relative;
+}
+  #banner h1 {
+    font-size: 2.8em;
+    margin: 3px 0 0;
+  }
+  #banner h2 {
+    font-size: 1.2em;
+    color: #aaa;
+  }
+
+#avatar {
+  display: block;
+  float: left;
+  margin: 0 10px 0 0;
+  padding: 5px;
+  border: solid 1px #ccc;
+  background: #eee;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+}
+  #avatar img {
+    width: 100%;
+    height: auto;
+    vertical-align: baseline;
+  }
+
+#elsewhere {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+}
+
+#main {
+  width: 70%;
+  float: left;
+  padding: 20px 0 0;
+}
+
+#sidebar {
+  margin: 0 0 0 70%;
+  padding: 20px 0 0 40px;
+}
+
+.info-section {
+  margin: 0 0 20px;
+  padding: 0 0 20px;
+  border-bottom: dashed 1px #ccc;
+}
+
+.work-experience, .education-item {
+  margin: 20px 0 0;
+}
+
+.company-name {
+  color: #999;
+}
+
+.work-experience-meta {
+  margin: .5em 0 0;
+  font-size: .85em;
+  color: #999;
+  overflow: hidden;
+  font-style: italic;
+}
+
+.length-service {
+  float: right;
+}
+
+.skill-bar {
+  position: relative;
+  margin: 0 0 8px;
+}
+
+.skill {
+  margin: 0 55px 0 0;
+  background-color: #efefef;
+  position: relative;
+}
+
+.skill-total, .skill {
+  padding: 5px;
+  font-size: .9em;
+  line-height: 1;
+}
+
+.skill-level {
+  display: block;
+  background: #dedede;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  -moz-transition-property: width;
+  -webkit-transition-property: width;
+  -o-transition-property: width;
+  transition-property: width;
+  -moz-transition-duration: 2s;
+  -webkit-transition-duration: 2s;
+  -o-transition-duration: 2s;
+  transition-duration: 2s;
+  -moz-transition-timing-function: cubic-bezier(0.7, 0.2, 0.1, 1);
+  -webkit-transition-timing-function: cubic-bezier(0.7, 0.2, 0.1, 1);
+  -o-transition-timing-function: cubic-bezier(0.7, 0.2, 0.1, 1);
+  transition-timing-function: cubic-bezier(0.7, 0.2, 0.1, 1);
+}
+
+.skill-title {
+  z-index: 2;
+  position: relative;
+}
+
+.skill-total {
+  font-family: 'Old Standard TT', Georgia, serif;
+  width: 40px;
+  background: #dedede;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}
+
+.extra-info {
+  margin: 0 0 40px;
+}
+  .extra-info h2 {
+    margin: 0 0 .4em;
+  }
+
+#github-projects {
+  margin: 1em 0 0;
+}
+
+.github-project {
+  margin: 0 0 1em;
+}
+  .github-project h3 {
+    font-size: 1.2em;
+  }
+
+#github-loading {
+  padding: 0 0 40px;
+  text-align: center;
+  background: url(../img/ajax-loader.gif) center bottom no-repeat;
+}
+
+.project-stats {
+  font-size: .85em;
+  font-style: italic;
+  color: #999;
+}
+
+.project-url {
+  display: none;
+}
+
+#download {
+  margin: 0 0 20px;
+  padding: 10px 0 10px 40px;
+  display: block;
+  background: url(../img/pdf.png) left center no-repeat;
+}
+
+@media only screen and (max-width: 720px) {
+  #main {width: 100%; float: none }
+  #sidebar { margin: 0; padding: 0 }
+  #elsewhere { bottom: 5px}
+}
+
+@media only screen and (max-width: 480px) {
+  #banner h1 {
+    font-size: 2em;
+    margin: 3px 0 0;
+  }
+  #banner h2 {
+    font-size: 1.2em;
+    color: #aaa;
+  }
+  #avatar {
+    display: none;
+  }
+  #elsewhere {
+    position: static;
+    right: auto;
+    bottom: auto;
+  }
+}
+
+@media print {
+  body { font-size: 10pt; }
+  h1, h2, h3, h4, body { font-family: 'Times New Roman', Georgia, sans-serif; }
+  h2 { font-size: 14pt; }
+  h3 { font-size: 12pt; }
+  h4 { font-size: 10pt; }
+  #banner h1 { font-size: 28pt }
+  #banner h2 { font-size: 14pt }
+  p a:after, #elsewhere a:after { content: " [" attr(href) "] " }
+  a { color: #222; text-decoration: none }
+  #skills { display: none; }
+  #main {width: 100%; float: none }
+  #sidebar { margin: 0; padding: 0 }
+  #elsewhere { bottom: 5px}
+  .project-url { display: block; margin: 0 0 .4em; }
+  #download { display: none; }
+}

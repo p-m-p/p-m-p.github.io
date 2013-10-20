@@ -1,0 +1,14 @@
+body { font-size: 10pt; }
+h1, h2, h3, h4, body { font-family: 'Times New Roman', Georgia, sans-serif; }
+h2 { font-size: 14pt; }
+h3 { font-size: 12pt; }
+h4 { font-size: 10pt; }
+#banner h1 { font-size: 28pt }
+#banner h2 { font-size: 14pt }
+p a:after, #elsewhere a:after { content: " [" attr(href) "] " }
+a { color: #222; text-decoration: none }
+#skills { display: none; }
+#main {width: 100%; float: none }
+#sidebar { margin: 0; padding: 0 }
+#elsewhere { bottom: 5px}
+.project-url { display: block; margin: 0 0 .4em; }
