@@ -1,0 +1,32 @@
+#branding {
+  text-align: center;
+  padding: 40px 0 80px;
+  margin: 0 0 80px;
+  border-bottom: solid 1px #e8e8e8;
+
+  h1 {
+    font-weight: 300;
+    font-size: 3.4em;
+    margin: 0 0 20px;
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+}
+
+.social-links {
+  overflow: hidden;
+
+  li {
+    display: inline;
+    margin: 0 20px 0 0;
+
+    &:last-child { margin: 0; }
+  }
+}
+
+.social-link {
+  text-decoration: none;
+}

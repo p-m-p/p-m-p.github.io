@@ -1,0 +1,11 @@
+---
+layout: default
+title: Phil Parsons
+---
+<ol class="posts">
+  {% for post in site.posts %}
+  <li>
+    {% include post.html post=post %}
+  </li>
+  {% endfor %}
+</ol>

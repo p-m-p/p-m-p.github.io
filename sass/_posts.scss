@@ -1,0 +1,24 @@
+.post {
+  header {
+    margin: 0 0 20px;
+
+    .title {
+      margin: 0 0 6px;
+    }
+
+    .post-date {
+      color: #dedede;
+      display: block;
+    }
+  }
+
+  p {
+    margin: 0 0 1em;
+    line-height: 1.6;
+  }
+
+  .highlight {
+    font-family: 'Courier New', monospace;
+    margin: 0 0 1em;
+  }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>{{ page.title }}</title>
+
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/screen.css">
+    <link href="http://fonts.googleapis.com/css?family=Merriweather:400,700,300,300italic,400italic,700italic" rel="stylesheet">
+  </head>
+  <body>
+    <div id="page">
+      <header id="branding">
+        <h1><a href="/">{{ site.name }}</a></h1>
+
+        {% include social-links.html %}
+      </header>
+
+      {{ content }}
+
+      <footer>
+        {% include social-links.html %}
+      </footer>
+    </div>
+  </body>
+</html>
