@@ -1,0 +1,3 @@
+[submodule "demos/box-slider"]
+	path = demos/box-slider
+	url = git@github.com:p-m-p/jquery-box-slider.git
