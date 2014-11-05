@@ -31,6 +31,8 @@ Need to add gist here.
 With the correct HTML structure in place all that is required is that the
 plugin be applied to the rotatng box, not the parent viewport as below.
 
+Need to add js gist here
+
 [demo-page]: '/demos/box-slider/'
 [github-repo]: 'https://github.com/p-m-p/jquery-box-slider'
 [github-issues]: 'https://github.com/p-m-p/jquery-box-slider/issues'
