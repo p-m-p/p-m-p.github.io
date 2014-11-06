@@ -2,7 +2,7 @@
 layout: post
 title:  "Adaptor, responsive 3D content slider"
 date:   2014-11-04 17:55:07
-categories: JavaScript, jQuery
+categories: JavaScript
 ---
 
 Adaptor (AKA jQuery Box Slider) has been about for a couple of years now and
