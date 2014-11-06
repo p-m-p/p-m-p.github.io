@@ -23,4 +23,4 @@ code you came here looking for is still accessible on my
 Anyway, there it is. You can expect to see some new posts and and hopefully
 some new code in the coming months.
 
-[github-repos]: 'https://github.com/p-m-p?tab=repositories'
+[github-repos]: https://github.com/p-m-p?tab=repositories

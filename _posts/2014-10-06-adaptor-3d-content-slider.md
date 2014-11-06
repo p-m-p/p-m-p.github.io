@@ -30,6 +30,6 @@ not the parent viewport.
 
 {% gist p-m-p/61e03fa867062ce3245e %}
 
-[demo-page]: '/demos/box-slider/'
-[github-repo]: 'https://github.com/p-m-p/jquery-box-slider'
-[github-issues]: 'https://github.com/p-m-p/jquery-box-slider/issues'
+[demo-page]: /demos/box-slider/
+[github-repo]: https://github.com/p-m-p/jquery-box-slider
+[github-issues]: https://github.com/p-m-p/jquery-box-slider/issues
