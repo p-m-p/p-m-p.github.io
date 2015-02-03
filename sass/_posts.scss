@@ -24,6 +24,11 @@
   .highlight {
     font-family: 'Courier New', monospace;
     margin: 0 0 1em;
+
+    pre {
+      overflow-x: auto;
+      width: 100%;
+    }
   }
 }
 
