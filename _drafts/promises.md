@@ -1,0 +1,190 @@
+---
+layout: post
+title: Promises, Promises
+categories: javascript es6
+---
+
+I wrote briefly about iterators and generators last week and during my research
+into those I touched briefly on promises. I've since had time to properly
+investigate the native promise implementation and... yeah, it looks promising,
+*groans*.
+
+If you've worked with the [Q][q] library before, be that the cut down version
+in [Angular][angular-q] or the fully fledged version, you'll be happy to know
+that the native implementation follows a similar model. For a long time jQuery
+has had a promise(ish) API with its [Deferred][jquery-deferred] objects but
+these have a few subtle differences, the main being that immediately resolved
+promises, those that do not carry out an asynchronous operation before being
+resolved, are not resolved asynchronously.
+
+```javascript
+// ES6 Promise
+var p = new Promise(function (resolve) {
+  resolve('A message from the future');
+});
+
+p.then(function (msg) {
+  console.info(msg);
+});
+
+console.info('The present is now');
+
+//=> The present is now
+//=> A message from the future
+
+// JQuery Deferred
+var $d = jQuery.Deferred();
+$d.resolve('A message from the future');
+
+$d.then(function (msg) {
+  console.info(msg);
+});
+
+console.info('The present is now');
+
+//=> A message from the future
+//=> The present is now
+```
+
+[ES6 promises][es6-promises] are constructed with the `Promise` constructor function that
+takes a function with `resolve` and `reject` parameters. Calling the resolve
+function starts the promise chain running and calling reject fails the
+chain passing execution to any supplied error handlers. Adding to the chain
+is done via the `then` method as you would expect which can takes a success
+function and a failure function as parameters respectively. Failure handlers
+can also be attached using the `catch` method.
+
+```javascript
+// Crude ajax function implementation for demo purposes
+funtion ajax(options) {
+  var request = new XMLHttpRequest();
+  request.onload = function() {
+    var response = this.responseText;
+
+    if (options.dataType === 'json') {
+      try {
+        response = JSON.parse(response);
+      } catch (ex) {
+        options.error(ex);
+      }
+    }
+
+    options.success(response);
+  };
+
+  request.open(options.type, options.url, true);
+  request.send();
+}
+
+function getJSON(url) {
+  return new Promise(function (resolve, reject) {
+    ajax({
+      url: url,
+      type: 'get',
+      dataType: 'json',
+      success: resolve,
+      error: reject
+    });
+  })l
+}
+
+// Using both methods explicitly
+getJSON('http://data-feed.com/all.json')
+  .then(function (json) {
+    // Manipulate data
+    return json;
+  })
+  .then(function (json) {
+    // Do something else with data
+    return json;
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
+// Using second parameter to then for error handler
+getJSON('http://data-feed.com/single.json').then(
+  function (data) {
+    console.log(data);
+  },
+  function (err) {
+    console.log(err);
+  });
+```
+
+That's the the base API for a Promise instance but there are also some static,
+class level methods that return a promise. The first set of these can be used
+to iterate over a collection of promises.
+
+```javascript
+function createPromise(timer) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve('Timer ' + timer + ' finished');
+    }, timer);
+  });
+}
+
+var p1 = createPromise(100);
+var p2 = createPromise(200);
+var p3 = createPromise(300);
+
+// Promise.all returns a single promise that resolves with an aggregation of
+// the resolved values from each promise once they are all resolved
+Promise.all([p1,p2,p3]).then(function (msgs) {
+  console.log(msgs);
+});
+
+//=> ["Timer 100 finished", "Timer 200 finished", "Timer 300 finished"]
+
+var p4 = createPromise(400); // winner by an unfair advantage
+var p5 = createPromise(500);
+var p6 = createPromise(600);
+
+// Promise.race returns a single promise which resolves or rejects as soon as
+// the first promise in the list resolves or rejects
+Promise.race([p6,p5,p4]).then(function (msg) {
+  console.log(msg);
+})
+
+//=> "Timer 400 finished"
+```
+
+Next there is utility methods for creating pre-resolved and rejected promises.
+Let's recreate the first promise example using these methods.
+
+```javascript
+var doIt = Promise.resolve('A message from the future');
+
+doIt.then(function (msg) {
+  console.info(msg);
+});
+
+console.info('The present is now');
+
+//=> The present is now
+//=> A message from the future
+
+var dontDoIt = Promise.reject('Failed to time travel');
+
+dontDoIt.catch(function (msg) {
+  console.info(msg);
+});
+
+console.info('The present is now');
+
+//=> The present is now
+//=> Failed to time travel
+```
+
+That's a quick look at promises, I'm in progress of writing a little utility
+that works with generators and promises to make asynchronouse code a little
+more manageable so look out for that one soon. I'll write it up its
+implementation here in the next week.
+
+Enjoy your day!
+
+[q]: https://github.com/kriskowal/q
+[angular-q]: https://docs.angularjs.org/api/ng/service/$q
+[jquery-deferred]: api.jquery.com/category/deferred-object/
+[es6-promises]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
