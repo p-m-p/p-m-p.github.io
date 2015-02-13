@@ -28,3 +28,13 @@ code {
   color: #333;
   font-family: 'Courier New', monospace;
 }
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+}
