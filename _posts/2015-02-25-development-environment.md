@@ -14,7 +14,7 @@ installed quickly and be productive on the different machines I have to work on.
 ##The development environment
 I've been a full time [Vim][vim] coder for a few years now. The terminal is
 where I spend about 90% of my productive time and I use Tmux for splitting my
-workflow across mulitiple windows, panes and sessions. I use Git on nearly
+workflow across multiple windows, panes and sessions. I use Git on nearly
 every project I work on and of course I have a [customised PS1][custom-prompt]
 to show which branch I'm working on etc, etc. I have a select few plugins
 installed in my Chrome browser some of which require additional programs to
@@ -24,23 +24,23 @@ company?
 
 ##Use a Google business account
 I use a [Google business account][google-business] on which I have a profile
-for Chrome which only installs the bookmarks, plugins and settings that are
-relevant, and appropriate, to be installed on a client's computer. I also use
-this account for my company email and this all costs me just &pound;3.30 a
-month. There are many other benefits to having this account such as the cloud
-storage which ties into the Googles suite of cloud applications.
+for Chrome that only installs the bookmarks, plugins and settings that are
+relevant and appropriate for the work I will be doing on the client's computer.
+I also use this account for my company email and it only costs me &pound;3.30
+a month. There are other benefits to having this account such as the cloud
+storage which ties into Google's suite of cloud applications.
 
 ##Package your config files
 Git is where I store and maintain my configuration files. I have a
-[repository on Github][configs-repo] that contains my config files along with a
-[bash script][install-script] that moves these files to the right location on
-the new machine and carries out some other setup including the install of the
+[repository on Github][configs-repo] that contains these files along with a
+[bash script][install-script] that moves them to the right location on the new
+machine and carries out some other setup including the install of the
 vim plugins I use. This enables me to get setup and into my natural feeling
-environment on a new machine within just a few minutes. The only manual
-overhead with this being to generate an SSH key to use for Github.
+environment within just a few minutes. The only manual overhead with this being
+to generate an SSH key to use for Github.
 
 ##Separate environments on a single machine
-When working on your own computer it's a good idea to have each clients
+When working on your own computer it's a good idea to have each client
 environment separated. You'll often need different versions of software
 installed and having to manage this in a single environment is a pain. For this
 I use [Vagrant][vagrant] with [Chef][chef] to quickly install and configure
@@ -56,7 +56,7 @@ set up any additional keys for Github. As I work in the terminal I simply jump
 into the new environment using `vagrant ssh` but for those of you who have a
 different workflow you can choose to sync local folders with the virtual
 machine. In my case the `sites` directory that is the web root on the virtual
-machine is bridgeed to a local directory so I that can easily drop files
+machine is bridged to a local directory so I that can easily drop files
 between my local machine and the virtual machine but you could also use this to
 edit the files with your editor of choice and the local installations of your
 favourite development tools.
@@ -66,7 +66,7 @@ not beyond anybody. You don't need to be a DevOps hero or work with Vim (but
 you should, everyone should use Vim!). The key thing to take away from this is
 to empower yourself to be productive. I know that if I spill coffee over my
 laptop tomorrow I can get back to where I was within minutes of acquiring a new
-one. There is some additonal workflow to this such as making regular pushes to
+one. There is some additional workflow to this such as making regular pushes to
 a remote repository on the projects you work but this is all just good practice
 that should be followed regardless of your setup. I've only touched lightly on
 the concepts here so please feel free to ask any additional questions
