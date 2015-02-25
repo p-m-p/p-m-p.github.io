@@ -56,10 +56,9 @@ set up any additional keys for Github. As I work in the terminal I simply jump
 into the new environment using `vagrant ssh` but for those of you who have a
 different workflow you can choose to sync local folders with the virtual
 machine. In my case the `sites` directory that is the web root on the virtual
-machine is bridged to a local directory so I that can easily drop files
-between my local machine and the virtual machine but you could also use this to
-edit the files with your editor of choice and the local installations of your
-favourite development tools.
+machine is bridged to a local directory so that I can easily drop files
+between the two but you can also use this to edit the files with your favourite
+editor or IDE.
 
 There is some up-front work to figure out the tools I've mentioned here but its
 not beyond anybody. You don't need to be a DevOps hero or work with Vim (but
