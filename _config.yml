@@ -1,3 +1,5 @@
 name: Phil Parsons
-markdown: redcarpet
-highlighter: "pygments"
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-gist
