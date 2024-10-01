@@ -1,0 +1,35 @@
+---
+title: Phil Parsons
+description: Web developer and bike enthusiast from London, UK
+---
+
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or metadata.title }}</title>
+  <meta name="description" content="{{ description or metadata.description }}">
+
+  <link rel="icon" href="/img/icon.png">
+
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="{{ metadata.title }}">
+  <link rel="alternate" href="/feed/feed.json" type="application/json" title="{{ metadata.title }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+
+  {%- css %}{% include "../../css/site.css" %}{% endcss %}
+  <style>{% getBundle "css" %}</style>
+
+  <title>{{ title }}</title>
+</head>
+
+<body>
+  {{ content | safe }}
+</body>
+
+</html>

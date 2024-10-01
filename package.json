@@ -1,0 +1,22 @@
+{
+  "name": "personal",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf _site",
+    "build": "pnpm run clean && eleventy",
+    "dev": "eleventy --serve"
+  },
+  "keywords": [],
+  "author": "Phil Parsons",
+  "license": "MIT",
+  "dependencies": {
+    "@11ty/eleventy": "3.0.0-alpha.10"
+  },
+  "devDependencies": {
+    "prettier": "3.3.3",
+    "prettier-plugin-jinja-template": "^1.5.0"
+  }
+}
