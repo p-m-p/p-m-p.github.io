@@ -168,7 +168,6 @@ a {
     font-weight: 400;
   }
 
-  &:hover,
   &:focus-visible {
     color: var(--color-text-inverted);
     text-decoration-color: var(--color-text-inverted);
@@ -178,6 +177,14 @@ a {
   &:active {
     position: relative;
     top: 0.125rem;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: var(--color-text-inverted);
+    text-decoration-color: var(--color-text-inverted);
+    background-color: var(--color-surface-inverted);
   }
 }</style>
 
