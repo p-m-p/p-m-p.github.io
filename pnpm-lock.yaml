@@ -9,8 +9,11 @@ importers:
   .:
     dependencies:
       '@11ty/eleventy':
-        specifier: 3.0.0-alpha.10
-        version: 3.0.0-alpha.10
+        specifier: 3.0.0-alpha.15
+        version: 3.0.0-alpha.15
+      '@11ty/eleventy-plugin-rss':
+        specifier: ^2.0.2
+        version: 2.0.2
     devDependencies:
       prettier:
         specifier: 3.3.3
@@ -36,12 +39,15 @@ packages:
     resolution: {integrity: sha512-zGyPp1g6bi+VC2I5ylwj4w29nivDmx4Uki5gWY6v3MT/1muK0JTtnc1KOMC7yUurv6YwtwdiLYyFK2eFyKv2wg==}
     engines: {node: '>=18'}
 
+  '@11ty/eleventy-plugin-rss@2.0.2':
+    resolution: {integrity: sha512-BiPsNbCvaqAORsg2NA4YqcSvMy/PZiefDU3PtGgwYJQ7A5rkRq/gdod2nu1AzwBG/0c5Qe7D49BxV0SByq9vCw==}
+
   '@11ty/eleventy-utils@1.0.3':
     resolution: {integrity: sha512-nULO91om7vQw4Y/UBjM8i7nJ1xl+/nyK4rImZ41lFxiY2d+XUz7ChAj1CDYFjrLZeu0utAYJTZ45LlcHTkUG4g==}
     engines: {node: '>=12'}
 
-  '@11ty/eleventy@3.0.0-alpha.10':
-    resolution: {integrity: sha512-lnymV2KjhxPNs+e4otrjwr/kh7AEE/yTAwgVRtpdo8BA+zSDHaw+aeq/2L+h2nhQ9Z1a4ExIjQqk7K51E40tlA==}
+  '@11ty/eleventy@3.0.0-alpha.15':
+    resolution: {integrity: sha512-aE7we/HUi+iZ87bOgXx562hf9Oqz3TKLBYlJi3g98RxwzDwG1fhDf/JBPkK7FQRR27GZf7bRatpA4b8BnYuHww==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -151,6 +157,9 @@ packages:
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
     engines: {node: '>= 0.4'}
+
+  chardet@2.0.0:
+    resolution: {integrity: sha512-xVgPpulCooDjY6zH4m9YW3jbkaBe3FKIAvF5sj5t7aBNsVl2ljIE+xwJ4iNgiDZHFQvNIpjdKdVOQvvk5ZfxbQ==}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -421,6 +430,10 @@ packages:
 
   js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
+    hasBin: true
+
+  js-yaml@4.1.0:
+    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
   junk@1.0.3:
@@ -760,11 +773,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@11ty/eleventy-plugin-rss@2.0.2':
+    dependencies:
+      '@11ty/eleventy-utils': 1.0.3
+      '@11ty/posthtml-urls': 1.0.0
+      debug: 4.3.7
+      posthtml: 0.16.6
+    transitivePeerDependencies:
+      - supports-color
+
   '@11ty/eleventy-utils@1.0.3':
     dependencies:
       normalize-path: 3.0.0
 
-  '@11ty/eleventy@3.0.0-alpha.10':
+  '@11ty/eleventy@3.0.0-alpha.15':
     dependencies:
       '@11ty/dependency-tree': 3.0.1
       '@11ty/dependency-tree-esm': 1.0.0
@@ -775,6 +797,7 @@ snapshots:
       '@11ty/posthtml-urls': 1.0.0
       '@sindresorhus/slugify': 2.2.1
       bcp-47-normalize: 2.3.0
+      chardet: 2.0.0
       chokidar: 3.6.0
       cross-spawn: 7.0.3
       debug: 4.3.7
@@ -784,6 +807,7 @@ snapshots:
       gray-matter: 4.0.3
       is-glob: 4.0.3
       iso-639-1: 3.1.3
+      js-yaml: 4.1.0
       kleur: 4.1.5
       liquidjs: 10.16.7
       luxon: 3.5.0
@@ -908,6 +932,8 @@ snapshots:
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
       set-function-length: 1.2.2
+
+  chardet@2.0.0: {}
 
   chokidar@3.6.0:
     dependencies:
@@ -1165,6 +1191,10 @@ snapshots:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
+
+  js-yaml@4.1.0:
+    dependencies:
+      argparse: 2.0.1
 
   junk@1.0.3: {}
 
