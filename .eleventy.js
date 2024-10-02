@@ -4,6 +4,12 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addBundle("css");
 
+  eleventyConfig.addPreprocessor("drafts", "*", (data) => {
+    if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
+      return false;
+    }
+  });
+
   eleventyConfig.addPassthroughCopy("./pretty-atom-feed.xsl");
   eleventyConfig.addPlugin(feedPlugin, {
     type: "atom",

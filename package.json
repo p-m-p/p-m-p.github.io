@@ -9,12 +9,13 @@
     "build": "pnpm run clean && eleventy",
     "dev": "eleventy --serve"
   },
-  "keywords": [],
   "author": "Phil Parsons",
   "license": "MIT",
   "dependencies": {
-    "@11ty/eleventy": "3.0.0-alpha.15",
-    "@11ty/eleventy-plugin-rss": "^2.0.2"
+    "@11ty/eleventy": "3.0.0",
+    "@11ty/eleventy-plugin-rss": "^2.0.2",
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "prettier": "3.3.3",
