@@ -1,8 +1,13 @@
 import { feedPlugin } from "@11ty/eleventy-plugin-rss";
+import { DateTime } from "luxon";
 
 export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addBundle("css");
+
+  eleventyConfig.addFilter("htmlDateString", (dateObj) => {
+    return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
+  });
 
   eleventyConfig.addPreprocessor("drafts", "*", (data) => {
     if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
