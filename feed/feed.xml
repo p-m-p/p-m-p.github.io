@@ -5,17 +5,9 @@
   <subtitle>Web developer and bike enthusiast from London, UK</subtitle>
   <link href="https://philparsons.co.uk/feed/feed.xml" rel="self" />
   <link href="https://philparsons.co.uk/" />
-  <updated>2024-09-15T00:00:00Z</updated>
+  <updated>2024-10-02T06:50:27Z</updated>
   <id>https://philparsons.co.uk/</id>
   <author>
     <name>Phil Parsons</name>
   </author>
-  <entry>
-    <title>Test Post</title>
-    <link href="https://philparsons.co.uk/blog/test-post/" />
-    <updated>2024-09-15T00:00:00Z</updated>
-    <id>https://philparsons.co.uk/blog/test-post/</id>
-    <content type="html">&lt;p&gt;Hello, this is a test post.&lt;/p&gt;
-</content>
-  </entry>
 </feed>
