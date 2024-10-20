@@ -14,6 +14,9 @@ importers:
       '@11ty/eleventy-plugin-rss':
         specifier: ^2.0.2
         version: 2.0.2
+      '@11ty/eleventy-plugin-syntaxhighlight':
+        specifier: ^5.0.0
+        version: 5.0.0
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
@@ -50,6 +53,9 @@ packages:
 
   '@11ty/eleventy-plugin-rss@2.0.2':
     resolution: {integrity: sha512-BiPsNbCvaqAORsg2NA4YqcSvMy/PZiefDU3PtGgwYJQ7A5rkRq/gdod2nu1AzwBG/0c5Qe7D49BxV0SByq9vCw==}
+
+  '@11ty/eleventy-plugin-syntaxhighlight@5.0.0':
+    resolution: {integrity: sha512-y9BUmP1GofmbJgxM1+ky/UpFCpD8JSOeLeKItUs0WApgnrHk9haHziW7lS86lbArX5SiCVo4zTTw9x53gvRCaA==}
 
   '@11ty/eleventy-utils@1.0.3':
     resolution: {integrity: sha512-nULO91om7vQw4Y/UBjM8i7nJ1xl+/nyK4rImZ41lFxiY2d+XUz7ChAj1CDYFjrLZeu0utAYJTZ45LlcHTkUG4g==}
@@ -668,6 +674,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prismjs@1.29.0:
+    resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
+    engines: {node: '>=6'}
+
   promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
 
@@ -875,6 +885,10 @@ snapshots:
       posthtml: 0.16.6
     transitivePeerDependencies:
       - supports-color
+
+  '@11ty/eleventy-plugin-syntaxhighlight@5.0.0':
+    dependencies:
+      prismjs: 1.29.0
 
   '@11ty/eleventy-utils@1.0.3':
     dependencies:
@@ -1486,6 +1500,8 @@ snapshots:
       prettier: 3.3.3
 
   prettier@3.3.3: {}
+
+  prismjs@1.29.0: {}
 
   promise@7.3.1:
     dependencies:

@@ -1,0 +1,19 @@
+---
+layout: layouts/base.njk
+---
+
+{%- css %}{% include "../../css/post.css" %}{% endcss %}
+{%- css %}{% include "../../css/prism-ally-dark.css" %}{% endcss %}
+<div class="container">
+  <div class="banner">
+    <div class="logo">Phil Parsons</div>
+  </div>
+
+  <article class="post">
+    <h1 class="post-title">{{ title }}</h1>
+
+    <main class="post-content">
+      {{ content | safe }}
+    </main>
+  </article>
+</div>

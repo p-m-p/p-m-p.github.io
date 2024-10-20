@@ -1,0 +1,59 @@
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 1rem;
+}
+
+.banner {
+  padding: 1rem 0;
+}
+
+.logo {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.post-content {
+  p {
+    margin: 0 0 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 2rem 0 1rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 2rem;
+    overflow: auto;
+    padding: 0.5rem;
+  }
+}
+
+.post-title {
+  background: rgb(0 0 0 / 20%);
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 2rem;
+  padding: 1rem;
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.25rem;
+
+    pre {
+      padding: 1rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+    line-height: 1.2;
+  }
+}
