@@ -174,8 +174,8 @@ for (const file of ["README.md", "LICENCE"]) {
 ```
 
 This script can be run during the build and publishing of the library. Everything in the `dist` directory can
-be ignored from source control and using this approach means there's no risk of forgetting to update the
-entry points or exposing library internals that may be subject to change in the future.
+be ignored from source control and now there's no risk of forgetting to update the entry points or exposing
+library internals that may be subject to change in the future.
 
 [javascript-modules]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
 [module-resolution]: https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries
