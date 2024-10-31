@@ -75,7 +75,7 @@
 }
 
 .post-title {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -125,7 +125,13 @@
 }
 
 .post-footer {
-  padding: 1rem 0 2rem;
+  background: var(--bg-highlight);
+  border-top: solid 1px var(--border-primary);
+  padding: 1rem 0;
+}
+
+.licence {
+  line-height: 1.75;
 }
 
 @media (width >=600px) {
@@ -136,10 +142,6 @@
   .post-date {
     padding: 1rem 0;
     font-size: 1rem;
-  }
-
-  .post-title {
-    font-size: 3rem;
   }
 }
 
@@ -362,6 +364,7 @@ pre[class*="language-"] {
   --color-surface-inverted: light-dark(#3f4238, #fefae0);
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
+  --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
 }
 
 *,
