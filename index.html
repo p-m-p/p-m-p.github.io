@@ -9,18 +9,22 @@
   <meta name="description" content="Web developer and bike enthusiast from London, UK">
 
   <link rel="icon" href="/img/icon.png">
-
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <style>.container {
-  align-items: center;
+  min-height: 100svh;
   display: flex;
   flex-flow: column;
-  justify-content: center;
-  min-height: 100svh;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-flow: column;
+  padding: 0 0 2rem;
+}
+
+.inner {
+  max-width: 540px;
 }
 
 .cover {
@@ -34,27 +38,53 @@
   }
 }
 
-.content {
-  display: flex;
-  flex: 1;
-  flex-flow: column;
-  gap: 2rem;
-  justify-content: center;
-  max-width: 540px;
+.header {
+  background: var(--bg-highlight);
   padding: 2rem;
 }
 
-.header {
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 400;
-    text-transform: uppercase;
-  }
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
 
-  p {
-    font-size: 1.25rem;
-    font-weight: 400;
+.subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+}
+
+.recent-posts {
+  flex: 1;
+  padding: 2.5rem 2rem;
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
   }
+}
+
+.recent-posts-list {
+  list-style: none;
+  padding: 0;
+}
+
+.recent-post:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.recent-post-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 0.375rem;
+  text-wrap: pretty;
+}
+
+.recent-post-date {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
 }
 
 .social-links {
@@ -70,34 +100,42 @@
   }
 }
 
+.footer {
+  margin: 0 2rem;
+}
+
 @media (width > 960px) {
   .container {
     flex-flow: row;
+    height: 100svh;
   }
 
   .content {
     flex: 0;
-    min-height: 100svh;
     min-width: 540px;
   }
 
-  .header {
-    h1 {
-      font-size: 3rem;
-    }
+  .recent-post {
+    flex: 1;
+    overflow: auto;
+  }
 
-    p {
-      font-size: 1.5rem;
-    }
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
   }
 
   .cover {
     display: block;
-    height: 100vh;
+    height: 100%;
     flex: 1;
 
     img {
       height: 100%;
+      min-height: unset;
     }
   }
 }
@@ -121,11 +159,15 @@
   --color-link-primary: var(--color-text-primary);
   --color-link-underline: light-dark(var(--color-secondary),
       var(--color-primary));
+  --color-link-underline-hover: light-dark(var(--color-primary),
+      var(--color-primary-dark));
   --color-link-visited: light-dark(var(--color-secondary-dark),
       var(--color-secondary-light));
 
   --color-surface-primary: light-dark(#fefae0, #3f4238);
   --color-surface-inverted: light-dark(#3f4238, #fefae0);
+
+  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
 }
 
 *,
@@ -152,12 +194,11 @@ a {
   color: var(--color-link-primary);
   font-weight: 500;
   outline: 0;
-  padding: 0.25rem;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
   text-decoration-color: var(--color-link-underline);
   transition:
-    background-color 200ms,
+    text-decoration-color 200ms,
     color 200ms;
 
   &:visited {
@@ -167,9 +208,7 @@ a {
   }
 
   &:focus-visible {
-    color: var(--color-text-inverted);
-    text-decoration-color: var(--color-text-inverted);
-    background-color: var(--color-surface-inverted);
+    text-decoration-color: var(--color-primary);
   }
 
   &:active {
@@ -180,9 +219,7 @@ a {
 
 @media (hover: hover) {
   a:hover {
-    color: var(--color-text-inverted);
-    text-decoration-color: var(--color-text-inverted);
-    background-color: var(--color-surface-inverted);
+    text-decoration-color: var(--color-link-underline-hover);
   }
 }</style>
 
@@ -191,20 +228,31 @@ a {
 
 <body>
   
-<div class="container">
-  <article class="content">
+<main class="container">
+  <div class="content">
     <header class="header">
-      <h1>Phil Parsons</h1>
-      <p>Web developer. Bike enthusiast.</p>
-    </header>
-
-    <main>
-      <p>
+      <h1 class="title">Phil Parsons</h1>
+      <p class="subtitle">Web developer. Bike enthusiast.</p>
+      <p class="intro">
         I'm a web developer from London in the United Kingdom. I work in FinTech and have a primary focus
         on front-end development with HTML, CSS and JavaScript. Away from the keyboard I enjoy hitting the
         trails on mountain bikes and offroad motorcycles.
       </p>
-    </main>
+    </header>
+
+    <section class="recent-posts">
+      <h2>Recent posts</h2>
+
+      <ol class="recent-posts-list">
+        
+        <li class="recent-post">
+          <h3 class="recent-post-title"><a href="/blog/typescript-package-entry-points/">Generating entry points for TypeScript packages</a></h3>
+          <p class="recent-post-description">Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.</p>
+          <div class="recent-post-date"><time datetime="2024-10-27">27 October 2024</time></div>
+        </li>
+        
+      </ol>
+    </section>
 
     <footer class="footer">
       <p>You can also find me here:</p>
@@ -215,12 +263,12 @@ a {
         Github
         </a></li>
         <li><a href="https://linkedin.com/in/phil-parsons-webdev">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
         LinkedIn
         </a></li>
       </ul>
     </footer>
-  </article>
+  </div>
 
   <div class="cover" =="">
     <picture>
@@ -229,7 +277,7 @@ a {
       <img src="/img/homepage-bpw-lg.webp" alt="Me throwing a whip on my mountain bike at Bikepark Wales on a typically wet Welsh day in Autumn">
     </picture>
   </div>
-</div>
+</main>
 
 </body>
 

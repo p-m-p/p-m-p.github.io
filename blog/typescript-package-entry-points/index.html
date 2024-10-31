@@ -1,0 +1,585 @@
+
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generating entry points for TypeScript packages</title>
+  <meta name="description" content="Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Generating entry points for TypeScript packages">
+  <style>.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 1rem;
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+
+  a {
+    color: var(--color-link-primary);
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-link-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-primary);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--bg-highlight);
+  margin: 0 0 1rem;
+  padding: 1rem 0 0;
+}
+
+.post-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.post-date {
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  text-align: right;
+}
+
+.post-content {
+  p {
+    margin: 0 0 1rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 2rem;
+    overflow: auto;
+    padding: 0.5rem;
+  }
+}
+
+.post-description {
+  font-size: 1.125rem;
+}
+
+.post-footer {
+  padding: 1rem 0 2rem;
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: 2rem 0 0;
+  }
+
+  .post-date {
+    padding: 1rem 0;
+    font-size: 1rem;
+  }
+
+  .post-title {
+    font-size: 3rem;
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    pre {
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+  background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-primary-light: #ffe8d6;
+  --color-primary: #ddbea9;
+  --color-primary-dark: #cb997e;
+  --color-primary-darker: #b98b73;
+  --color-secondary-light: #b7b7a4;
+  --color-secondary: #a5a58d;
+  --color-secondary-dark: #6b705c;
+  --color-secondary-darker: #3f4238;
+
+  --color-text-primary: light-dark(var(--color-secondary-darker),
+      var(--color-primary-light));
+  --color-text-inverted: light-dark(var(--color-primary-light),
+      var(--color-secondary-darker));
+
+  --color-link-primary: var(--color-text-primary);
+  --color-link-underline: light-dark(var(--color-secondary),
+      var(--color-primary));
+  --color-link-underline-hover: light-dark(var(--color-primary),
+      var(--color-primary-dark));
+  --color-link-visited: light-dark(var(--color-secondary-dark),
+      var(--color-secondary-light));
+
+  --color-surface-primary: light-dark(#fefae0, #3f4238);
+  --color-surface-inverted: light-dark(#3f4238, #fefae0);
+
+  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link-primary);
+  font-weight: 500;
+  outline: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    text-decoration-color: var(--color-primary);
+  }
+
+  &:active {
+    position: relative;
+    top: 0.125rem;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: var(--color-link-underline-hover);
+  }
+}</style>
+
+  <title>Generating entry points for TypeScript packages</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title">Generating entry points for TypeScript packages</h1>
+      <div class="post-date"><time datetime="2024-10-27">27 October 2024</time></div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.</p>
+    <h2>TypeScript vs JavaScript module resolution</h2>
+<p>TypeScript generally has the same import syntax as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">JavaScript modules</a> with additional features
+from CommonJS that aren't supported in JavaScript modules.</p>
+<p>Take this basic example of a library module structure.</p>
+<pre class="language-shell"><code class="language-shell"><span class="token builtin class-name">.</span>
+├── package.json
+├── src
+│   ├── feature
+│   │   ├── Component.ts
+│   │   └── index.ts
+│   └── index.ts
+└── tsconfig.json</code></pre>
+<p>With TypeScript it's possible to import from the directory via it's index file or from another file without
+the extension.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component"</span><span class="token punctuation">;</span></code></pre>
+<p>JavaScript modules require the full path and the file extension.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature/index.js"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component.js"</span><span class="token punctuation">;</span></code></pre>
+<p>To export JavaScript modules from the compiled TypeScript all import statements need to use the ESM syntax. To do this
+the TypeScript configuration option for <code>module</code> needs to be set to <code>nodenext</code> as does <code>moduleResolution</code> (see
+<a href="https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries">Module resolution for libraries</a>).</p>
+<p>You'd be easily mistaken here to think that compiling with other module settings work fine when consuming the library
+with a bundler that doesn't apply the strict ESM resolution algorithm but when used with Node.js it will result in
+module import errors.</p>
+<p>Here's an example of a minimal TypeScript configuration for compiling to JavaScript modules.</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"compilerOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"esModuleInterop"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    <span class="token property">"lib"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"node"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"module"</span><span class="token operator">:</span> <span class="token string">"nodenext"</span><span class="token punctuation">,</span>
+    <span class="token property">"moduleResolution"</span><span class="token operator">:</span> <span class="token string">"nodenext"</span><span class="token punctuation">,</span>
+    <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"esnext"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>It seems weird importing <code>.ts</code> and <code>.tsx</code> files with a <code>.js</code> extension, and there are other ways to fix the import
+paths via plugins for bundlers like ESBuild and Rollup, but it does at least make the intent explicit.</p>
+<h2>Packaging library modules</h2>
+<p>A common solution for exposing library modules is to use a bundler to create a single entry point. This is fine, and
+possibly even preferred, for small packages but on a larger scale for packages with many modules exporting them
+individually will help to reduce unused JavaScript and optimise build performance through <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree shaking</a>.</p>
+<h3>Build options</h3>
+<p>If the compiled JavaScript files are relative to package.json they could be imported from the file system path.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/feature/index.js"</span><span class="token punctuation">;</span></code></pre>
+<p>It can get messy with this approach, having the compiled files strewn across the project during development. Some of
+this can be overcome with <a href="https://git-scm.com/docs/gitignore">Git ignore</a> rules and use of the <a href="https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files">files configuration</a> in package.json
+but it also means a key advantage of the module pattern is lost, <a href="https://en.wikipedia.org/wiki/Information_hiding">information hiding</a>.</p>
+<p>Node.js modules are able to provide a map of <a href="entry-points">package entry points</a> in package.json to expose only the
+public modules. When using this approach the compiled JavaScript modules can be output to a separate build directory.</p>
+<p>Here's an example package.json with entry points for the JavaScript modules compiled to a directory named <code>dist</code>.</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"myLib"</span><span class="token punctuation">,</span>
+  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"module"</span><span class="token punctuation">,</span>
+  <span class="token property">"files"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"dist"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"exports"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"."</span><span class="token operator">:</span> <span class="token string">"./dist/index.js"</span>
+    <span class="token property">"./feature"</span><span class="token operator">:</span> <span class="token string">"./dist/feature/index.js"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Now it's possible to import the package modules from the named entry points, noticeably without the file name and extension.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> ComponentA <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'myLib/componentA'</span></code></pre>
+<h3>Automated entry point generation</h3>
+<p>Maintaining the entry points manually will be a burden that likely becomes a source of errors with keeping things in sync.
+Automating the generation of the package entry points removes this risk but presents a new problem, the need to update
+package.json.</p>
+<p>Generating the entry points and updating package.json could run as a <a href="https://docs.npmjs.com/cli/v9/using-npm/scripts#pre--post-scripts">prepublish</a> phase, a
+<a href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks">pre-commit hook</a> or on a build server. Given there is a separate <code>dist</code> directory another
+approach is to create a package.json in that directory and publish the package from there.</p>
+<p>This Node.js script generates the entry points and writes a new package.json file in the <code>dist</code> directory. All public
+modules under the <code>src</code> directory contain an <code>index.ts</code> file and this is used as the entry point.</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// generateExports.js</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> copyFile<span class="token punctuation">,</span> readFile<span class="token punctuation">,</span> writeFile <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fs/promises"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> join <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"path"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> glob <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"glob"</span><span class="token punctuation">;</span> <span class="token comment">// npm install -D glob</span>
+
+<span class="token comment">// Assumes the script is in the project root and the TypeScript</span>
+<span class="token comment">// files have been compiled into a directory named dist</span>
+<span class="token keyword">const</span> root <span class="token operator">=</span> <span class="token keyword">import</span><span class="token punctuation">.</span>meta<span class="token punctuation">.</span>dirname<span class="token punctuation">;</span>
+<span class="token keyword">const</span> dist <span class="token operator">=</span> <span class="token function">join</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> <span class="token string">"dist"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Read package.json from the project root</span>
+<span class="token keyword">const</span> packageJson <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>
+  <span class="token keyword">await</span> <span class="token function">readFile</span><span class="token punctuation">(</span><span class="token function">join</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> <span class="token string">"package.json"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"utf8"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Extend any manually added named exports</span>
+<span class="token keyword">const</span> exports <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token operator">...</span>packageJson<span class="token punctuation">.</span>exports <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Search for all index files in src directory and add</span>
+<span class="token comment">// named exports for the generated types and imports</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> index <span class="token keyword">of</span> <span class="token keyword">await</span> <span class="token function">glob</span><span class="token punctuation">(</span><span class="token string">"src/**/index.ts"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> exportPath <span class="token operator">=</span> index<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^src(.*?)\/[^/]+$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token string">".$1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  exports<span class="token punctuation">[</span>exportPath<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">types</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>distPath<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/index.d.ts</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token keyword">import</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>distPath<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/index.js</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Write the published package.json into the dist directory</span>
+<span class="token keyword">await</span> <span class="token function">writeFile</span><span class="token punctuation">(</span>
+  <span class="token function">join</span><span class="token punctuation">(</span>dist<span class="token punctuation">,</span> <span class="token string">"package.json"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>
+    <span class="token punctuation">{</span>
+      <span class="token operator">...</span>packageJson<span class="token punctuation">,</span>
+      exports<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token number">2</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token string">"utf8"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Copy other files required in the published package</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> file <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"README.md"</span><span class="token punctuation">,</span> <span class="token string">"LICENCE"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> <span class="token function">copyFile</span><span class="token punctuation">(</span><span class="token function">join</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">join</span><span class="token punctuation">(</span>dist<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This script can be run during the build and publishing of the library. Everything in the <code>dist</code> directory can
+be ignored from source control and using this approach means there's no risk of forgetting to update the
+entry points or exposing library internals that may be subject to change in the future.</p>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+</body>
+
+</html>
