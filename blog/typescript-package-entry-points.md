@@ -148,8 +148,8 @@ for (const index of await glob("src/**/index.ts")) {
   const exportPath = index.replace(/^src(.*?)\/[^/]+$/, ".$1");
 
   exports[exportPath] = {
-    types: `${distPath}/index.d.ts`,
-    import: `${distPath}/index.js`,
+    types: `${exportPath}/index.d.ts`,
+    import: `${exportPath}/index.js`,
   };
 }
 
