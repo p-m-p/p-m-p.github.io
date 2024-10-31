@@ -18,11 +18,15 @@
   --color-link-primary: var(--color-text-primary);
   --color-link-underline: light-dark(var(--color-secondary),
       var(--color-primary));
+  --color-link-underline-hover: light-dark(var(--color-primary),
+      var(--color-primary-dark));
   --color-link-visited: light-dark(var(--color-secondary-dark),
       var(--color-secondary-light));
 
   --color-surface-primary: light-dark(#fefae0, #3f4238);
   --color-surface-inverted: light-dark(#3f4238, #fefae0);
+
+  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
 }
 
 *,
@@ -49,12 +53,11 @@ a {
   color: var(--color-link-primary);
   font-weight: 500;
   outline: 0;
-  padding: 0.25rem;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
   text-decoration-color: var(--color-link-underline);
   transition:
-    background-color 200ms,
+    text-decoration-color 200ms,
     color 200ms;
 
   &:visited {
@@ -64,9 +67,7 @@ a {
   }
 
   &:focus-visible {
-    color: var(--color-text-inverted);
-    text-decoration-color: var(--color-text-inverted);
-    background-color: var(--color-surface-inverted);
+    text-decoration-color: var(--color-primary);
   }
 
   &:active {
@@ -77,8 +78,6 @@ a {
 
 @media (hover: hover) {
   a:hover {
-    color: var(--color-text-inverted);
-    text-decoration-color: var(--color-text-inverted);
-    background-color: var(--color-surface-inverted);
+    text-decoration-color: var(--color-link-underline-hover);
   }
 }

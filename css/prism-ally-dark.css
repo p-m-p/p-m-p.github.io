@@ -28,7 +28,7 @@ pre[class*="language-"] {
 
 :not(pre)>code[class*="language-"],
 pre[class*="language-"] {
-  background: rgb(0 0 0 / 20%);
+  background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
 }
 
 /* Inline code */

@@ -5,14 +5,75 @@
 }
 
 .banner {
-  padding: 1rem 0;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+
+  a {
+    color: var(--color-link-primary);
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-link-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-primary);
+    }
+  }
 }
 
 .logo {
-  color: var(--color-primary);
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--bg-highlight);
+  margin: 0 0 1rem;
+  padding: 1rem 0 0;
+}
+
+.post-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.post-date {
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  text-align: right;
 }
 
 .post-content {
@@ -20,11 +81,23 @@
     margin: 0 0 1rem;
   }
 
-  h1,
   h2,
   h3,
   h4 {
     margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
   }
 
   pre {
@@ -35,25 +108,62 @@
   }
 }
 
-.post-title {
-  background: rgb(0 0 0 / 20%);
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0 0 2rem;
-  padding: 1rem;
+.post-description {
+  font-size: 1.125rem;
+}
+
+.post-footer {
+  padding: 1rem 0 2rem;
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: 2rem 0 0;
+  }
+
+  .post-date {
+    padding: 1rem 0;
+    font-size: 1rem;
+  }
+
+  .post-title {
+    font-size: 3rem;
+  }
 }
 
 @media (width >=1024px) {
   .post-content {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
 
     pre {
       padding: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
     }
   }
 
   .post-title {
     font-size: 4rem;
-    line-height: 1.2;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
   }
 }

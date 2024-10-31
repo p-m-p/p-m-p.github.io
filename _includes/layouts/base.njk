@@ -13,13 +13,7 @@ description: Web developer and bike enthusiast from London, UK
   <meta name="description" content="{{ description or metadata.description }}">
 
   <link rel="icon" href="/img/icon.png">
-
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="{{ title or metadata.title }}">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet">
 
   {%- css %}{% include "../../css/site.css" %}{% endcss %}
   <style>{% getBundle "css" %}</style>

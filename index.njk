@@ -3,20 +3,31 @@ layout: layouts/base.njk
 ---
 
 {%- css %}{% include "./css/home.css" %}{% endcss %}
-<div class="container">
-  <article class="content">
+<main class="container">
+  <div class="content">
     <header class="header">
-      <h1>Phil Parsons</h1>
-      <p>Web developer. Bike enthusiast.</p>
-    </header>
-
-    <main>
-      <p>
+      <h1 class="title">Phil Parsons</h1>
+      <p class="subtitle">Web developer. Bike enthusiast.</p>
+      <p class="intro">
         I'm a web developer from London in the United Kingdom. I work in FinTech and have a primary focus
         on front-end development with HTML, CSS and JavaScript. Away from the keyboard I enjoy hitting the
         trails on mountain bikes and offroad motorcycles.
       </p>
-    </main>
+    </header>
+
+    <section class="recent-posts">
+      <h2>Recent posts</h2>
+
+      <ol class="recent-posts-list">
+        {% for recentPost in collections.posts | reverse %}
+        <li class="recent-post">
+          <h3 class="recent-post-title"><a href="{{ recentPost.url }}">{{ recentPost.data.title }}</a></h3>
+          <p class="recent-post-description">{{ recentPost.data.description }}</p>
+          <div class="recent-post-date"><time datetime="{{ recentPost.date | htmlDateString }}">{{ recentPost.date | readableDate }}</time></div>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
 
     <footer class="footer">
       <p>You can also find me here:</p>
@@ -27,12 +38,12 @@ layout: layouts/base.njk
         Github
         </a></li>
         <li><a href="https://linkedin.com/in/phil-parsons-webdev">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
         LinkedIn
         </a></li>
       </ul>
     </footer>
-  </article>
+  </div>
 
   <div class="cover"=>
     <picture>
@@ -41,4 +52,4 @@ layout: layouts/base.njk
       <img src="/img/homepage-bpw-lg.webp" alt="Me throwing a whip on my mountain bike at Bikepark Wales on a typically wet Welsh day in Autumn">
     </picture>
   </div>
-</div>
+</main>
