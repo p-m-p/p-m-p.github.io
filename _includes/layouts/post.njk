@@ -41,3 +41,9 @@ layout: layouts/base.njk
     </div>
   </footer>
 </article>
+
+{% block script %}
+  {% if script %}
+    <script src="/js/{{ script }}" type="module" defer></script>
+  {% endif %}
+{% endblock %}

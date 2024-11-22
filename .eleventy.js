@@ -5,6 +5,10 @@ import { DateTime } from "luxon";
 export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addBundle("css");
+  eleventyConfig.addWatchTarget("css");
+
+  eleventyConfig.addPassthroughCopy("js");
+  eleventyConfig.addWatchTarget("js");
 
   eleventyConfig.addFilter("htmlDateString", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
