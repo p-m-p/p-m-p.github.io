@@ -24,10 +24,15 @@ export class PaginationMutation extends HTMLElement {
 
     // Listen for slot changes to store reference to the animation container
     shadow.querySelector("slot").addEventListener("slotchange", (ev) => {
+      // Remove any previous observerations
       this.#observer.disconnect();
+
       this.#animationContainer = ev.target.assignedElements()[0];
+      // Add the element to the observer for active-page attribute
+      // and child list updates
       this.#observer.observe(this.#animationContainer, {
         attributes: true,
+        attributeFilter: ["active-page"],
         childList: true,
       });
 

@@ -22,6 +22,8 @@ export class Pagination extends HTMLElement {
     // set the initial state of the page selection status
     shadow.querySelector("slot").addEventListener("slotchange", (ev) => {
       this.#pages = ev.target.assignedElements();
+      // Start by hiding all pages
+      this.#pages.forEach((page) => page.style.setProperty("display", "none"));
       this.#setSelectedPage(0);
     });
 
@@ -41,14 +43,14 @@ export class Pagination extends HTMLElement {
   }
 
   #setSelectedPage(pageIndex) {
+    // Display only page index
+    this.#pages[this.#selectedPageIndex]?.style.setProperty("display", "none");
+    this.#pages[pageIndex]?.style.setProperty("display", "block");
+
+    // Store the new page index
     this.#selectedPageIndex = pageIndex;
 
     // Update indicator to show selected page
     this.#selectionIndicator.textContent = `Page ${pageIndex + 1} of ${this.#pages.length}`;
-
-    // Display only the current page
-    this.#pages.forEach((page, index) => {
-      page.style.setProperty("display", index === pageIndex ? "block" : "none");
-    });
   }
 }
