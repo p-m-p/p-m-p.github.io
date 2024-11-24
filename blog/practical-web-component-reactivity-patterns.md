@@ -1,11 +1,12 @@
 ---
 title: Practical web component reactivity patterns
 description:
-  The web platform provides some cool constructs that allow us to apply reactive programming
-  patterns to our custom elements. Let's take a look at some patterns we can use in everyday
-  scenarios to implement reactivity in our websites and applications.
+  The web platform provides constructs that allow us to apply reactive programming
+  patterns to our custom elements. Let's take a look at some patterns we can use in
+  everyday scenarios to implement reactivity in our websites and applications.
 date: 2024-11-24
 script: /practical-web-component-reactivity-patterns/index.js
+social_card: practical-web-component-reactivity-patterns.jpg
 ---
 
 ## Keeping HTML element attributes and properties in sync
@@ -105,7 +106,7 @@ the article) can define [slots][templates-and-slots] to position content into th
 specific locations. I won't incldde the full implementation of each component here but you can
 [view the code][code-examples] for the examples.
 
-Let's explore these reactivity patterns by implementing a pagination component that provides controls
+Let's explore some reactivity patterns by implementing a pagination component that provides controls
 for navigating through a list of pages. We'll declare a template that defines the structure of the
 component with a default slot for the pages, buttons to navigate to the next and previous page and
 a status indicator that displays the acttive page number alongside the total number of pages.
@@ -357,7 +358,7 @@ class Pagination extends HTMLElement {
   </my-page-flip>
 </my-pagination-mutation>
 
-## Conclusion
+## Takeaway
 
 Custom events are a power tool for implementing components that both work in isolation and can be combined,
 without coupling, to create dynamic applications for the web. Consider also the encapsulation of state
