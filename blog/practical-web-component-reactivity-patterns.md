@@ -5,7 +5,6 @@ description:
   patterns to our custom elements. Let's take a look at some patterns we can use in everyday
   scenarios to implement reactivity in our websites and applications.
 date: 2024-11-24
-draft: true
 script: /practical-web-component-reactivity-patterns/index.js
 ---
 
