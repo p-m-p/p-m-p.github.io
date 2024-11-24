@@ -8,8 +8,20 @@
   <title>Generating entry points for TypeScript packages</title>
   <meta name="description" content="Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.">
 
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://philparsons.co.uk">
+  <meta property="og:title" content="Generating entry points for TypeScript packages">
+  <meta property="og:description" content="Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk">
+  <meta property="twitter:title" content="Generating entry points for TypeScript packages">
+  <meta property="twitter:description" content="Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/">
+
   <link rel="icon" href="/img/icon.png">
-  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Generating entry points for TypeScript packages">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
   <style>.container {
   margin: 0 auto;
   max-width: 1024px;
@@ -350,6 +362,7 @@ pre[class*="language-"] {
 :root {
   color-scheme: light dark;
 
+  --color-primary-lighter: #fefae0;
   --color-primary-light: #ffe8d6;
   --color-primary: #ddbea9;
   --color-primary-dark: #cb997e;
@@ -372,8 +385,10 @@ pre[class*="language-"] {
   --color-link-visited: light-dark(var(--color-secondary-dark),
       var(--color-secondary-light));
 
-  --color-surface-primary: light-dark(#fefae0, #3f4238);
-  --color-surface-inverted: light-dark(#3f4238, #fefae0);
+  --color-surface-primary: light-dark(var(--color-primary-lighter),
+      var(--color-secondary-darker));
+  --color-surface-inverted: light-dark(var(--color-secondary-darker),
+      var(--color-primary-lighter));
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));

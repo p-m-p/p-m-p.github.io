@@ -6,10 +6,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Practical web component reactivity patterns</title>
-  <meta name="description" content="The web platform provides some cool constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta name="description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://philparsons.co.uk">
+  <meta property="og:title" content="Practical web component reactivity patterns">
+  <meta property="og:description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/practical-web-component-reactivity-patterns.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk">
+  <meta property="twitter:title" content="Practical web component reactivity patterns">
+  <meta property="twitter:description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/practical-web-component-reactivity-patterns.jpg">
 
   <link rel="icon" href="/img/icon.png">
-  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Practical web component reactivity patterns">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
   <style>.container {
   margin: 0 auto;
   max-width: 1024px;
@@ -350,6 +362,7 @@ pre[class*="language-"] {
 :root {
   color-scheme: light dark;
 
+  --color-primary-lighter: #fefae0;
   --color-primary-light: #ffe8d6;
   --color-primary: #ddbea9;
   --color-primary-dark: #cb997e;
@@ -372,8 +385,10 @@ pre[class*="language-"] {
   --color-link-visited: light-dark(var(--color-secondary-dark),
       var(--color-secondary-light));
 
-  --color-surface-primary: light-dark(#fefae0, #3f4238);
-  --color-surface-inverted: light-dark(#3f4238, #fefae0);
+  --color-surface-primary: light-dark(var(--color-primary-lighter),
+      var(--color-secondary-darker));
+  --color-surface-inverted: light-dark(var(--color-secondary-darker),
+      var(--color-primary-lighter));
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
@@ -462,7 +477,7 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">The web platform provides some cool constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.</p>
+    <p class="post-description">The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.</p>
     <h2>Keeping HTML element attributes and properties in sync</h2>
 <p>If you've worked with HTML elements previously you'll likely be aware that attributes declared
 on an element have no default mechanism to reflect their value to properties on the underlying
@@ -540,7 +555,7 @@ callback update the property value.</p>
 the article) can define <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots">slots</a> to position content into the component tree at
 specific locations. I won't incldde the full implementation of each component here but you can
 <a href="https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns">view the code</a> for the examples.</p>
-<p>Let's explore these reactivity patterns by implementing a pagination component that provides controls
+<p>Let's explore some reactivity patterns by implementing a pagination component that provides controls
 for navigating through a list of pages. We'll declare a template that defines the structure of the
 component with a default slot for the pages, buttons to navigate to the next and previous page and
 a status indicator that displays the acttive page number alongside the total number of pages.</p>
@@ -756,7 +771,7 @@ control the status indicator.</p>
     <div class="page" role="group">Page three</div>
   </my-page-flip>
 </my-pagination-mutation>
-<h2>Conclusion</h2>
+<h2>Takeaway</h2>
 <p>Custom events are a power tool for implementing components that both work in isolation and can be combined,
 without coupling, to create dynamic applications for the web. Consider also the encapsulation of state
 through the use of custom property getters and setters and a pragmatic approach of reflecting this to attribute

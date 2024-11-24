@@ -92,7 +92,7 @@ callback update the property value.&lt;/p&gt;
 the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt; to position content into the component tree at
 specific locations. I won&#39;t incldde the full implementation of each component here but you can
 &lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the code&lt;/a&gt; for the examples.&lt;/p&gt;
-&lt;p&gt;Let&#39;s explore these reactivity patterns by implementing a pagination component that provides controls
+&lt;p&gt;Let&#39;s explore some reactivity patterns by implementing a pagination component that provides controls
 for navigating through a list of pages. We&#39;ll declare a template that defines the structure of the
 component with a default slot for the pages, buttons to navigate to the next and previous page and
 a status indicator that displays the acttive page number alongside the total number of pages.&lt;/p&gt;
@@ -308,7 +308,7 @@ control the status indicator.&lt;/p&gt;
     &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
   &lt;/my-page-flip&gt;
 &lt;/my-pagination-mutation&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h2&gt;Takeaway&lt;/h2&gt;
 &lt;p&gt;Custom events are a power tool for implementing components that both work in isolation and can be combined,
 without coupling, to create dynamic applications for the web. Consider also the encapsulation of state
 through the use of custom property getters and setters and a pragmatic approach of reflecting this to attribute

@@ -8,6 +8,18 @@
   <title>Phil Parsons</title>
   <meta name="description" content="Web developer and bike enthusiast from London, UK">
 
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://philparsons.co.uk">
+  <meta property="og:title" content="Phil Parsons">
+  <meta property="og:description" content="Web developer and bike enthusiast from London, UK">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk">
+  <meta property="twitter:title" content="Phil Parsons">
+  <meta property="twitter:description" content="Web developer and bike enthusiast from London, UK">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/">
+
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
   <style>.container {
@@ -142,6 +154,7 @@
 :root {
   color-scheme: light dark;
 
+  --color-primary-lighter: #fefae0;
   --color-primary-light: #ffe8d6;
   --color-primary: #ddbea9;
   --color-primary-dark: #cb997e;
@@ -164,8 +177,10 @@
   --color-link-visited: light-dark(var(--color-secondary-dark),
       var(--color-secondary-light));
 
-  --color-surface-primary: light-dark(#fefae0, #3f4238);
-  --color-surface-inverted: light-dark(#3f4238, #fefae0);
+  --color-surface-primary: light-dark(var(--color-primary-lighter),
+      var(--color-secondary-darker));
+  --color-surface-inverted: light-dark(var(--color-secondary-darker),
+      var(--color-primary-lighter));
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
@@ -248,7 +263,7 @@ a {
         
         <li class="recent-post">
           <h3 class="recent-post-title"><a href="/blog/practical-web-component-reactivity-patterns/">Practical web component reactivity patterns</a></h3>
-          <p class="recent-post-description">The web platform provides some cool constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.</p>
+          <p class="recent-post-description">The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.</p>
           <div class="recent-post-date"><time datetime="2024-11-24">24 November 2024</time></div>
         </li>
         
