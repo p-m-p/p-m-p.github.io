@@ -32,7 +32,7 @@ elements `dataset` and provide an initial value in the HTML declaration.
 If we then set the value of the active page from JavaScript the value is reflected to the
 attribute in the HTML. You'll notice that the conversion between camel casing and hyphens is
 handled for us but because the `dataset` is represented as a `DomStringMap` it doesn't provide
-us any control over how the values are stored and exposed&mdash;it is always a string.
+us any control over how the values are stored and exposed&mdash;it's always a string.
 
 ```js
 const flip = document.querySelector("my-page-flip");
@@ -377,16 +377,16 @@ values and we have some robust patterns for adding reactivity to our component d
 
 <style>
 .pagination {
-  max-width: 400px;
-  height: 400px;
-  margin: 0 auto;
-
+  height: 300px;
+  margin: 0 0 1rem;
   &:not(:defined) {
     display: none;
   }
 }
 .page {
   align-items: center;
+  background: white;
+  border: solid 2px gray;
   color: black;
   font-weight: bold;
   inset: 0;
@@ -395,14 +395,7 @@ values and we have some robust patterns for adding reactivity to our component d
   position: absolute;
   z-index; 1;
   &:nth-child(1) {
-    background: lightsalmon;
     z-index: 2;
-  }
-  &:nth-child(2) {
-    background: cornsilk;
-  }
-  &:nth-child(3) {
-    background: powderblue;
   }
 }
 my-page-flip {
@@ -421,7 +414,6 @@ my-page-flip {
         "pages pages" 1fr
         "status controls" auto;
       gap: 0.5rem;
-      padding: 1rem;
     }
     #pages {
       grid-area: pages;
@@ -436,6 +428,13 @@ my-page-flip {
     #controls {
       grid-area: controls;
       justify-self: right;
+    }
+    button {
+      background: light-dark(rgb(255 255 255 / 50%), rgb(255 255 255 / 10%));
+      border: solid 1px light-dark(rgb(0 0 0 / 20%), rgb(255 255 255 / 20%));
+      border-radius: 0.25rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
     }
   </style>
   <div id="pages">
