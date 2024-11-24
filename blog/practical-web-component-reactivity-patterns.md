@@ -433,6 +433,7 @@ my-page-flip {
       background: light-dark(rgb(255 255 255 / 50%), rgb(255 255 255 / 10%));
       border: solid 1px light-dark(rgb(0 0 0 / 20%), rgb(255 255 255 / 20%));
       border-radius: 0.25rem;
+      color: inherit;
       font-weight: 500;
       padding: 0.25rem 0.5rem;
     }
