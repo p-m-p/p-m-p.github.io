@@ -31,7 +31,7 @@ elements &lt;code&gt;dataset&lt;/code&gt; and provide an initial value in the HT
 &lt;p&gt;If we then set the value of the active page from JavaScript the value is reflected to the
 attribute in the HTML. You&#39;ll notice that the conversion between camel casing and hyphens is
 handled for us but because the &lt;code&gt;dataset&lt;/code&gt; is represented as a &lt;code&gt;DomStringMap&lt;/code&gt; it doesn&#39;t provide
-us any control over how the values are stored and exposed—it is always a string.&lt;/p&gt;
+us any control over how the values are stored and exposed—it&#39;s always a string.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; flip &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;querySelector&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;my-page-flip&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 flip&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;dataset&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;activePage &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -315,16 +315,16 @@ through the use of custom property getters and setters and a pragmatic approach 
 values and we have some robust patterns for adding reactivity to our component development.&lt;/p&gt;
 &lt;style&gt;
 .pagination {
-  max-width: 400px;
-  height: 400px;
-  margin: 0 auto;
-
+  height: 300px;
+  margin: 0 0 1rem;
   &amp;:not(:defined) {
     display: none;
   }
 }
 .page {
   align-items: center;
+  background: white;
+  border: solid 2px gray;
   color: black;
   font-weight: bold;
   inset: 0;
@@ -333,14 +333,7 @@ values and we have some robust patterns for adding reactivity to our component d
   position: absolute;
   z-index; 1;
   &amp;:nth-child(1) {
-    background: lightsalmon;
     z-index: 2;
-  }
-  &amp;:nth-child(2) {
-    background: cornsilk;
-  }
-  &amp;:nth-child(3) {
-    background: powderblue;
   }
 }
 my-page-flip {
@@ -359,7 +352,6 @@ my-page-flip {
         &quot;pages pages&quot; 1fr
         &quot;status controls&quot; auto;
       gap: 0.5rem;
-      padding: 1rem;
     }
     #pages {
       grid-area: pages;
@@ -374,6 +366,13 @@ my-page-flip {
     #controls {
       grid-area: controls;
       justify-self: right;
+    }
+    button {
+      background: light-dark(rgb(255 255 255 / 50%), rgb(255 255 255 / 10%));
+      border: solid 1px light-dark(rgb(0 0 0 / 20%), rgb(255 255 255 / 20%));
+      border-radius: 0.25rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
     }
   &lt;/style&gt;
   &lt;div id=&quot;pages&quot;&gt;
