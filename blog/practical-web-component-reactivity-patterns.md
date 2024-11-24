@@ -379,6 +379,10 @@ values and we have some robust patterns for adding reactivity to our component d
   max-width: 400px;
   height: 400px;
   margin: 0 auto;
+
+  &:not(:defined) {
+    display: none;
+  }
 }
 .page {
   align-items: center;
