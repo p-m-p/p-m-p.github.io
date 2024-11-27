@@ -20,18 +20,18 @@
 on an element have no default mechanism to reflect their value to properties on the underlying
 object in JavaScript. While this &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes&quot;&gt;isn&#39;t true for all elements and attributes&lt;/a&gt;
 it makes sense because object properties can represent any type of data and attributes are always
-strings. Let&#39;s look at how we can keep attribute and property values in sync for situations that
-warrant it.&lt;/p&gt;
+represented as strings. Let&#39;s look at how we can keep attribute and property values in sync for
+situations that warrant it.&lt;/p&gt;
 &lt;h3&gt;The HTMLElement dataset&lt;/h3&gt;
-&lt;p&gt;The element &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset&quot;&gt;&lt;code&gt;dataset&lt;/code&gt;&lt;/a&gt; allows stateful properties to be set either from HTML attributes
-in the &lt;code&gt;data-*&lt;/code&gt; format or via the object property in JavaScript. Take the &lt;code&gt;activePage&lt;/code&gt; property
-of the &lt;code&gt;PageFlip&lt;/code&gt; element that we&#39;ll cover later in the article as an example. We can use the
-elements &lt;code&gt;dataset&lt;/code&gt; and provide an initial value in the HTML declaration.&lt;/p&gt;
+&lt;p&gt;The element &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset&quot;&gt;&lt;code&gt;dataset&lt;/code&gt;&lt;/a&gt; allows attributes to be set either from HTML in the &lt;code&gt;data-*&lt;/code&gt;
+format or via the object property in JavaScript. Take the &lt;code&gt;activePage&lt;/code&gt; property of the &lt;code&gt;PageFlip&lt;/code&gt;
+element that we&#39;ll cover later in the article as an example. We could use the elements &lt;code&gt;dataset&lt;/code&gt;
+to store it and provide an initial value in the HTML declaration.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-page-flip&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;data-active-page&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-page-flip&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;If we then set the value of the active page from JavaScript the value is reflected to the
-attribute in the HTML. You&#39;ll notice that the conversion between camel casing and hyphens is
-handled for us but because the &lt;code&gt;dataset&lt;/code&gt; is represented as a &lt;code&gt;DomStringMap&lt;/code&gt; it doesn&#39;t provide
-us any control over how the values are stored and exposed—it&#39;s always a string.&lt;/p&gt;
+&lt;p&gt;If we set the value of the active page from JavaScript then it is reflected to the attribute in
+the HTML. You&#39;ll notice that the conversion between camel casing and hyphens is handled for us
+but because the &lt;code&gt;dataset&lt;/code&gt; is represented as a &lt;code&gt;DomStringMap&lt;/code&gt; it doesn&#39;t provide us any control
+over how the values are stored and exposed—it&#39;s always a string.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; flip &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;querySelector&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;my-page-flip&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 flip&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;dataset&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;activePage &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -42,15 +42,15 @@ console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
 defining our own custom attribute and property.&lt;/p&gt;
 &lt;h3&gt;Custom element attributes and properties&lt;/h3&gt;
 &lt;p&gt;Rather than use the element &lt;code&gt;dataset&lt;/code&gt; we can implement our own attributes and provide getter
-and setter functions to expose them as properties. This provides us with full control over
-the data format and better encapsulates how the element will react to changes. To implement
-this reactivity attributes are observed for changes by listing them in the static
-&lt;code&gt;observedAttributes&lt;/code&gt; property (this is applicable to &lt;code&gt;data-*&lt;/code&gt; attributes too). We then implement
-the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes&quot;&gt;&lt;code&gt;attributeChangedCallback&lt;/code&gt;&lt;/a&gt; method to be notified about the updated value.&lt;/p&gt;
-&lt;p&gt;Here&#39;s an example of the &lt;code&gt;PageFlip&lt;/code&gt; element with this pattern applied. We only want to update
-the attribute value in HTML if it is already declared and we achieve this by conditionally calling
-&lt;code&gt;setAttribute&lt;/code&gt; from the setter function if the attribute is present in the HTML and letting the
-callback update the property value.&lt;/p&gt;
+and setter functions to expose them as properties. Doing this provides us with full control over
+how the data is stored, provides better encapsulation and more control over how the element will
+react to changes. To implement this reactivity pattern we will observe attributes for changes by
+listing them in the static &lt;code&gt;observedAttributes&lt;/code&gt; property (this could be applied to &lt;code&gt;data-*&lt;/code&gt;
+attributes too). We then implement the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes&quot;&gt;&lt;code&gt;attributeChangedCallback&lt;/code&gt;&lt;/a&gt; method to
+be notified about value changes and update the state accordingly.&lt;/p&gt;
+&lt;p&gt;Here&#39;s an example of this in the &lt;code&gt;PageFlip&lt;/code&gt; element. We only want to update the attribute value
+in the HTML if it is already declared by conditionally calling &lt;code&gt;setAttribute&lt;/code&gt; from the setter
+function and letting the callback handle updating the property value.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PageFlip&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Observe changes to active-page attribute&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; observedAttributes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;active-page&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -89,16 +89,17 @@ callback update the property value.&lt;/p&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Reacting to changes in sub-components&lt;/h2&gt;
 &lt;p&gt;Custom elements (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components&quot;&gt;Web Components&lt;/a&gt;, I&#39;ll refer to them as components for the rest of
-the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt; to position content into the component tree at
-specific locations. I won&#39;t incldde the full implementation of each component here but you can
-&lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the code&lt;/a&gt; for the examples.&lt;/p&gt;
-&lt;p&gt;Let&#39;s explore some reactivity patterns by implementing a pagination component that provides controls
-for navigating through a list of pages. We&#39;ll declare a template that defines the structure of the
-component with a default slot for the pages, buttons to navigate to the next and previous page and
-a status indicator that displays the acttive page number alongside the total number of pages.&lt;/p&gt;
+the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt; to inject content into the component tree at
+specified locations. I won&#39;t incldde the full implementation of each component here but you can
+&lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the code&lt;/a&gt; for the examples. When the element or elements in the slot update
+we may need to react to this change, let&#39;s explore some ways to deal with this reactivity pattern.&lt;/p&gt;
+&lt;p&gt;We&#39;ll implement a pagination component that provides controls for navigating through a list of pages.
+It&#39;ll need a template that defines the structure of the component with a default slot (the one that
+isn&#39;t named) to hold the pages, buttons to navigate to the next and previous page and a status
+indicator that displays the acttive page number alongside the total number of pages.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pagination-tmpl&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pages&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;&amp;lt;!-- default slot --&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;status&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;&amp;lt;!-- Page 1 of n --&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;controls&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -106,16 +107,15 @@ a status indicator that displays the acttive page number alongside the total num
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;button&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;next&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;aria-controls&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pages&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Next&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The component implementation needs to react to changes in the default slot and update the total
-number of pages in the status label. It also needds to set and show the active page when pressing
-the buttons to navigate.&lt;/p&gt;
+&lt;p&gt;The component needs to react to changes in the default slot to set the total number of pages in the
+status label. It also needds to set and show the active page when pressing the buttons to navigate.&lt;/p&gt;
 &lt;h3&gt;Using the slotchange event to react to updates&lt;/h3&gt;
 &lt;p&gt;Whenever elements are assigned to a slot a &lt;code&gt;slotchange&lt;/code&gt; event is dispatched. By adding an event
-listener for these events we can update the status indicator to show the total number of pages.
-This may only happen once when the document is first loaded or multiple times depending on how the
-pages are displayed.&lt;/p&gt;
-&lt;p&gt;If we start with a basic implementation of the pagination component we can add an event listener
-and display the active page by controlling the CSS display property of the pages.&lt;/p&gt;
+listener for these we can update the status indicator to show the total number of pages. This may
+only happen once when the document is first loaded or multiple times depending on how the pages
+are displayed.&lt;/p&gt;
+&lt;p&gt;Let&#39;s start with a basic implementation of the pagination component. We&#39;ll add an event listener for
+the slot change and display the active page by setting the CSS display property of the pages.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Currently selected page index&lt;/span&gt;
   #selectedPageIndex &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -133,7 +133,7 @@ and display the active page by controlling the CSS display property of the pages
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;shadowRoot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// Listen for slot changes to store reference to the pages elements&lt;/span&gt;
-    &lt;span class=&quot;token comment&quot;&gt;// and set the page selection status&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// and set the active page&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;shadowRoot
       &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;querySelector&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;slot&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;slotchange&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;ev&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -147,11 +147,11 @@ and display the active page by controlling the CSS display property of the pages
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
   &lt;span class=&quot;token function&quot;&gt;#setSelectedPage&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;pageIndex&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token comment&quot;&gt;// Display only page index&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// Display only the active page&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#pages&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectedPageIndex&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?.&lt;/span&gt;style&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setProperty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;display&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;none&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#pages&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;pageIndex&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?.&lt;/span&gt;style&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setProperty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;display&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;block&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;token comment&quot;&gt;// Store the new page index&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// Store the new active page index&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectedPageIndex &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; pageIndex&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// Update indicator to show selected page&lt;/span&gt;
@@ -165,13 +165,14 @@ and display the active page by controlling the CSS display property of the pages
     &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
   &lt;/my-pagination&gt;
 &lt;/div&gt;
-&lt;p&gt;This works well to update the status indicator and display the active page. Next we&#39;ll add a component
-that is responsible for animating the page changes and look at how we handle inter-component reactivity.&lt;/p&gt;
+&lt;p&gt;This already works well to update the status indicator and display the active page. Next we&#39;ll add a
+component that animates the page changes and look at how we handle inter-component reactivity.&lt;/p&gt;
 &lt;h3&gt;Using events for web component interactivity&lt;/h3&gt;
-&lt;p&gt;If we move the responsibility of displaying the pages to a new &lt;code&gt;PageFlip&lt;/code&gt; component that displays the
-active page by way of an animation we&#39;ll need a way to notify the pagination component so that the
-status indicator can continue to be updated. We&#39;ll use the &lt;code&gt;activePage&lt;/code&gt; property we&#39;ve already seen
-to control thie visible page when the navigation buttons are clicked and introduce a
+&lt;p&gt;If we move the responsibility of displaying the active page with an animation to a new &lt;code&gt;PageFlip&lt;/code&gt;
+component we&#39;ll need it to provide a way to notify the &lt;code&gt;Pagination&lt;/code&gt; component of changes to update
+the status indicator.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;PageFlip&lt;/code&gt; component will expose an &lt;code&gt;activePage&lt;/code&gt; property (we saw this earlier) to control thie
+visible page when the navigation buttons are clicked. For the reactivity pattern we&#39;ll use a
 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent&quot;&gt;custom event&lt;/a&gt; named &lt;code&gt;pagechange&lt;/code&gt; that is dispatched when the active page or total
 number of pages changes. The event is set to bubble so we can apply the listener to the slot
 element and not to the &lt;code&gt;PageFlip&lt;/code&gt; component directly.&lt;/p&gt;
@@ -195,7 +196,7 @@ element and not to the &lt;code&gt;PageFlip&lt;/code&gt; component directly.&lt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Adding the page flip means the default slot now plays host to this component and the slot change event
-we used previously will be dispatched when this element is assigned.&lt;/p&gt;
+we used previously will be dispatched only when this element is assigned.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-pagination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-page-flip&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;active-page&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Page one&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -203,8 +204,9 @@ we used previously will be dispatched when this element is assigned.&lt;/p&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Page three&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-page-flip&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-pagination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We&#39;ll update the &lt;code&gt;Pagination&lt;/code&gt; component to add the &lt;code&gt;pagechange&lt;/code&gt; event listener. This component is
-simpler now and only responsible for setting the active page index and updating the status indicator.&lt;/p&gt;
+&lt;p&gt;We&#39;ll update the &lt;code&gt;Pagination&lt;/code&gt; component to remove the page display functionality and add the &lt;code&gt;pagechange&lt;/code&gt;
+event listener. This component is simpler now and only responsible for navigating pages and setting the
+status indicator label.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Page selection indicator&lt;/span&gt;
   #selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -213,7 +215,7 @@ simpler now and only responsible for setting the active page index and updating 
   #animationContainer &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
   &lt;span class=&quot;token function&quot;&gt;connectedCallback&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token comment&quot;&gt;// ...attach shadow root, apply the template and add button event listeners&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// ...attach shadow root, apply the template and add button event listeners to set activePage&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// Store a reference to the selected page indicator&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; shadow&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -240,19 +242,19 @@ simpler now and only responsible for setting the active page index and updating 
     &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
   &lt;/my-page-flip&gt;
 &lt;/my-pagination-event&gt;
-&lt;p&gt;Events are fundamental to how we build user interfaces. By applying this pattern to our own
-components we are able to split our applications into discrete elements that can be combined to
-create rich user experiences.&lt;/p&gt;
+&lt;p&gt;Events are fundamental to how we build user interfaces on the web with all kinds of existing events. By
+applying this pattern to our own components we are able to split our applications into discrete parts that
+can be combined together to create rich user experiences.&lt;/p&gt;
 &lt;h3&gt;Using a MutationObserver to react to sub component updates&lt;/h3&gt;
 &lt;p&gt;Sometimes, we might not have an event like &lt;code&gt;pagechange&lt;/code&gt; available. Maybe we have to deal with
 integrating a new feature into a legacy codebase or use a third party library we have no control
 over. In these scenarios we can achieve a similar result with a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver&quot;&gt;&lt;code&gt;MutationObserver&lt;/code&gt;&lt;/a&gt;
 to observe changes to the attributes and children of the element.&lt;/p&gt;
-&lt;p&gt;This approach will rely on the &lt;code&gt;active-page&lt;/code&gt; attribute correctly reflecting the &lt;code&gt;activePage&lt;/code&gt;
+&lt;p&gt;This approach here will rely on the &lt;code&gt;active-page&lt;/code&gt; attribute correctly reflecting the &lt;code&gt;activePage&lt;/code&gt;
 property value and some confidence that the list of pages are the elements direct children (although,
-we could also apply the observer to the entire subtree).&lt;/p&gt;
+we could also apply the observer to the entire element subtree).&lt;/p&gt;
 &lt;p&gt;Here&#39;s what the &lt;code&gt;Pagination&lt;/code&gt; component would look like if we updated it to use a &lt;code&gt;MutationObserver&lt;/code&gt; to
-control the status indicator.&lt;/p&gt;
+control the status indicator instead of the &lt;code&gt;pagechange&lt;/code&gt; event.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Page selection indicator&lt;/span&gt;
   #selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -263,16 +265,20 @@ control the status indicator.&lt;/p&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Mutation observer reference&lt;/span&gt;
   #observer &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-  &lt;span class=&quot;token function&quot;&gt;connectedCallback&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token comment&quot;&gt;// ...attach shadow root, apply the template and add button event listeners&lt;/span&gt;
-
-    &lt;span class=&quot;token comment&quot;&gt;// Store a reference to the selected page indicator&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; shadow&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token function&quot;&gt;constructor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// On mutations update the selected page status&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#observer &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;MutationObserver&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
       &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;#setSelectedPage&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;token function&quot;&gt;connectedCallback&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// ...attach shadow root, apply the template and add button event listeners to set activePage&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;// Store a reference to the selected page indicator&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; shadow&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// Listen for slot changes to store reference to the page flip component&lt;/span&gt;
     &lt;span class=&quot;token comment&quot;&gt;// and observe for mutations within it&lt;/span&gt;
@@ -301,18 +307,11 @@ control the status indicator.&lt;/p&gt;
     &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;#selectionIndicator&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;textContent &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Page &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;page&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt; of &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;totalPages&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;my-pagination-mutation class=&quot;pagination&quot; aria-roledescription=&quot;carousel&quot; aria-label=&quot;Example pagination container with animation&quot;&gt;
-  &lt;my-page-flip active-page=&quot;0&quot;&gt;
-    &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page one&lt;/div&gt;
-    &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page two&lt;/div&gt;
-    &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
-  &lt;/my-page-flip&gt;
-&lt;/my-pagination-mutation&gt;
 &lt;h2&gt;Takeaway&lt;/h2&gt;
-&lt;p&gt;Custom events are a power tool for implementing components that both work in isolation and can be combined,
-without coupling, to create dynamic applications for the web. Consider also the encapsulation of state
-through the use of custom property getters and setters and a pragmatic approach of reflecting this to attribute
-values and we have some robust patterns for adding reactivity to our component development.&lt;/p&gt;
+&lt;p&gt;Custom events are a power tool for implementing components that both work in isolation and can be combined to
+create dynamic applications for the web. Consider also the encapsulation of state through the use of custom
+property getters and setters and a pragmatic approach of reflecting this to attribute values and we have some
+solid patterns for adding reactivity to our component development.&lt;/p&gt;
 &lt;style&gt;
 .pagination {
   height: 300px;

@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en-GB">
 
@@ -6,18 +5,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Practical web component reactivity patterns</title>
-  <meta name="description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta name="description" content="The web platform provides us with all the tools we need to apply reactivity to our web components. Let&#39;s explore some reactive programming patterns we can use in everyday scenarios to build interactive web pages and applications.">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://philparsons.co.uk/blog/practical-web-component-reactivity-patterns/">
   <meta property="og:title" content="Practical web component reactivity patterns">
-  <meta property="og:description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta property="og:description" content="The web platform provides us with all the tools we need to apply reactivity to our web components. Let&#39;s explore some reactive programming patterns we can use in everyday scenarios to build interactive web pages and applications.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/practical-web-component-reactivity-patterns.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/practical-web-component-reactivity-patterns/">
   <meta property="twitter:title" content="Practical web component reactivity patterns">
-  <meta property="twitter:description" content="The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.">
+  <meta property="twitter:description" content="The web platform provides us with all the tools we need to apply reactivity to our web components. Let&#39;s explore some reactive programming patterns we can use in everyday scenarios to build interactive web pages and applications.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/practical-web-component-reactivity-patterns.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -483,24 +482,24 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">The web platform provides constructs that allow us to apply reactive programming patterns to our custom elements. Let&#39;s take a look at some patterns we can use in everyday scenarios to implement reactivity in our websites and applications.</p>
+    <p class="post-description">The web platform provides us with all the tools we need to apply reactivity to our web components. Let&#39;s explore some reactive programming patterns we can use in everyday scenarios to build interactive web pages and applications.</p>
     <h2>Keeping HTML element attributes and properties in sync</h2>
 <p>If you've worked with HTML elements previously you'll likely be aware that attributes declared
 on an element have no default mechanism to reflect their value to properties on the underlying
 object in JavaScript. While this <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes">isn't true for all elements and attributes</a>
 it makes sense because object properties can represent any type of data and attributes are always
-strings. Let's look at how we can keep attribute and property values in sync for situations that
-warrant it.</p>
+represented as strings. Let's look at how we can keep attribute and property values in sync for
+situations that warrant it.</p>
 <h3>The HTMLElement dataset</h3>
-<p>The element <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset"><code>dataset</code></a> allows stateful properties to be set either from HTML attributes
-in the <code>data-*</code> format or via the object property in JavaScript. Take the <code>activePage</code> property
-of the <code>PageFlip</code> element that we'll cover later in the article as an example. We can use the
-elements <code>dataset</code> and provide an initial value in the HTML declaration.</p>
+<p>The element <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset"><code>dataset</code></a> allows attributes to be set either from HTML in the <code>data-*</code>
+format or via the object property in JavaScript. Take the <code>activePage</code> property of the <code>PageFlip</code>
+element that we'll cover later in the article as an example. We could use the elements <code>dataset</code>
+to store it and provide an initial value in the HTML declaration.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-page-flip</span> <span class="token attr-name">data-active-page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-page-flip</span><span class="token punctuation">></span></span></code></pre>
-<p>If we then set the value of the active page from JavaScript the value is reflected to the
-attribute in the HTML. You'll notice that the conversion between camel casing and hyphens is
-handled for us but because the <code>dataset</code> is represented as a <code>DomStringMap</code> it doesn't provide
-us any control over how the values are stored and exposed—it's always a string.</p>
+<p>If we set the value of the active page from JavaScript then it is reflected to the attribute in
+the HTML. You'll notice that the conversion between camel casing and hyphens is handled for us
+but because the <code>dataset</code> is represented as a <code>DomStringMap</code> it doesn't provide us any control
+over how the values are stored and exposed—it's always a string.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> flip <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"my-page-flip"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 flip<span class="token punctuation">.</span>dataset<span class="token punctuation">.</span>activePage <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
@@ -511,15 +510,15 @@ console<span class="token punctuation">.</span><span class="token function">log<
 defining our own custom attribute and property.</p>
 <h3>Custom element attributes and properties</h3>
 <p>Rather than use the element <code>dataset</code> we can implement our own attributes and provide getter
-and setter functions to expose them as properties. This provides us with full control over
-the data format and better encapsulates how the element will react to changes. To implement
-this reactivity attributes are observed for changes by listing them in the static
-<code>observedAttributes</code> property (this is applicable to <code>data-*</code> attributes too). We then implement
-the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes"><code>attributeChangedCallback</code></a> method to be notified about the updated value.</p>
-<p>Here's an example of the <code>PageFlip</code> element with this pattern applied. We only want to update
-the attribute value in HTML if it is already declared and we achieve this by conditionally calling
-<code>setAttribute</code> from the setter function if the attribute is present in the HTML and letting the
-callback update the property value.</p>
+and setter functions to expose them as properties. Doing this provides us with full control over
+how the data is stored, provides better encapsulation and more control over how the element will
+react to changes. To implement this reactivity pattern we will observe attributes for changes by
+listing them in the static <code>observedAttributes</code> property (this could be applied to <code>data-*</code>
+attributes too). We then implement the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes"><code>attributeChangedCallback</code></a> method to
+be notified about value changes and update the state accordingly.</p>
+<p>Here's an example of this in the <code>PageFlip</code> element. We only want to update the attribute value
+in the HTML if it is already declared by conditionally calling <code>setAttribute</code> from the setter
+function and letting the callback handle updating the property value.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">PageFlip</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   <span class="token comment">// Observe changes to active-page attribute</span>
   <span class="token keyword">static</span> observedAttributes <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"active-page"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -558,16 +557,17 @@ callback update the property value.</p>
 <span class="token punctuation">}</span></code></pre>
 <h2>Reacting to changes in sub-components</h2>
 <p>Custom elements (<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components">Web Components</a>, I'll refer to them as components for the rest of
-the article) can define <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots">slots</a> to position content into the component tree at
-specific locations. I won't incldde the full implementation of each component here but you can
-<a href="https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns">view the code</a> for the examples.</p>
-<p>Let's explore some reactivity patterns by implementing a pagination component that provides controls
-for navigating through a list of pages. We'll declare a template that defines the structure of the
-component with a default slot for the pages, buttons to navigate to the next and previous page and
-a status indicator that displays the acttive page number alongside the total number of pages.</p>
+the article) can define <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots">slots</a> to inject content into the component tree at
+specified locations. I won't incldde the full implementation of each component here but you can
+<a href="https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns">view the code</a> for the examples. When the element or elements in the slot update
+we may need to react to this change, let's explore some ways to deal with this reactivity pattern.</p>
+<p>We'll implement a pagination component that provides controls for navigating through a list of pages.
+It'll need a template that defines the structure of the component with a default slot (the one that
+isn't named) to hold the pages, buttons to navigate to the next and previous page and a status
+indicator that displays the acttive page number alongside the total number of pages.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pagination-tmpl<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">></span></span><span class="token comment">&lt;!-- default slot --></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>status<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token comment">&lt;!-- Page 1 of n --></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>controls<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
@@ -575,16 +575,15 @@ a status indicator that displays the acttive page number alongside the total num
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>next<span class="token punctuation">"</span></span> <span class="token attr-name">aria-controls</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Next<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-<p>The component implementation needs to react to changes in the default slot and update the total
-number of pages in the status label. It also needds to set and show the active page when pressing
-the buttons to navigate.</p>
+<p>The component needs to react to changes in the default slot to set the total number of pages in the
+status label. It also needds to set and show the active page when pressing the buttons to navigate.</p>
 <h3>Using the slotchange event to react to updates</h3>
 <p>Whenever elements are assigned to a slot a <code>slotchange</code> event is dispatched. By adding an event
-listener for these events we can update the status indicator to show the total number of pages.
-This may only happen once when the document is first loaded or multiple times depending on how the
-pages are displayed.</p>
-<p>If we start with a basic implementation of the pagination component we can add an event listener
-and display the active page by controlling the CSS display property of the pages.</p>
+listener for these we can update the status indicator to show the total number of pages. This may
+only happen once when the document is first loaded or multiple times depending on how the pages
+are displayed.</p>
+<p>Let's start with a basic implementation of the pagination component. We'll add an event listener for
+the slot change and display the active page by setting the CSS display property of the pages.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Pagination</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   <span class="token comment">// Currently selected page index</span>
   #selectedPageIndex <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -602,7 +601,7 @@ and display the active page by controlling the CSS display property of the pages
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>shadowRoot<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment">// Listen for slot changes to store reference to the pages elements</span>
-    <span class="token comment">// and set the page selection status</span>
+    <span class="token comment">// and set the active page</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>shadowRoot
       <span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"slot"</span><span class="token punctuation">)</span>
       <span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"slotchange"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
@@ -616,11 +615,11 @@ and display the active page by controlling the CSS display property of the pages
   <span class="token punctuation">}</span>
 
   <span class="token function">#setSelectedPage</span><span class="token punctuation">(</span><span class="token parameter">pageIndex</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Display only page index</span>
+    <span class="token comment">// Display only the active page</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#pages<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#selectedPageIndex<span class="token punctuation">]</span><span class="token operator">?.</span>style<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"display"</span><span class="token punctuation">,</span> <span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#pages<span class="token punctuation">[</span>pageIndex<span class="token punctuation">]</span><span class="token operator">?.</span>style<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"display"</span><span class="token punctuation">,</span> <span class="token string">"block"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token comment">// Store the new page index</span>
+    <span class="token comment">// Store the new active page index</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectedPageIndex <span class="token operator">=</span> pageIndex<span class="token punctuation">;</span>
 
     <span class="token comment">// Update indicator to show selected page</span>
@@ -634,13 +633,14 @@ and display the active page by controlling the CSS display property of the pages
     <div class="page" role="group">Page three</div>
   </my-pagination>
 </div>
-<p>This works well to update the status indicator and display the active page. Next we'll add a component
-that is responsible for animating the page changes and look at how we handle inter-component reactivity.</p>
+<p>This already works well to update the status indicator and display the active page. Next we'll add a
+component that animates the page changes and look at how we handle inter-component reactivity.</p>
 <h3>Using events for web component interactivity</h3>
-<p>If we move the responsibility of displaying the pages to a new <code>PageFlip</code> component that displays the
-active page by way of an animation we'll need a way to notify the pagination component so that the
-status indicator can continue to be updated. We'll use the <code>activePage</code> property we've already seen
-to control thie visible page when the navigation buttons are clicked and introduce a
+<p>If we move the responsibility of displaying the active page with an animation to a new <code>PageFlip</code>
+component we'll need it to provide a way to notify the <code>Pagination</code> component of changes to update
+the status indicator.</p>
+<p>The <code>PageFlip</code> component will expose an <code>activePage</code> property (we saw this earlier) to control thie
+visible page when the navigation buttons are clicked. For the reactivity pattern we'll use a
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">custom event</a> named <code>pagechange</code> that is dispatched when the active page or total
 number of pages changes. The event is set to bubble so we can apply the listener to the slot
 element and not to the <code>PageFlip</code> component directly.</p>
@@ -664,7 +664,7 @@ element and not to the <code>PageFlip</code> component directly.</p>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <p>Adding the page flip means the default slot now plays host to this component and the slot change event
-we used previously will be dispatched when this element is assigned.</p>
+we used previously will be dispatched only when this element is assigned.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-pagination</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-page-flip</span> <span class="token attr-name">active-page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>Page one<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
@@ -672,8 +672,9 @@ we used previously will be dispatched when this element is assigned.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>Page three<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-page-flip</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-pagination</span><span class="token punctuation">></span></span></code></pre>
-<p>We'll update the <code>Pagination</code> component to add the <code>pagechange</code> event listener. This component is
-simpler now and only responsible for setting the active page index and updating the status indicator.</p>
+<p>We'll update the <code>Pagination</code> component to remove the page display functionality and add the <code>pagechange</code>
+event listener. This component is simpler now and only responsible for navigating pages and setting the
+status indicator label.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Pagination</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   <span class="token comment">// Page selection indicator</span>
   #selectionIndicator <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
@@ -682,7 +683,7 @@ simpler now and only responsible for setting the active page index and updating 
   #animationContainer <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
 
   <span class="token function">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// ...attach shadow root, apply the template and add button event listeners</span>
+    <span class="token comment">// ...attach shadow root, apply the template and add button event listeners to set activePage</span>
 
     <span class="token comment">// Store a reference to the selected page indicator</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator <span class="token operator">=</span> shadow<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -709,19 +710,19 @@ simpler now and only responsible for setting the active page index and updating 
     <div class="page" role="group">Page three</div>
   </my-page-flip>
 </my-pagination-event>
-<p>Events are fundamental to how we build user interfaces. By applying this pattern to our own
-components we are able to split our applications into discrete elements that can be combined to
-create rich user experiences.</p>
+<p>Events are fundamental to how we build user interfaces on the web with all kinds of existing events. By
+applying this pattern to our own components we are able to split our applications into discrete parts that
+can be combined together to create rich user experiences.</p>
 <h3>Using a MutationObserver to react to sub component updates</h3>
 <p>Sometimes, we might not have an event like <code>pagechange</code> available. Maybe we have to deal with
 integrating a new feature into a legacy codebase or use a third party library we have no control
 over. In these scenarios we can achieve a similar result with a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"><code>MutationObserver</code></a>
 to observe changes to the attributes and children of the element.</p>
-<p>This approach will rely on the <code>active-page</code> attribute correctly reflecting the <code>activePage</code>
+<p>This approach here will rely on the <code>active-page</code> attribute correctly reflecting the <code>activePage</code>
 property value and some confidence that the list of pages are the elements direct children (although,
-we could also apply the observer to the entire subtree).</p>
+we could also apply the observer to the entire element subtree).</p>
 <p>Here's what the <code>Pagination</code> component would look like if we updated it to use a <code>MutationObserver</code> to
-control the status indicator.</p>
+control the status indicator instead of the <code>pagechange</code> event.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Pagination</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   <span class="token comment">// Page selection indicator</span>
   #selectionIndicator <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
@@ -732,16 +733,20 @@ control the status indicator.</p>
   <span class="token comment">// Mutation observer reference</span>
   #observer <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
 
-  <span class="token function">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// ...attach shadow root, apply the template and add button event listeners</span>
-
-    <span class="token comment">// Store a reference to the selected page indicator</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator <span class="token operator">=</span> shadow<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment">// On mutations update the selected page status</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MutationObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
       <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">#setSelectedPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// ...attach shadow root, apply the template and add button event listeners to set activePage</span>
+
+    <span class="token comment">// Store a reference to the selected page indicator</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator <span class="token operator">=</span> shadow<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment">// Listen for slot changes to store reference to the page flip component</span>
     <span class="token comment">// and observe for mutations within it</span>
@@ -770,18 +775,11 @@ control the status indicator.</p>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Page </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>page<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>totalPages<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<my-pagination-mutation class="pagination" aria-roledescription="carousel" aria-label="Example pagination container with animation">
-  <my-page-flip active-page="0">
-    <div class="page" role="group">Page one</div>
-    <div class="page" role="group">Page two</div>
-    <div class="page" role="group">Page three</div>
-  </my-page-flip>
-</my-pagination-mutation>
 <h2>Takeaway</h2>
-<p>Custom events are a power tool for implementing components that both work in isolation and can be combined,
-without coupling, to create dynamic applications for the web. Consider also the encapsulation of state
-through the use of custom property getters and setters and a pragmatic approach of reflecting this to attribute
-values and we have some robust patterns for adding reactivity to our component development.</p>
+<p>Custom events are a power tool for implementing components that both work in isolation and can be combined to
+create dynamic applications for the web. Consider also the encapsulation of state through the use of custom
+property getters and setters and a pragmatic approach of reflecting this to attribute values and we have some
+solid patterns for adding reactivity to our component development.</p>
 <style>
 .pagination {
   height: 300px;
