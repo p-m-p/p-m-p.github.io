@@ -8,6 +8,14 @@ export class PaginationMutation extends HTMLElement {
   // Mutation observer reference
   #observer = null;
 
+  constructor() {
+    super();
+
+    this.#observer = new MutationObserver(() => {
+      this.#setSelectedPage();
+    });
+  }
+
   connectedCallback() {
     // Attach a shadow root using the template
     const shadow = this.attachShadow({ mode: "open" });
@@ -17,10 +25,6 @@ export class PaginationMutation extends HTMLElement {
 
     // Store a reference to the selected page indicator
     this.#selectionIndicator = shadow.getElementById("status");
-
-    this.#observer = new MutationObserver(() => {
-      this.#setSelectedPage();
-    });
 
     // Listen for slot changes to store reference to the animation container
     shadow.querySelector("slot").addEventListener("slotchange", (ev) => {
