@@ -109,7 +109,7 @@ class PageFlip extends HTMLElement {
 
 Custom elements ([Web Components][web-components], I'll refer to them as components for the rest of
 the article) can define [slots][templates-and-slots] to inject content into the component tree at
-specified locations. I won't incldde the full implementation of each component here but you can
+specified locations. I won't include the full implementation of each component here but you can
 [view the code][code-examples] for the examples. When the element or elements in the slot update
 we may need to react to this change, let's explore some ways to deal with this reactivity pattern.
 
@@ -132,7 +132,7 @@ indicator that displays the acttive page number alongside the total number of pa
 ```
 
 The component needs to react to changes in the default slot to set the total number of pages in the
-status label. It also needds to set and show the active page when pressing the buttons to navigate.
+status label. It also needs to set and show the active page when pressing the buttons to navigate.
 
 ### Using the slotchange event to react to updates
 
