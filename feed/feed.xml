@@ -90,7 +90,7 @@ function and letting the callback handle updating the property value.&lt;/p&gt;
 &lt;h2&gt;Reacting to changes in sub-components&lt;/h2&gt;
 &lt;p&gt;Custom elements (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components&quot;&gt;Web Components&lt;/a&gt;, I&#39;ll refer to them as components for the rest of
 the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt; to inject content into the component tree at
-specified locations. I won&#39;t incldde the full implementation of each component here but you can
+specified locations. I won&#39;t include the full implementation of each component here but you can
 &lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the code&lt;/a&gt; for the examples. When the element or elements in the slot update
 we may need to react to this change, let&#39;s explore some ways to deal with this reactivity pattern.&lt;/p&gt;
 &lt;p&gt;We&#39;ll implement a pagination component that provides controls for navigating through a list of pages.
@@ -108,7 +108,7 @@ indicator that displays the acttive page number alongside the total number of pa
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The component needs to react to changes in the default slot to set the total number of pages in the
-status label. It also needds to set and show the active page when pressing the buttons to navigate.&lt;/p&gt;
+status label. It also needs to set and show the active page when pressing the buttons to navigate.&lt;/p&gt;
 &lt;h3&gt;Using the slotchange event to react to updates&lt;/h3&gt;
 &lt;p&gt;Whenever elements are assigned to a slot a &lt;code&gt;slotchange&lt;/code&gt; event is dispatched. By adding an event
 listener for these we can update the status indicator to show the total number of pages. This may

@@ -557,7 +557,7 @@ function and letting the callback handle updating the property value.</p>
 <h2>Reacting to changes in sub-components</h2>
 <p>Custom elements (<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components">Web Components</a>, I'll refer to them as components for the rest of
 the article) can define <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots">slots</a> to inject content into the component tree at
-specified locations. I won't incldde the full implementation of each component here but you can
+specified locations. I won't include the full implementation of each component here but you can
 <a href="https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns">view the code</a> for the examples. When the element or elements in the slot update
 we may need to react to this change, let's explore some ways to deal with this reactivity pattern.</p>
 <p>We'll implement a pagination component that provides controls for navigating through a list of pages.
@@ -575,7 +575,7 @@ indicator that displays the acttive page number alongside the total number of pa
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
 <p>The component needs to react to changes in the default slot to set the total number of pages in the
-status label. It also needds to set and show the active page when pressing the buttons to navigate.</p>
+status label. It also needs to set and show the active page when pressing the buttons to navigate.</p>
 <h3>Using the slotchange event to react to updates</h3>
 <p>Whenever elements are assigned to a slot a <code>slotchange</code> event is dispatched. By adding an event
 listener for these we can update the status indicator to show the total number of pages. This may
