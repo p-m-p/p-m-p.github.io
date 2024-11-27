@@ -11,7 +11,12 @@ description: Web developer and bike enthusiast from London, UK
   <title>{{ title or metadata.title }}</title>
   <meta name="description" content="{{ description or metadata.description }}">
 
+
+{%- if tags.length > 0 %}
+  <meta property="og:type" content="article">
+{%- else %}
   <meta property="og:type" content="website">
+{%- endif %}
   <meta property="og:url" content="https://philparsons.co.uk{{ page.url }}">
   <meta property="og:title" content="{{ title }}">
   <meta property="og:description" content="{{ description }}">
