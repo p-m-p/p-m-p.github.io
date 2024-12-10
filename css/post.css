@@ -68,12 +68,17 @@
   line-height: 1.2;
 }
 
+.post-meta {
+  display: flex;
+  flex-flow: row-reverse;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
 .post-date {
   color: light-dark(var(--color-secondary-darker),
       var(--color-secondary-light));
   font-size: 0.875rem;
-  padding: 0.5rem 0;
-  text-align: right;
 }
 
 .post-content {
@@ -178,12 +183,4 @@
     animation-timeline: scroll();
     animation-range: 0 500px;
   }
-}
-
-/* Need to add a component for this */
-.note {
-  background: var(--bg-highlight);
-  font-size: 1rem;
-  margin: 0 0 1rem;
-  padding: 1rem;
 }

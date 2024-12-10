@@ -23,7 +23,25 @@ layout: layouts/base.njk
   <header class="post-header">
     <div class="container">
       <h1 class="post-title">{{ title }}</h1>
-      <div class="post-date"><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></div>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></div>
+
+        <share-button>
+          <ul class="share-fallback">
+            <li>
+              <a href="https://bsky.app/intent/compose?text={{ title | urlencode }}%20https://philparsons.co.uk/{{ page.url }}">Share on Bluesky</a>
+            </li>
+            <li>
+              <a href="{{ social.linkedIn.url }}?url=https://philparsons.co.uk/{{ page.url }}&title={{ title | urlencode }}">Share on LinkedIn</a>
+            </li>
+            <li>
+              <a href="{{ social.x.url }}?url=https://philparsons.co.uk/{{ page.url }}&text={{ title | urlencode }}&via={{ social.x.username | urlencode }}">Post on X</a>
+            </li>
+            <li><copy-to-clipboard text="https://philparsons.co.uk{{ page.url }}">Copy link</copy-to-clipboard></li>
+          </ul>
+        </share-button>
+      </div>
     </div>
   </header>
 
