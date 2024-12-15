@@ -91,10 +91,11 @@
 }
 
 .post-meta {
+  align-items: baseline;
   display: flex;
-  flex-flow: row-reverse;
-  gap: 1rem;
-  padding: 0.5rem 0;
+  gap: 1.5rem;
+  justify-content: right;
+  padding: 1rem 0 0.5rem;
 }
 
 .post-date {
@@ -137,6 +138,14 @@
     overflow: auto;
     padding: 0.5rem;
   }
+
+  img {
+    background: var(--bg-highlight);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 1rem;
+  }
 }
 
 .post-description {
@@ -153,13 +162,46 @@
   line-height: 1.75;
 }
 
+.share-fallback {}
+
+#share-fallback-links {
+  border: none;
+  left: 50%;
+  min-width: 240px;
+  padding: 1rem;
+  top: 25%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: var(--bg-highlight);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
 @media (width >=600px) {
   .post-header {
     padding: 2rem 0 0;
   }
 
   .post-date {
-    padding: 1rem 0;
     font-size: 1rem;
   }
 }
@@ -418,7 +460,6 @@ body {
 a {
   color: var(--color-link-primary);
   font-weight: 500;
-  outline: 0;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
   text-decoration-color: var(--color-link-underline);
@@ -476,8 +517,32 @@ a {
 
       <div class="post-meta">
         <div class="post-date"><time datetime="2024-10-27">27 October 2024</time></div>
+
+        <share-button>
+          <button class="share-btn" slot="share-btn" popovertarget="share-fallback-links">
+            Share
+            <span class="share-btn-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback-links">
+            <h2>Share this post</h2>
+            <ul>
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Generating%20entry%20points%20for%20TypeScript%20packages%20https://philparsons.co.uk//blog/typescript-package-entry-points/">Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&title=Generating%20entry%20points%20for%20TypeScript%20packages">Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&text=Generating%20entry%20points%20for%20TypeScript%20packages&via=phil_parsons">Share on X</a>
+              </li>
+            </ul>
+          </div>
+        </share-button></div>
       </div>
-    </div>
+    
   </header>
 
   <main class="post-content container">
@@ -608,11 +673,13 @@ library internals that may be subject to change in the future.</p>
   <footer class="post-footer">
     <div class="container">
       <div class="licence">
-        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
       </div>
     </div>
   </footer>
 </article>
+
+<script src="/js/posts.js" type="module" defer=""></script>
 
 
   
