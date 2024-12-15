@@ -13,7 +13,6 @@ tags:
   - html
   - css
 draft: true
-script: /web-component-fouc/index.js
 ---
 
 ## What is FOUC and how does it apply to web components?
@@ -42,21 +41,35 @@ the component.
 <share-button>
   <ul class="share-fallback">
     <li>
-      <a href="https://bsky.app/intent/compose?text={{title}}%20{{url}}">Share on Bluesky</a>
+      <a href="https://bsky.app/intent/compose?text={title}%20{url}">Share on Bluesky</a>
     </li>
     <li>
-      <a href="https://www.linkedin.com/shareArticle?url={{url}}&amp;title={{title}}">Share on LinkedIn</a>
+      <a href="https://www.linkedin.com/shareArticle?url={url}&title={title}">Share on LinkedIn</a>
     </li>
     <li>
-      <a href="https://x.com/intent/post?url={{url}}&text={{title}}&via={{author}}">Post on X</a>
+      <a href="https://x.com/intent/post?url={url}&text={title}&via={author}">Post on X</a>
     </li>
-    <li><copy-to-clipboard text="{{url}}">Copy link</copy-to-clipboard></li>
+    <li><copy-to-clipboard text="{url}">Copy link</copy-to-clipboard></li>
   </ul>
 </share-button>
 ```
 
-Before applying any styles to this list it presents an opportunity to discuss [Cumulative
-Layout Shift][cls] (CLS). While
+Before applying any styles to the list we can take a look at how a FOUC can lead to an
+unwanted [cumulative layout shift][cls] (CLS). The share button takes up less vertical
+space than the list of links and causes the the page beneath the header to shift upwards
+once the share button component has rendered.
+
+<img src="./cls-comparison.webp" alt="Two screenshots side by side to compare the layout shift between the default list of links and the share button">
+
+### How to mitigate the cumulative layout shift
+
+To resolve the CLS issue the list of fallback links needs to have the same height as
+the share button. This could be done by displaying the list items inline but this
+will still cause the _flash of unstyled content_ before the share button is rendered.
+A better solution is to make the fallback look as similr to the share button as
+possible. In this case I decided to use a popover to show the links so that the same
+trigger button can be used for both states.
 
 [navigator-share]: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
 [cls]: https://web.dev/articles/cls
+[popover]: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover

@@ -1,9 +1,20 @@
+import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { DateTime } from "luxon";
 
 export default function(eleventyConfig) {
+  eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
+    extensions: "html",
+    formats: ["webp", "jpeg"],
+    // widths: ["auto"],
+    defaultAttributes: {
+      loading: "lazy",
+      decoding: "async",
+    },
+  });
   eleventyConfig.addPassthroughCopy("img");
+
   eleventyConfig.addBundle("css");
   eleventyConfig.addWatchTarget("css");
 
