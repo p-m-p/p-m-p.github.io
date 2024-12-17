@@ -1,3 +1,10 @@
+figure {}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
 .container {
   margin: 0 auto;
   max-width: 1024px;
@@ -140,24 +147,39 @@
   line-height: 1.75;
 }
 
-.share-fallback {}
-
-#share-fallback-links {
+#share-fallback {
+  background: black;
   border: none;
+  border-radius: 1rem;
   left: 50%;
-  min-width: 240px;
-  padding: 1rem;
-  top: 25%;
+  min-width: 280px;
+  padding: 2rem;
+  top: 50%;
   transform: translate(-50%, -50%);
 
   &::backdrop {
-    background: var(--bg-highlight);
+    background: rgb(0 0 0 / 40%);
   }
+}
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
   }
 }
 

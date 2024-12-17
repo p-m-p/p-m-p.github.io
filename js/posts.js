@@ -7,9 +7,15 @@ class ShareButton extends HTMLElement {
         document
           .querySelector("meta[property='og:url']")
           ?.getAttribute("content") ?? location.href;
+    }
+
+    if (!text) {
       text = document
         .querySelector("meta[property='og:description']")
         ?.getAttribute("content");
+    }
+
+    if (!title) {
       title =
         document
           .querySelector("meta[property='og:title']")
@@ -19,10 +25,7 @@ class ShareButton extends HTMLElement {
     const data = { url, text, title };
 
     if (navigator.canShare(data)) {
-      const shadow = this.attachShadow({ mode: "open" });
-      shadow.innerHTML = `<slot name="share-btn"><button type="button">Share that</button></slot>`;
-
-      shadow.querySelector("slot").addEventListener("click", async () => {
+      this.shadowRoot.addEventListener("click", async () => {
         try {
           await navigator.share(data);
         } catch (e) { }

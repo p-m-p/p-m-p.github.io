@@ -28,28 +28,33 @@ layout: layouts/base.njk
         <div class="post-date"><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></div>
 
         <share-button>
-          <button class="share-btn" slot="share-btn" popovertarget="share-fallback-links">
+          <template shadowrootmode="open">
+            <slot name="share-btn"></slot>
+          </template>
+          <button class="share-btn" slot="share-btn" popovertarget="share-fallback">
             Share
             <span class="share-btn-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>
             </span>
           </button>
 
-          <div popover id="share-fallback-links">
-            <h2>Share this post</h2>
-            <ul>
+          <div popover id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
               <li>
-                <a href="https://bsky.app/intent/compose?text={{ title | urlencode }}%20https://philparsons.co.uk/{{ page.url }}">Share on Bluesky</a>
+                <a href="https://bsky.app/intent/compose?text={{ title | urlencode }}%20https://philparsons.co.uk/{{ page.url }}">🦋 Share on Bluesky</a>
               </li>
               <li>
-                <a href="{{ social.linkedIn.url }}?url=https://philparsons.co.uk/{{ page.url }}&title={{ title | urlencode }}">Share on LinkedIn</a>
+                <a href="{{ social.linkedIn.url }}?url=https://philparsons.co.uk/{{ page.url }}&title={{ title | urlencode }}">🏢 Share on LinkedIn</a>
               </li>
               <li>
-                <a href="{{ social.x.url }}?url=https://philparsons.co.uk/{{ page.url }}&text={{ title | urlencode }}&via={{ social.x.username | urlencode }}">Share on X</a>
+                <a href="{{ social.x.url }}?url=https://philparsons.co.uk/{{ page.url }}&text={{ title | urlencode }}&via={{ social.x.username | urlencode }}">
+                  💩 Share on X
+                </a>
               </li>
             </ul>
           </div>
-        </div>
+        </share-button>
       </div>
     </div>
   </header>
