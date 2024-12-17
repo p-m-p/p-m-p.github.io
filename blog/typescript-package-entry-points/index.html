@@ -20,7 +20,14 @@
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
-  <style>.container {
+  <style>figure {}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
   margin: 0 auto;
   max-width: 1024px;
   padding: 0 1rem;
@@ -162,24 +169,39 @@
   line-height: 1.75;
 }
 
-.share-fallback {}
-
-#share-fallback-links {
+#share-fallback {
+  background: black;
   border: none;
+  border-radius: 1rem;
   left: 50%;
-  min-width: 240px;
-  padding: 1rem;
-  top: 25%;
+  min-width: 280px;
+  padding: 2rem;
+  top: 50%;
   transform: translate(-50%, -50%);
 
   &::backdrop {
-    background: var(--bg-highlight);
+    background: rgb(0 0 0 / 40%);
   }
+}
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
   }
 }
 
@@ -520,30 +542,35 @@ a {
         <div class="post-date"><time datetime="2024-10-27">27 October 2024</time></div>
 
         <share-button>
-          <button class="share-btn" slot="share-btn" popovertarget="share-fallback-links">
+          <template shadowrootmode="open">
+            <slot name="share-btn"></slot>
+          </template>
+          <button class="share-btn" slot="share-btn" popovertarget="share-fallback">
             Share
             <span class="share-btn-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
             </span>
           </button>
 
-          <div popover="" id="share-fallback-links">
-            <h2>Share this post</h2>
-            <ul>
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
               <li>
-                <a href="https://bsky.app/intent/compose?text=Generating%20entry%20points%20for%20TypeScript%20packages%20https://philparsons.co.uk//blog/typescript-package-entry-points/">Share on Bluesky</a>
+                <a href="https://bsky.app/intent/compose?text=Generating%20entry%20points%20for%20TypeScript%20packages%20https://philparsons.co.uk//blog/typescript-package-entry-points/">🦋 Share on Bluesky</a>
               </li>
               <li>
-                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&title=Generating%20entry%20points%20for%20TypeScript%20packages">Share on LinkedIn</a>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&title=Generating%20entry%20points%20for%20TypeScript%20packages">🏢 Share on LinkedIn</a>
               </li>
               <li>
-                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&text=Generating%20entry%20points%20for%20TypeScript%20packages&via=phil_parsons">Share on X</a>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/typescript-package-entry-points/&text=Generating%20entry%20points%20for%20TypeScript%20packages&via=phil_parsons">
+                  💩 Share on X
+                </a>
               </li>
             </ul>
           </div>
-        </share-button></div>
+        </share-button>
       </div>
-    
+    </div>
   </header>
 
   <main class="post-content container">
