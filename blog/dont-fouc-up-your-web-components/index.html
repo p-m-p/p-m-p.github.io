@@ -709,8 +709,8 @@ layout shift.</p>
 <p>With <a href="https://web.dev/articles/declarative-shadow-dom">Declarative Shadow DOM</a> you can render the component from a
 template that is attached to the elements shadow root when the component HTML is parsed.
 Taking the share button example, the fallback content and button styling could be encapsulated
-in the component, something like this. The component can then replace the button functionality
-with the native share API call or do nothing and maintain the fallback.</p>
+in the component. The component can then replace the button functionality with the native share
+API call or do nothing and maintain the fallback.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>share-button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">shadowrootmode</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>open<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
