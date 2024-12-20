@@ -12,12 +12,17 @@
 	</url>
 	
 	<url>
+		<loc>/blog/dont-fouc-up-your-web-components/</loc>
+		<lastmod>2024-12-20</lastmod>
+	</url>
+	
+	<url>
 		<loc>/</loc>
-		<lastmod>2024-12-17</lastmod>
+		<lastmod>2024-12-20</lastmod>
 	</url>
 	
 	<url>
 		<loc>/feed/feed.xml</loc>
-		<lastmod>2024-12-17</lastmod>
+		<lastmod>2024-12-20</lastmod>
 	</url>
 </urlset>
