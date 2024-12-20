@@ -1,5 +1,11 @@
 class ShareButton extends HTMLElement {
   connectedCallback() {
+    const slot = document.createElement("slot");
+    slot.setAttribute("name", "share-btn");
+
+    const shadowRoot = this.attachShadow({ mode: "open" });
+    shadowRoot.appendChild(slot);
+
     let { url, text, title } = this.dataset;
 
     if (!url) {
@@ -25,7 +31,9 @@ class ShareButton extends HTMLElement {
     const data = { url, text, title };
 
     if (navigator.canShare(data)) {
-      this.shadowRoot.addEventListener("click", async () => {
+      slot.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+
         try {
           await navigator.share(data);
         } catch (e) { }

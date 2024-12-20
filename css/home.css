@@ -20,7 +20,7 @@
 
   img {
     display: block;
-    min-height: 440px;
+    height: 440px;
     object-fit: cover;
     width: 100%;
   }
