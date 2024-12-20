@@ -23,17 +23,18 @@ introduce even more opportunity to FOUC things up, especially with the use of Sh
 and slots.
 
 I recently bullt the share button for my website&mdash;up in header, feel free to use
-it&mdash;that gave me an opporunity to think and deal with both the flash of unstyled
-content and a signficant [cumulative layout shift][cls].
+it&mdash;that presented me with an opporunity to think about and deal with a flash of
+unstyled content _and_ a [cumulative layout shift][cls].
 
-Here's how I prevented it.
+Here's how I prevented both.
 
 ## The share button web component
 
 The share button is a small web component that attempts to use the [native share
 functionality][navigator-share] in the browser. At the time of writing this feature has
 good support across browsers but I wanted to also provide a fallback list of links as the
-initial content of the component.
+initial content of the component. Once the share button element is upgraded the list of
+links is replaced with a single share button.
 
 ```html
 <share-button>
@@ -51,12 +52,9 @@ initial content of the component.
 </share-button>
 ```
 
-Once the component is defined and connected the list of links is replaced with a single
-share button.
-
-Even after applying some styles to the list with this approach we can see that the share
-button takes up less vertical space than the list of links. When the button replaces the
-links the page beneath the header shifts upwards and causes a cumulative layout shift.
+Even after applying some styles to the list you can probably see that the share button will
+take up less vertical space. When the button replaces the links the page beneath the header
+will shift upwards and causes a cumulative layout shift.
 
 <figure>
   <img src="./cls-comparison.png" alt="Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards">
@@ -69,9 +67,9 @@ links the page beneath the header shifts upwards and causes a cumulative layout 
 
 To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn't go any way to removing the flash of unstyled content. To solve both issues
-at once I made the fallback work in a similar way to the the share button by using a popover
-to display the links and a button as the trigger.
+but that wouldn't go any way to resolving a flash of unstyled content, the links swapping to
+the button. To solve both issues I made the fallback work in a similar way to the the share
+button by using a popover to display the links with a button as the trigger.
 
 ```html
 <share-button>
