@@ -185,8 +185,8 @@ layout shift.
 With [Declarative Shadow DOM][declarative-shadow-dom] you can render the component from a
 template that is attached to the elements shadow root when the component HTML is parsed.
 Taking the share button example, the fallback content and button styling could be encapsulated
-in the component, something like this. The component can then replace the button functionality
-with the native share API call or do nothing and maintain the fallback.
+in the component. The component can then replace the button functionality with the native share
+API call or do nothing and maintain the fallback.
 
 ```html
 <share-button>
