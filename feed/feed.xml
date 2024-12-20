@@ -18,13 +18,13 @@
     <content type="html">&lt;h2&gt;What is FOUC and how does it apply to web components?&lt;/h2&gt;
 &lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Flash_of_unstyled_content&quot;&gt;flash of unstyled content&lt;/a&gt; (FOUC) occurs when content on a web page is visible
 before it has had styling applied to it. This can happen for a few reasons, often while
-loading images that are used in the site layout, usihg web fonts that either don&#39;t appear
+loading images that are used in the site layout, using web fonts that either don&#39;t appear
 until loaded or show differently or more commonly with JavaScript that applies styling to
 content already visible in the page. Web components are susceptible to all of this and
 introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
 and slots.&lt;/p&gt;
-&lt;p&gt;I recently bullt the share button for my website—up in header, feel free to use
-it—that presented me with an opporunity to think about and deal with a flash of
+&lt;p&gt;I recently built the share button for my website—up in header, feel free to use
+it—that presented me with an opportunity to think about and deal with a flash of
 unstyled content &lt;em&gt;and&lt;/em&gt; a &lt;a href=&quot;https://web.dev/articles/cls&quot;&gt;cumulative layout shift&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here&#39;s how I prevented both.&lt;/p&gt;
 &lt;h2&gt;The share button web component&lt;/h2&gt;
@@ -59,7 +59,7 @@ will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
 &lt;p&gt;To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
 but that wouldn&#39;t go any way to resolving a flash of unstyled content, the links swapping to
-the button. To solve both issues I made the fallback work in a similar way to the the share
+the button. To solve both issues I made the fallback work in a similar way to the share
 button by using a popover to display the links with a button as the trigger.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;button&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;popovertarget&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;share-fallback&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Share&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
