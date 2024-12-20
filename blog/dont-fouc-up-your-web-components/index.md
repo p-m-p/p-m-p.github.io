@@ -16,14 +16,14 @@ tags:
 
 A [flash of unstyled content][fouc] (FOUC) occurs when content on a web page is visible
 before it has had styling applied to it. This can happen for a few reasons, often while
-loading images that are used in the site layout, usihg web fonts that either don't appear
+loading images that are used in the site layout, using web fonts that either don't appear
 until loaded or show differently or more commonly with JavaScript that applies styling to
 content already visible in the page. Web components are susceptible to all of this and
 introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
 and slots.
 
-I recently bullt the share button for my website&mdash;up in header, feel free to use
-it&mdash;that presented me with an opporunity to think about and deal with a flash of
+I recently built the share button for my website&mdash;up in header, feel free to use
+it&mdash;that presented me with an opportunity to think about and deal with a flash of
 unstyled content _and_ a [cumulative layout shift][cls].
 
 Here's how I prevented both.
@@ -68,7 +68,7 @@ will shift upwards and causes a cumulative layout shift.
 To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
 but that wouldn't go any way to resolving a flash of unstyled content, the links swapping to
-the button. To solve both issues I made the fallback work in a similar way to the the share
+the button. To solve both issues I made the fallback work in a similar way to the share
 button by using a popover to display the links with a button as the trigger.
 
 ```html
