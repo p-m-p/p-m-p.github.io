@@ -581,14 +581,15 @@ content already visible in the page. Web components are susceptible to all of th
 introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
 and slots.</p>
 <p>I recently bullt the share button for my website—up in header, feel free to use
-it—that gave me an opporunity to think and deal with both the flash of unstyled
-content and a signficant <a href="https://web.dev/articles/cls">cumulative layout shift</a>.</p>
-<p>Here's how I prevented it.</p>
+it—that presented me with an opporunity to think about and deal with a flash of
+unstyled content <em>and</em> a <a href="https://web.dev/articles/cls">cumulative layout shift</a>.</p>
+<p>Here's how I prevented both.</p>
 <h2>The share button web component</h2>
 <p>The share button is a small web component that attempts to use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share">native share
 functionality</a> in the browser. At the time of writing this feature has
 good support across browsers but I wanted to also provide a fallback list of links as the
-initial content of the component.</p>
+initial content of the component. Once the share button element is upgraded the list of
+links is replaced with a single share button.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>share-button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">></span></span>
@@ -602,11 +603,9 @@ initial content of the component.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
-<p>Once the component is defined and connected the list of links is replaced with a single
-share button.</p>
-<p>Even after applying some styles to the list with this approach we can see that the share
-button takes up less vertical space than the list of links. When the button replaces the
-links the page beneath the header shifts upwards and causes a cumulative layout shift.</p>
+<p>Even after applying some styles to the list you can probably see that the share button will
+take up less vertical space. When the button replaces the links the page beneath the header
+will shift upwards and causes a cumulative layout shift.</p>
 <figure>
   <picture><source type="image/webp" srcset="/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.webp 1864w"><img loading="lazy" decoding="async" src="/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.jpeg" alt="Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards" width="1864" height="951"></picture>
   <figcaption>
@@ -616,9 +615,9 @@ links the page beneath the header shifts upwards and causes a cumulative layout 
 <h3>How to fix cumulative layout shift</h3>
 <p>To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn't go any way to removing the flash of unstyled content. To solve both issues
-at once I made the fallback work in a similar way to the the share button by using a popover
-to display the links and a button as the trigger.</p>
+but that wouldn't go any way to resolving a flash of unstyled content, the links swapping to
+the button. To solve both issues I made the fallback work in a similar way to the the share
+button by using a popover to display the links with a button as the trigger.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>share-button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">popovertarget</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>share-fallback<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Share<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 

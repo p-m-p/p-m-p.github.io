@@ -24,14 +24,15 @@ content already visible in the page. Web components are susceptible to all of th
 introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
 and slots.&lt;/p&gt;
 &lt;p&gt;I recently bullt the share button for my website—up in header, feel free to use
-it—that gave me an opporunity to think and deal with both the flash of unstyled
-content and a signficant &lt;a href=&quot;https://web.dev/articles/cls&quot;&gt;cumulative layout shift&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Here&#39;s how I prevented it.&lt;/p&gt;
+it—that presented me with an opporunity to think about and deal with a flash of
+unstyled content &lt;em&gt;and&lt;/em&gt; a &lt;a href=&quot;https://web.dev/articles/cls&quot;&gt;cumulative layout shift&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here&#39;s how I prevented both.&lt;/p&gt;
 &lt;h2&gt;The share button web component&lt;/h2&gt;
 &lt;p&gt;The share button is a small web component that attempts to use the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share&quot;&gt;native share
 functionality&lt;/a&gt; in the browser. At the time of writing this feature has
 good support across browsers but I wanted to also provide a fallback list of links as the
-initial content of the component.&lt;/p&gt;
+initial content of the component. Once the share button element is upgraded the list of
+links is replaced with a single share button.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -45,11 +46,9 @@ initial content of the component.&lt;/p&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once the component is defined and connected the list of links is replaced with a single
-share button.&lt;/p&gt;
-&lt;p&gt;Even after applying some styles to the list with this approach we can see that the share
-button takes up less vertical space than the list of links. When the button replaces the
-links the page beneath the header shifts upwards and causes a cumulative layout shift.&lt;/p&gt;
+&lt;p&gt;Even after applying some styles to the list you can probably see that the share button will
+take up less vertical space. When the button replaces the links the page beneath the header
+will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
 &lt;figure&gt;
   &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.webp 1864w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
   &lt;figcaption&gt;
@@ -59,9 +58,9 @@ links the page beneath the header shifts upwards and causes a cumulative layout 
 &lt;h3&gt;How to fix cumulative layout shift&lt;/h3&gt;
 &lt;p&gt;To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn&#39;t go any way to removing the flash of unstyled content. To solve both issues
-at once I made the fallback work in a similar way to the the share button by using a popover
-to display the links and a button as the trigger.&lt;/p&gt;
+but that wouldn&#39;t go any way to resolving a flash of unstyled content, the links swapping to
+the button. To solve both issues I made the fallback work in a similar way to the the share
+button by using a popover to display the links with a button as the trigger.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;button&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;popovertarget&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;share-fallback&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Share&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 
