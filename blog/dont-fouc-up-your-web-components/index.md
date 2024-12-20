@@ -4,6 +4,7 @@ description:
   A flash of unstlyed content (FOUC) doesn't just look bad, it could be hurting your
   core web vital score. Let's look at how to use progressive enhancement in web
   components to prevent such a FOUC up.
+date: 2024-12-20
 tags:
   - posts
   - web components
