@@ -3,10 +3,12 @@ title: Don't FOUC up your web components
 description:
   A flash of unstlyed content (FOUC) doesn't just look bad, it could be hurting your
   core web vital score. Let's look at how to use progressive enhancement in web
-  components to prevent a FOUC up.
+  components to prevent such a FOUC up.
 tags:
   - posts
-draft: true
+  - web components
+  - javascript
+  - html
 ---
 
 ## What is FOUC and how does it apply to web components?
@@ -158,8 +160,8 @@ can be used to prevent the flash of unstyled content.
 
 ### Hiding elements until they are defined
 
-One method is hiding the element until it has been defined. A quick search, or prompt to your
-_trusted_ AI, on this subject will likely lead you to the `:defined` CSS selector.
+A quick search, or prompt to your _trusted_ AI, on this subject will likely lead you to the
+`:defined` CSS selector.
 
 ```css
 /* Hide the element until it's defined */
@@ -180,19 +182,20 @@ layout shift.
 
 ### Declarative Shadow DOM
 
-With [Declarative Shadow DOM][declarative-shadow-dom] we can provide the component with a
-template that is attached to the elements shadow root as the component is parsed. Using the
-share button example from before the fallback could be provided in the template and the
-popover opened with JavaScript if the native share functionality can't be used.
+With [Declarative Shadow DOM][declarative-shadow-dom] you can render the component from a
+template that is attached to the elements shadow root when the component HTML is parsed.
+Taking the share button example, the fallback content and button styling could be encapsulated
+in the component, something like this. The component can then replace the button functionality
+with the native share API call or do nothing and maintain the fallback.
 
 ```html
 <share-button>
   <template shadowrootmode="open">
     <style>
-      /* Fallback styles */
+      /* Fallback and button styles */
     </style>
 
-    <slot name="share-btn"></slot>
+    <button popovertarget="share-fallback">Share</button>
 
     <div id="share-fallback" popover>
       <h2>Share this page</h2>
@@ -210,10 +213,13 @@ popover opened with JavaScript if the native share functionality can't be used.
       </ul>
     </div>
   </template>
-
-  <button slot="share-btn">Share</button>
 </share-button>
 ```
+
+This approach is probably more useful for content that is important for SEO as it can be
+rendered in HTML but only displayed once the component is upgraded. There won't be any
+issue with FOUC (unless the browser doesn't support Declarative Shadow DOM) but the
+potential for CLS still needs to be considered.
 
 [fouc]: https://en.wikipedia.org/wiki/Flash_of_unstyled_content
 [navigator-share]: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share

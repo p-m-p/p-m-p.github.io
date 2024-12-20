@@ -7,7 +7,6 @@ description:
 date: 2024-11-24
 tags:
   - posts
-  - web
   - web components
   - javascript
   - html
