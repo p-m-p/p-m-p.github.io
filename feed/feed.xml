@@ -5,7 +5,7 @@
   <subtitle>Web developer and bike enthusiast from London, UK</subtitle>
   <link href="https://philparsons.co.uk/feed/feed.xml" rel="self" />
   <link href="https://philparsons.co.uk/" />
-  <updated>2024-12-20T17:29:39Z</updated>
+  <updated>2024-12-20T00:00:00Z</updated>
   <id>https://philparsons.co.uk/</id>
   <author>
     <name>Phil Parsons</name>
@@ -13,7 +13,7 @@
   <entry>
     <title>Don&#39;t FOUC up your web components</title>
     <link href="https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/" />
-    <updated>2024-12-20T17:29:39Z</updated>
+    <updated>2024-12-20T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/</id>
     <content type="html">&lt;h2&gt;What is FOUC and how does it apply to web components?&lt;/h2&gt;
 &lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Flash_of_unstyled_content&quot;&gt;flash of unstyled content&lt;/a&gt; (FOUC) occurs when content on a web page is visible
