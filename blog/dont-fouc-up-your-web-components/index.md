@@ -16,14 +16,15 @@ tags:
 
 A [flash of unstyled content][fouc] (FOUC) occurs when content on a web page is visible
 before it has had styling applied to it. This can happen for a few reasons, often while
-loading images without dimensions, usihg web fonts or with JavaScript that applies
-styling to content already loaded and visible in the page. Web components are susceptible
-to all of this and introduce even more opportunity to FOUC things up, especially with
-the use of Shadow DOM and slots.
+loading images that are used in the site layout, usihg web fonts that either don't appear
+until loaded or show differently or more commonly with JavaScript that applies styling to
+content already visible in the page. Web components are susceptible to all of this and
+introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
+and slots.
 
-I recently bullt the share button for my website, up ihn header, feel free to use it, that
-gave me an opporunity to think and deal with both the flash of unstyled content and a
-signficant [cumulative layout shift][cls].
+I recently bullt the share button for my website&mdash;up in header, feel free to use
+it&mdash;that gave me an opporunity to think and deal with both the flash of unstyled
+content and a signficant [cumulative layout shift][cls].
 
 Here's how I prevented it.
 
