@@ -152,6 +152,9 @@ Add the slot attribute to the button.
 Now when the `share-button` element is upgraded the popover will no longer be displayed
 and only the native share functionality will be observed when the button is clicked.
 
+I've packaged the share button into a [shared component][package] you can easily use
+in your own website.
+
 ## Handling FOUC without a fallback
 
 The approach used to build the share button is one of [progressive enhancement][progressive-enhancement].
@@ -228,3 +231,4 @@ potential for CLS still needs to be considered.
 [progressive-enhancement]: https://www.gov.uk/service-manual/technology/using-progressive-enhancement
 [defined]: https://developer.mozilla.org/en-US/docs/Web/CSS/:defined
 [declarative-shadow-dom]: https://web.dev/articles/declarative-shadow-dom
+[package]: https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button
