@@ -541,8 +541,9 @@ a {
       <div class="post-meta">
         <div class="post-date"><time datetime="2024-12-20">20 December 2024</time></div>
 
+        <script type="module" src="https://cdn.jsdelivr.net/npm/@parsonic/share-button@0.2.1/dist/index.js" defer=""></script>
         <share-button>
-          <button class="share-btn" slot="share-btn" popovertarget="share-fallback">
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
             Share
             <span class="share-btn-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
@@ -685,6 +686,8 @@ named slot in which to place the button.</p>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
 <p>Now when the <code>share-button</code> element is upgraded the popover will no longer be displayed
 and only the native share functionality will be observed when the button is clicked.</p>
+<p>I've packaged the share button into a <a href="https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button">shared component</a> you can easily use
+in your own website.</p>
 <h2>Handling FOUC without a fallback</h2>
 <p>The approach used to build the share button is one of <a href="https://www.gov.uk/service-manual/technology/using-progressive-enhancement">progressive enhancement</a>.
 If the component does not have appropriate fallback or initial content then other options

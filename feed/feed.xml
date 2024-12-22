@@ -128,6 +128,8 @@ named slot in which to place the button.&lt;/p&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now when the &lt;code&gt;share-button&lt;/code&gt; element is upgraded the popover will no longer be displayed
 and only the native share functionality will be observed when the button is clicked.&lt;/p&gt;
+&lt;p&gt;I&#39;ve packaged the share button into a &lt;a href=&quot;https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button&quot;&gt;shared component&lt;/a&gt; you can easily use
+in your own website.&lt;/p&gt;
 &lt;h2&gt;Handling FOUC without a fallback&lt;/h2&gt;
 &lt;p&gt;The approach used to build the share button is one of &lt;a href=&quot;https://www.gov.uk/service-manual/technology/using-progressive-enhancement&quot;&gt;progressive enhancement&lt;/a&gt;.
 If the component does not have appropriate fallback or initial content then other options
