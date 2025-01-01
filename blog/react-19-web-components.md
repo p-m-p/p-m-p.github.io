@@ -1,5 +1,5 @@
 ---
-title: React supports web components, but it aint that simple
+title: A story of React web components and design system adoption
 description: React 19 shipped with long awaited support for custom HTML elements.
   Let's take a look at avoiding all of the foot guns when using a web component in
   React and TypeScript across client and server components.
@@ -85,8 +85,7 @@ export default function MyApp({ Component, pageProps }) {
 
 The error is gone and the page seems to be loading with the design system script. It doesn't
 seem like the best option to include everything from the design system but right now you just
-want to show progress to the team and get it working. You figure that you can remove the
-`"use client"` directive from the Tabs component now and move on to ading the tab content...
+want to show progress to the team and get it working. You move on to ading the tab content...
 
 ## Property 'acme-tabs' does not exist on type 'JSX.IntrinsicElements'
 
@@ -114,7 +113,7 @@ You check the project `tsconfig.json` file and see that the `jsx` compiler optio
 `preserve` and so make the update to include the react module.
 
 ```ts
-declare module "react" {
+declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'acme-tabs': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
@@ -129,6 +128,8 @@ need to use to make the tab labels smaller but when you add the attribute that r
 is back with an even longer TypeScript error message than before!.
 
 ```tsx
+'use client'
+
 export function Tabs() {
   return (
     <acme-tabs size="sm"></acme-tabs>
@@ -145,7 +146,7 @@ your struggles and eager to help solve it. "I think you need to add the size att
 element interface" she says before helping you update the code.
 
 ```ts
-declare module "react" {
+declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'acme-tabs': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
@@ -168,26 +169,108 @@ and you've made very little progress with the new application so decide to perse
 element types yourself.
 
 ```ts
-declare module "react" {
+declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'acme-tabs': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         size?: 'sm' | 'md' | 'lg'
       };
       'acme-tab': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        label: string
+        active?: boolean
       };
-    }
+      'acme-tabpanel': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
   }
 }
 ```
 
-This feels very wrong but you'll have to come back to it once you've shown some progress on the
-feature you've been assigned to work on. You add the logic to pull the tab content from the database
-and implement the Tabs component.
+This feels wrong but you'll have to come back to it later. You add the logic to pull the tab
+navigation items and content from the database and implement the Tabs component.
 
 ```tsx
+export interface TabProps extends PropsWithChildren {
+  tabs: {
+    id: string;
+    label: string;
+  }[];
+}
+
+export function Tabs({ tabs, children }: TabProps) {
+  const pathname = usePathname()
+
+  return (
+    <>
+      <acme-tabs size="sm">
+        {tabs.map(({ label, id }) => {
+          const href = `/${id}`;
+
+          return (
+            <acme-tab active={pathname === href} key={id}>
+              <Link slot="button" href={href}>{label}</Link>
+            </acme-tab>
+          );
+        })}
+      </acme-tabs>
+
+      <acme-tabpanel>{children}</acme-tabpanel>
+    </>
+  );
+}
 ```
+
+The design system components are working well! You apply the button slot to the router links so
+you can use the Next.js link component and the active tab styling works perfectly. You head home
+after a challenging day but feeling as though you made good progress and can get the work done.
+
+The next day one of the design system engineers stops by your desk to see how you are getting on
+with using the components. You walk them through the issues you faced and the temporary solutions
+you have put in place. They seem sympathetic and tell you that if you can continue with the
+workaround for now they'll look into it as they know another team will be using the components
+with React soon.
+
+While they are there you strike up a conversation on web components and ask how they are achieving
+the polymorphisn with components like the tabs through it's named slots. They describe a technique
+of using nested slots within the component template. Using the tab element as an example if you only
+need to provide a label for the button then you can add it in the default slot. If you want to
+provide your own element like a link then you can replace the default button element by using the
+named slot.
+
+```html
+<template>
+  <slot name="button">
+    <button type="button">
+      <slot></slot>
+    </button>
+  </slot>
+</template>
+
+<acme-tab>Button label</acme-tab>
+<acme-tab><a href="/section" slot="button">Link tab</a></acme-tab>
+```
+
+"That's pretty neat" you say, "how are you styling the link though? I thought with shadow dom you
+can't apply styling to the slotted elements". They go on to correct you and explain how you can use
+the `slotted` pseudo selector to style elements placed into a slot.
+
+```css
+::slotted(a) {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+```
+
+## Design system contribution model
+
+A couple of weeks pass. You've implemented a few features now for the application and had to define
+a number of the JSX element types for the design system components. In this time you've developed a
+good working relationship with the design system team through questions, feedback and minor issues
+you've faced when using the components. One morning the design system lead approaches you. "Hey, the
+team tell me you've been doing some great work with the design system in your app" he says
+enthusiastically, "There's a new project starting and they are also using React, would you be able
+to share the types you have created with them?". You explain to him that you've been adding them
+locally to the components as a temporary measure and that one of his team said they were looking at
+a permanent solution. "Yeah, we've not had time to look into it properly yet but it's on our backlog.
+Can I connect you with the team lead on the new project so you can help them get started?". You
+reluctantly agree knowing that he has skillfully made his problem, your problem.
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [react]: https://react.dev/learn
