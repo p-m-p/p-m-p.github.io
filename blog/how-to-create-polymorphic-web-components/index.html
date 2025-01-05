@@ -4,17 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to create a polymorhpic web component</title>
+  <title>How to create polymorhpic web components</title>
   <meta name="description" content="The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://philparsons.co.uk/blog/web-component-polymorphic-slots/">
-  <meta property="og:title" content="How to create a polymorhpic web component">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/how-to-create-polymorphic-web-components/">
+  <meta property="og:title" content="How to create polymorhpic web components">
   <meta property="og:description" content="The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://philparsons.co.uk/blog/web-component-polymorphic-slots/">
-  <meta property="twitter:title" content="How to create a polymorhpic web component">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/how-to-create-polymorphic-web-components/">
+  <meta property="twitter:title" content="How to create polymorhpic web components">
   <meta property="twitter:description" content="The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
@@ -514,7 +514,7 @@ a {
 
   <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
 
-  <title>How to create a polymorhpic web component</title>
+  <title>How to create polymorhpic web components</title>
 </head>
 
 <body>
@@ -538,7 +538,7 @@ a {
 <article class="post">
   <header class="post-header">
     <div class="container">
-      <h1 class="post-title">How to create a polymorhpic web component</h1>
+      <h1 class="post-title">How to create polymorhpic web components</h1>
 
       <div class="post-meta">
         <div class="post-date"><time datetime="2025-01-05">05 January 2025</time></div>
@@ -556,13 +556,13 @@ a {
             <h2 class="share-fallback-title">Share this post</h2>
             <ul class="share-fallback-links">
               <li>
-                <a href="https://bsky.app/intent/compose?text=How%20to%20create%20a%20polymorhpic%20web%20component%20https://philparsons.co.uk//blog/web-component-polymorphic-slots/">🦋 Share on Bluesky</a>
+                <a href="https://bsky.app/intent/compose?text=How%20to%20create%20polymorhpic%20web%20components%20https://philparsons.co.uk//blog/how-to-create-polymorphic-web-components/">🦋 Share on Bluesky</a>
               </li>
               <li>
-                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/web-component-polymorphic-slots/&title=How%20to%20create%20a%20polymorhpic%20web%20component">🏢 Share on LinkedIn</a>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/how-to-create-polymorphic-web-components/&title=How%20to%20create%20polymorhpic%20web%20components">🏢 Share on LinkedIn</a>
               </li>
               <li>
-                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/web-component-polymorphic-slots/&text=How%20to%20create%20a%20polymorhpic%20web%20component&via=phil_parsons">
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/how-to-create-polymorphic-web-components/&text=How%20to%20create%20polymorhpic%20web%20components&via=phil_parsons">
                   💩 Share on X
                 </a>
               </li>
@@ -580,10 +580,10 @@ a {
 are the <code>component</code> prop in <a href="https://mui.com/material-ui/guides/composition/#component-prop">MUI</a> and <a href="https://mantine.dev/guides/polymorphic/">Mantine</a>
 or the <a href="https://www.radix-ui.com/primitives/docs/utilities/slot">Slot</a> element in Radix. This polymorphism provides an mechanism to
 render an alternative element to the default and have the same styling and behaviours
-applied. In <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements">web components</a> the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot">slot</a> element can be used to
-achieve similar results.</p>
+applied. In <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements">web components</a> the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot">slot</a> element is used to achieve
+similar results.</p>
 <h2>Tabbed navigation components</h2>
-<p>Here is a set of web components for a tabbed navigation section. By default the tab
+<p>Here's a set of web components for a tabbed navigation section. By default the tab
 element currently displays a button that shows the associated tab panel when clicked.
 The component needs to also be used with a single tab panel and have the tabs render
 as links to navigate between sections.</p>
@@ -607,11 +607,11 @@ slot for the button label and applies styling to the button.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-<p>Trying to use this tab element as it is with a link in the slot will result in rendering
-the link inside the button element. To solve this use case the tab element could replace
-the button for a link if there was an <code>href</code> attribute or perhaps an event listener could
-be applied to the tab instead to initiate navigation. More often in application development
-a link component is provided by a framework, such as the Next.js <a href="https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component">Link component</a>,
+<p>Trying to use this tab element as is with a link in the slot will result in rendering the
+link inside the button element. To solve this use case the tab element could replace the
+button for a link if it has an <code>href</code> attribute or perhaps an event listener could be
+applied to the tab instead to drive navigation. More often in application development a
+link component is provided by a framework, such as the Next.js <a href="https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component">Link component</a>,
 and the tab should support this.</p>
 <pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Ends up with the anchor inside the button --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/tab-page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Link tab<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span>
@@ -619,7 +619,7 @@ and the tab should support this.</p>
 <span class="token comment">&lt;!-- This could work but won't allow the use of framework Link components --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/tab-page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Link tab<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span></code></pre>
 <h2>Layering slots</h2>
-<p>To achieve this polymorhpism in the tab element a named slot is added around the button to
+<p>To achieve this polymorphism in the tab element a named slot is added around the button to
 replace it with the provided element, the Next.js link.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
