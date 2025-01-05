@@ -1,5 +1,5 @@
 ---
-title: How to create a polymorhpic web component
+title: How to create polymorhpic web components
 description: The slot element provides us with the tools to create polymorhpic custom
   elements. This post explores how a tab element within a tabbed navigation section can
   be used with a Next.js link component.
@@ -15,12 +15,12 @@ React frameworks often have a concept of component polymorphism. Some examples o
 are the `component` prop in [MUI][mui-component-prop] and [Mantine][mantine-polymorphic]
 or the [Slot][radix-slot] element in Radix. This polymorphism provides an mechanism to
 render an alternative element to the default and have the same styling and behaviours
-applied. In [web components][custom-elements] the [slot][slot] element can be used to
-achieve similar results.
+applied. In [web components][custom-elements] the [slot][slot] element is used to achieve
+similar results.
 
 ## Tabbed navigation components
 
-Here is a set of web components for a tabbed navigation section. By default the tab
+Here's a set of web components for a tabbed navigation section. By default the tab
 element currently displays a button that shows the associated tab panel when clicked.
 The component needs to also be used with a single tab panel and have the tabs render
 as links to navigate between sections.
@@ -52,11 +52,11 @@ slot for the button label and applies styling to the button.
 </template>
 ```
 
-Trying to use this tab element as it is with a link in the slot will result in rendering
-the link inside the button element. To solve this use case the tab element could replace
-the button for a link if there was an `href` attribute or perhaps an event listener could
-be applied to the tab instead to initiate navigation. More often in application development
-a link component is provided by a framework, such as the Next.js [Link component][next-link],
+Trying to use this tab element as is with a link in the slot will result in rendering the
+link inside the button element. To solve this use case the tab element could replace the
+button for a link if it has an `href` attribute or perhaps an event listener could be
+applied to the tab instead to drive navigation. More often in application development a
+link component is provided by a framework, such as the Next.js [Link component][next-link],
 and the tab should support this.
 
 ```html
@@ -69,7 +69,7 @@ and the tab should support this.
 
 ## Layering slots
 
-To achieve this polymorhpism in the tab element a named slot is added around the button to
+To achieve this polymorphism in the tab element a named slot is added around the button to
 replace it with the provided element, the Next.js link.
 
 ```html
