@@ -14,7 +14,7 @@ tags:
 
 ## What is FOUC and how does it apply to web components?
 
-A [flash of unstyled content][fouc] (FOUC) occurs when content on a web page is visible
+A [flash of un-styled content][fouc] (FOUC) occurs when content on a web page is visible
 before it has had styling applied to it. This can happen for a few reasons, often while
 loading images that are used in the site layout, using web fonts that either don't appear
 until loaded or show differently or more commonly with JavaScript that applies styling to
@@ -24,7 +24,7 @@ and slots.
 
 I recently built the share button for my website&mdash;up in header, feel free to use
 it&mdash;that presented me with an opportunity to think about and deal with a flash of
-unstyled content _and_ a [cumulative layout shift][cls].
+un-styled content _and_ a [cumulative layout shift][cls].
 
 Here's how I prevented both.
 
@@ -67,7 +67,7 @@ will shift upwards and causes a cumulative layout shift.
 
 To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn't go any way to resolving a flash of unstyled content, the links swapping to
+but that wouldn't go any way to resolving a flash of un-styled content, the links swapping to
 the button. To solve both issues I made the fallback work in a similar way to the share
 button by using a popover to display the links with a button as the trigger.
 
@@ -159,7 +159,7 @@ in your own website.
 
 The approach used to build the share button is one of [progressive enhancement][progressive-enhancement].
 If the component does not have appropriate fallback or initial content then other options
-can be used to prevent the flash of unstyled content.
+can be used to prevent the flash of un-styled content.
 
 ### Hiding elements until they are defined
 
@@ -224,7 +224,7 @@ rendered in HTML but only displayed once the component is upgraded. There won't 
 issue with FOUC (unless the browser doesn't support Declarative Shadow DOM) but the
 potential for CLS still needs to be considered.
 
-[fouc]: https://en.wikipedia.org/wiki/Flash_of_unstyled_content
+[fouc]: https://en.wikipedia.org/wiki/Flash_of_un-styled_content
 [navigator-share]: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
 [cls]: https://web.dev/articles/cls
 [popover]: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover

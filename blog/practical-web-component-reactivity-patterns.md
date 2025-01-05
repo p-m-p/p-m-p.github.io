@@ -115,7 +115,7 @@ we may need to react to this change, let's explore some ways to deal with this r
 We'll implement a pagination component that provides controls for navigating through a list of pages.
 It'll need a template that defines the structure of the component with a default slot (the one that
 isn't named) to hold the pages, buttons to navigate to the next and previous page and a status
-indicator that displays the acttive page number alongside the total number of pages.
+indicator that displays the active page number alongside the total number of pages.
 
 ```html
 <template id="pagination-tmpl">
@@ -205,7 +205,7 @@ If we move the responsibility of displaying the active page with an animation to
 component we'll need it to provide a way to notify the `Pagination` component of changes to update
 the status indicator.
 
-The `PageFlip` component will expose an `activePage` property (we saw this earlier) to control thie
+The `PageFlip` component will expose an `activePage` property (we saw this earlier) to control the
 visible page when the navigation buttons are clicked. For the reactivity pattern we'll use a
 [custom event][custom-event] named `pagechange` that is dispatched when the active page or total
 number of pages changes. The event is set to bubble so we can apply the listener to the slot
@@ -369,7 +369,6 @@ create dynamic applications for the web. Consider also the encapsulation of stat
 property getters and setters and a pragmatic approach of reflecting this to attribute values and we have some
 solid patterns for adding reactivity to our component development.
 
-[code-examples]: https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns
 [reflected-attributes]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes
 [attribute-changes]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes
 [templates-and-slots]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots
