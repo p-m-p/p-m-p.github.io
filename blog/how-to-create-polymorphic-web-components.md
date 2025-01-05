@@ -9,21 +9,21 @@ tags:
 date: 2025-01-05
 ---
 
-## What are polymorphic components?
+## Polymorphic components
 
 React frameworks often have a concept of component polymorphism. Some examples of this
-are the `component` prop in [MUI][mui-component-prop] and [Mantine][mantine-polymorphic]
-or the [Slot][radix-slot] element in Radix. This polymorphism provides an mechanism to
-render an alternative element to the default and have the same styling and behaviours
-applied. In [web components][custom-elements] the [slot][slot] element is used to achieve
-similar results.
+can bee seen in the `component` prop in [MUI][mui-component-prop] and
+[Mantine][mantine-polymorphic] or the [Slot][radix-slot] element in Radix. This
+polymorphism provides an mechanism to render an alternative element to the default
+and have the same styling and behaviours applied. In [web components][custom-elements]
+the [slot][slot] element can achieve similar results.
 
 ## Tabbed navigation components
 
-Here's a set of web components for a tabbed navigation section. By default the tab
-element currently displays a button that shows the associated tab panel when clicked.
-The component needs to also be used with a single tab panel and have the tabs render
-as links to navigate between sections.
+Take this set of web components for a tabbed navigation section as an example. By
+default the tab element currently displays a button that shows the associated tab
+panel when clicked. The component needs to also support a single tab panel and
+have the tabs render as links to navigate between sections.
 
 ```html
 <my-tabs>
@@ -52,12 +52,11 @@ slot for the button label and applies styling to the button.
 </template>
 ```
 
-Trying to use this tab element as is with a link in the slot will result in rendering the
-link inside the button element. To solve this use case the tab element could replace the
-button for a link if it has an `href` attribute or perhaps an event listener could be
-applied to the tab instead to drive navigation. More often in application development a
-link component is provided by a framework, such as the Next.js [Link component][next-link],
-and the tab should support this.
+Trying to use this tab element with a link in the slot will result in rendering the link
+inside the button element. To solve this use case the tab element could replace the button
+for a link if it has an `href` attribute or perhaps a click event listener applied to the
+tab can drive the navigation. More often in application development a framework provides
+a link component and the tab needs to support this.
 
 ```html
 <!-- Ends up with the anchor inside the button -->
@@ -69,8 +68,8 @@ and the tab should support this.
 
 ## Layering slots
 
-To achieve this polymorphism in the tab element a named slot is added around the button to
-replace it with the provided element, the Next.js link.
+To achieve polymorphism in the tab element a named slot around the button replaces it with
+a provided element.
 
 ```html
 <template>
@@ -87,9 +86,9 @@ replace it with the provided element, the Next.js link.
 </template>
 ```
 
-Layering the slots in this way means the element can be used with just a label for the button
-as before or another element can be used in its place. Here a React component for the tab
-navigation uses the slot attribute on the Link component to replace the button.
+Layering the slots in this way means the element supports either a label for the button
+as before or another element to replace it. Here a React component for the tab navigation
+uses the slot attribute on a Next.js [Link component][next-link] to replace the button.
 
 ```jsx
 import Link from 'next/link';
@@ -109,10 +108,9 @@ export default function TabNavigation({ sections }) {
 
 ## Styling slotted elements
 
-The named slot replaces the button but the styling is not applied to the anchor element. To
-resolve this the slotted element needs to be targeted as well as the default button when
-applying the styles. This is achieved with the [`::slotted()`][slotted] pseudo-element
-selector.
+The named slot replaces the button but the styling doesn't get applied to the anchor element.
+To resolve this we change the styles to target the slotted element and the button using the
+[`::slotted()`][slotted] pseudo-element selector.
 
 ```html
 <template>
@@ -130,8 +128,8 @@ selector.
 </template>
 ```
 
-Now the style is applied to any slotted element but the selector can be narrowed to specific
-elements like the anchor or to selectors like a class name.
+Now the styling applies to any slotted element but the selector may also specify elements
+like an anchor or other selectors like a class name.
 
 ```css
 ::slotted(a) {
