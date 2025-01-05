@@ -656,7 +656,7 @@ we may need to react to this change, let's explore some ways to deal with this r
 <p>We'll implement a pagination component that provides controls for navigating through a list of pages.
 It'll need a template that defines the structure of the component with a default slot (the one that
 isn't named) to hold the pages, buttons to navigate to the next and previous page and a status
-indicator that displays the acttive page number alongside the total number of pages.</p>
+indicator that displays the active page number alongside the total number of pages.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pagination-tmpl<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">></span></span><span class="token comment">&lt;!-- default slot --></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
@@ -731,7 +731,7 @@ component that animates the page changes and look at how we handle inter-compone
 <p>If we move the responsibility of displaying the active page with an animation to a new <code>PageFlip</code>
 component we'll need it to provide a way to notify the <code>Pagination</code> component of changes to update
 the status indicator.</p>
-<p>The <code>PageFlip</code> component will expose an <code>activePage</code> property (we saw this earlier) to control thie
+<p>The <code>PageFlip</code> component will expose an <code>activePage</code> property (we saw this earlier) to control the
 visible page when the navigation buttons are clicked. For the reactivity pattern we'll use a
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">custom event</a> named <code>pagechange</code> that is dispatched when the active page or total
 number of pages changes. The event is set to bubble so we can apply the listener to the slot

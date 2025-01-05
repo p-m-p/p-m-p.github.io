@@ -576,7 +576,7 @@ a {
   <main class="post-content container">
     <p class="post-description">A flash of unstlyed content (FOUC) doesn&#39;t just look bad, it could be hurting your core web vital score. Let&#39;s look at how to use progressive enhancement in web components to prevent such a FOUC up.</p>
     <h2>What is FOUC and how does it apply to web components?</h2>
-<p>A <a href="https://en.wikipedia.org/wiki/Flash_of_unstyled_content">flash of unstyled content</a> (FOUC) occurs when content on a web page is visible
+<p>A <a href="https://en.wikipedia.org/wiki/Flash_of_un-styled_content">flash of un-styled content</a> (FOUC) occurs when content on a web page is visible
 before it has had styling applied to it. This can happen for a few reasons, often while
 loading images that are used in the site layout, using web fonts that either don't appear
 until loaded or show differently or more commonly with JavaScript that applies styling to
@@ -585,7 +585,7 @@ introduce even more opportunity to FOUC things up, especially with the use of Sh
 and slots.</p>
 <p>I recently built the share button for my website—up in header, feel free to use
 it—that presented me with an opportunity to think about and deal with a flash of
-unstyled content <em>and</em> a <a href="https://web.dev/articles/cls">cumulative layout shift</a>.</p>
+un-styled content <em>and</em> a <a href="https://web.dev/articles/cls">cumulative layout shift</a>.</p>
 <p>Here's how I prevented both.</p>
 <h2>The share button web component</h2>
 <p>The share button is a small web component that attempts to use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share">native share
@@ -618,7 +618,7 @@ will shift upwards and causes a cumulative layout shift.</p>
 <h3>How to fix cumulative layout shift</h3>
 <p>To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
 of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn't go any way to resolving a flash of unstyled content, the links swapping to
+but that wouldn't go any way to resolving a flash of un-styled content, the links swapping to
 the button. To solve both issues I made the fallback work in a similar way to the share
 button by using a popover to display the links with a button as the trigger.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>share-button</span><span class="token punctuation">></span></span>
@@ -693,7 +693,7 @@ in your own website.</p>
 <h2>Handling FOUC without a fallback</h2>
 <p>The approach used to build the share button is one of <a href="https://www.gov.uk/service-manual/technology/using-progressive-enhancement">progressive enhancement</a>.
 If the component does not have appropriate fallback or initial content then other options
-can be used to prevent the flash of unstyled content.</p>
+can be used to prevent the flash of un-styled content.</p>
 <h3>Hiding elements until they are defined</h3>
 <p>A quick search, or prompt to your <em>trusted</em> AI, on this subject will likely lead you to the
 <code>:defined</code> CSS selector.</p>
