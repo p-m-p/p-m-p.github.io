@@ -11,23 +11,37 @@
   --color-secondary-dark: #6b705c;
   --color-secondary-darker: #3f4238;
 
-  --color-text-primary: light-dark(var(--color-secondary-darker),
-      var(--color-primary-light));
-  --color-text-inverted: light-dark(var(--color-primary-light),
-      var(--color-secondary-darker));
+  --color-text-primary: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-light)
+  );
+  --color-text-inverted: light-dark(
+    var(--color-primary-light),
+    var(--color-secondary-darker)
+  );
 
   --color-link-primary: var(--color-text-primary);
-  --color-link-underline: light-dark(var(--color-secondary),
-      var(--color-primary));
-  --color-link-underline-hover: light-dark(var(--color-primary),
-      var(--color-primary-dark));
-  --color-link-visited: light-dark(var(--color-secondary-dark),
-      var(--color-secondary-light));
+  --color-link-underline: light-dark(
+    var(--color-secondary),
+    var(--color-primary)
+  );
+  --color-link-underline-hover: light-dark(
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  --color-link-visited: light-dark(
+    var(--color-secondary-dark),
+    var(--color-secondary-light)
+  );
 
-  --color-surface-primary: light-dark(var(--color-primary-lighter),
-      var(--color-secondary-darker));
-  --color-surface-inverted: light-dark(var(--color-secondary-darker),
-      var(--color-primary-lighter));
+  --color-surface-primary: light-dark(
+    var(--color-primary-lighter),
+    var(--color-secondary-darker)
+  );
+  --color-surface-inverted: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-lighter)
+  );
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
