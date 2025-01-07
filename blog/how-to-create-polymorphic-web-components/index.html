@@ -20,7 +20,8 @@
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
-  <style>figure {}
+  <style>figure {
+}
 
 figcaption {
   font-size: 0.875rem;
@@ -106,8 +107,10 @@ figcaption {
 }
 
 .post-date {
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
   font-size: 0.875rem;
 }
 
@@ -209,8 +212,10 @@ figcaption {
   align-items: center;
   background: transparent;
   border: none;
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
@@ -299,13 +304,13 @@ pre[class*="language-"] {
   hyphens: none;
 }
 
-:not(pre)>code[class*="language-"],
+:not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
 }
 
 /* Inline code */
-:not(pre)>code[class*="language-"] {
+:not(pre) > code[class*="language-"] {
   padding: 0.1em;
   border-radius: 0.3em;
   white-space: normal;
@@ -382,14 +387,13 @@ pre[class*="language-"] {
 }
 
 @media screen and (-ms-high-contrast: active) {
-
   code[class*="language-"],
   pre[class*="language-"] {
     color: windowText;
     background: window;
   }
 
-  :not(pre)>code[class*="language-"],
+  :not(pre) > code[class*="language-"],
   pre[class*="language-"] {
     background: window;
   }
@@ -438,23 +442,37 @@ pre[class*="language-"] {
   --color-secondary-dark: #6b705c;
   --color-secondary-darker: #3f4238;
 
-  --color-text-primary: light-dark(var(--color-secondary-darker),
-      var(--color-primary-light));
-  --color-text-inverted: light-dark(var(--color-primary-light),
-      var(--color-secondary-darker));
+  --color-text-primary: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-light)
+  );
+  --color-text-inverted: light-dark(
+    var(--color-primary-light),
+    var(--color-secondary-darker)
+  );
 
   --color-link-primary: var(--color-text-primary);
-  --color-link-underline: light-dark(var(--color-secondary),
-      var(--color-primary));
-  --color-link-underline-hover: light-dark(var(--color-primary),
-      var(--color-primary-dark));
-  --color-link-visited: light-dark(var(--color-secondary-dark),
-      var(--color-secondary-light));
+  --color-link-underline: light-dark(
+    var(--color-secondary),
+    var(--color-primary)
+  );
+  --color-link-underline-hover: light-dark(
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  --color-link-visited: light-dark(
+    var(--color-secondary-dark),
+    var(--color-secondary-light)
+  );
 
-  --color-surface-primary: light-dark(var(--color-primary-lighter),
-      var(--color-secondary-darker));
-  --color-surface-inverted: light-dark(var(--color-secondary-darker),
-      var(--color-primary-lighter));
+  --color-surface-primary: light-dark(
+    var(--color-primary-lighter),
+    var(--color-secondary-darker)
+  );
+  --color-surface-inverted: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-lighter)
+  );
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
@@ -576,17 +594,19 @@ a {
   <main class="post-content container">
     <p class="post-description">The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.</p>
     <h2>Polymorphic components</h2>
-<p>React frameworks often have a concept of component polymorphism. You can see examples of
-this in the <code>component</code> prop of <a href="https://mui.com/material-ui/guides/composition/#component-prop">MUI</a> and <a href="https://mantine.dev/guides/polymorphic/">Mantine</a>
-or the <a href="https://www.radix-ui.com/primitives/docs/utilities/slot">Slot</a> element in Radix. This polymorphism provides a mechanism to
-render an alternative element than the default use case but have the same styling and
-behaviours applied. In <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements">web components</a> features of the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot">slot</a>
-element provide similar results.</p>
+<p>React frameworks often have a concept of component polymorphism. You can see
+examples of this in the <code>component</code> prop of <a href="https://mui.com/material-ui/guides/composition/#component-prop">MUI</a> and
+<a href="https://mantine.dev/guides/polymorphic/">Mantine</a> or the <a href="https://www.radix-ui.com/primitives/docs/utilities/slot">Slot</a> element in Radix. This
+polymorphism provides a mechanism to render an alternative element than the
+default use case but have the same styling and behaviours applied. In <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements">web
+components</a> features of the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot">slot</a> element provide
+similar results.</p>
 <h2>Tabbed navigation components</h2>
-<p>Take a set of web components for a tabbed navigation section as an example. By default
-the tab element displays a button that shows an associated tab panel when clicked.
-The components need updating to support the use of a single tab panel where the tabs
-render as links to navigate between the different sections of tab content.</p>
+<p>Take a set of web components for a tabbed navigation section as an example. By
+default the tab element displays a button that shows an associated tab panel
+when clicked. The components need updating to support the use of a single tab
+panel where the tabs render as links to navigate between the different sections
+of tab content.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tabs</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span><span class="token punctuation">></span></span>Tab one<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span><span class="token punctuation">></span></span>Tab two<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span>
@@ -595,8 +615,9 @@ render as links to navigate between the different sections of tab content.</p>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tabpanel</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>Selected tab content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tabpanel</span><span class="token punctuation">></span></span></code></pre>
-<p>The <code>my-tab</code> component implementation uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM">Shadow DOM</a> with a template that
-has a default slot for the button label and applies styling to the button.</p>
+<p>The <code>my-tab</code> component implementation uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM">Shadow DOM</a> with a
+template that has a default slot for the button label and applies styling to the
+button.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
     <span class="token selector">button</span> <span class="token punctuation">{</span>
@@ -607,11 +628,12 @@ has a default slot for the button label and applies styling to the button.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-<p>Trying to use the component with a link in the slot as it stands results in rendering the
-anchor element inside the button. To show a link <em>instead</em> of the button it could render
-an anchor tag in the presence of an <code>href</code> or a click event listener applied to the tab
-could drive the navigation but neither option works well. In application development a
-framework often provides a link component tied to a router so the tab should support this.</p>
+<p>Trying to use the component with a link in the slot as it stands results in
+rendering the anchor element inside the button. To show a link <em>instead</em> of the
+button it could render an anchor tag in the presence of an <code>href</code> or a click
+event listener applied to the tab could drive the navigation but neither option
+works well. In application development a framework often provides a link
+component tied to a router so the tab should support this.</p>
 <pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Ends up with the anchor inside the button --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/tab-page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Link tab<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span>
 
@@ -621,8 +643,8 @@ framework often provides a link component tied to a router so the tab should sup
 --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/tab-page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Link tab<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span></code></pre>
 <h2>Layering slots</h2>
-<p>To solve the problem with polymorphism in the tab element a second, named, slot around
-the button replaces it with the provided element.</p>
+<p>To solve the problem with polymorphism in the tab element a second, named, slot
+around the button replaces it with the provided element.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
     <span class="token selector">button</span> <span class="token punctuation">{</span>
@@ -635,31 +657,34 @@ the button replaces it with the provided element.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-<p>Layering the slots in this way allows the element to support either a label for the button
-as before or another element to replace it. This example shows a React component implementation
-of the tab navigation that uses the slot attribute on a Next.js <a href="https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component">Link component</a>
-to replace the button.</p>
-<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> Link <span class="token keyword">from</span> <span class="token string">'next/link'</span><span class="token punctuation">;</span>
+<p>Layering the slots in this way allows the element to support either a label for
+the button as before or another element to replace it. This example shows a
+React component implementation of the tab navigation that uses the slot
+attribute on a Next.js <a href="https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component">Link component</a> to replace the button.</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> Link <span class="token keyword">from</span> <span class="token string">"next/link"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">TabNavigation</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> sections <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tabs</span><span class="token punctuation">></span></span><span class="token plain-text">
       </span><span class="token punctuation">{</span>sections<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> title<span class="token punctuation">,</span> path <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-tab</span> <span class="token attr-name">key</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>path<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
-          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Link</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>path<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>title<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Link</span></span><span class="token punctuation">></span></span><span class="token plain-text">
-        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span><span class="token plain-text">
-      ))}
-    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tabs</span><span class="token punctuation">></span></span><span class="token plain-text">
-  )
-}
-</span></code></pre>
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Link</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>path<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token punctuation">{</span>title<span class="token punctuation">}</span><span class="token plain-text">
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Link</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tab</span><span class="token punctuation">></span></span>
+      <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-tabs</span><span class="token punctuation">></span></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 <h2>Styling slotted elements</h2>
-<p>The named slot replaces the button but the button styling doesn't get applied to the anchor
-element. To resolve this an update to the style selector targets the slotted element as well
-as the button using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::slotted"><code>::slotted()</code></a> pseudo-element selector.</p>
+<p>The named slot replaces the button but the button styling doesn't get applied to
+the anchor element. To resolve this an update to the style selector targets the
+slotted element as well as the button using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::slotted"><code>::slotted()</code></a>
+pseudo-element selector.</p>
 <pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
-    <span class="token selector">button, ::slotted(*)</span> <span class="token punctuation">{</span>
+    <span class="token selector">button,
+    ::slotted(*)</span> <span class="token punctuation">{</span>
       <span class="token comment">/* button styles */</span>
     <span class="token punctuation">}</span>
   </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
@@ -669,8 +694,8 @@ as the button using the <a href="https://developer.mozilla.org/en-US/docs/Web/CS
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-<p>Now the styling applies to any slotted element but the selector may also specify certain
-elements like an anchor or other selectors like a class name.</p>
+<p>Now the styling applies to any slotted element but the selector may also specify
+certain elements like an anchor or other selectors like a class name.</p>
 <pre class="language-css"><code class="language-css"><span class="token selector">::slotted(a)</span> <span class="token punctuation">{</span>
   <span class="token comment">/* anchor styles */</span>
 <span class="token punctuation">}</span>

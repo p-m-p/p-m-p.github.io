@@ -16,17 +16,19 @@
     <updated>2025-01-05T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/how-to-create-polymorphic-web-components/</id>
     <content type="html">&lt;h2&gt;Polymorphic components&lt;/h2&gt;
-&lt;p&gt;React frameworks often have a concept of component polymorphism. You can see examples of
-this in the &lt;code&gt;component&lt;/code&gt; prop of &lt;a href=&quot;https://mui.com/material-ui/guides/composition/#component-prop&quot;&gt;MUI&lt;/a&gt; and &lt;a href=&quot;https://mantine.dev/guides/polymorphic/&quot;&gt;Mantine&lt;/a&gt;
-or the &lt;a href=&quot;https://www.radix-ui.com/primitives/docs/utilities/slot&quot;&gt;Slot&lt;/a&gt; element in Radix. This polymorphism provides a mechanism to
-render an alternative element than the default use case but have the same styling and
-behaviours applied. In &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements&quot;&gt;web components&lt;/a&gt; features of the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot&quot;&gt;slot&lt;/a&gt;
-element provide similar results.&lt;/p&gt;
+&lt;p&gt;React frameworks often have a concept of component polymorphism. You can see
+examples of this in the &lt;code&gt;component&lt;/code&gt; prop of &lt;a href=&quot;https://mui.com/material-ui/guides/composition/#component-prop&quot;&gt;MUI&lt;/a&gt; and
+&lt;a href=&quot;https://mantine.dev/guides/polymorphic/&quot;&gt;Mantine&lt;/a&gt; or the &lt;a href=&quot;https://www.radix-ui.com/primitives/docs/utilities/slot&quot;&gt;Slot&lt;/a&gt; element in Radix. This
+polymorphism provides a mechanism to render an alternative element than the
+default use case but have the same styling and behaviours applied. In &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements&quot;&gt;web
+components&lt;/a&gt; features of the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot&quot;&gt;slot&lt;/a&gt; element provide
+similar results.&lt;/p&gt;
 &lt;h2&gt;Tabbed navigation components&lt;/h2&gt;
-&lt;p&gt;Take a set of web components for a tabbed navigation section as an example. By default
-the tab element displays a button that shows an associated tab panel when clicked.
-The components need updating to support the use of a single tab panel where the tabs
-render as links to navigate between the different sections of tab content.&lt;/p&gt;
+&lt;p&gt;Take a set of web components for a tabbed navigation section as an example. By
+default the tab element displays a button that shows an associated tab panel
+when clicked. The components need updating to support the use of a single tab
+panel where the tabs render as links to navigate between the different sections
+of tab content.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tabs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Tab one&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Tab two&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -35,8 +37,9 @@ render as links to navigate between the different sections of tab content.&lt;/p
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tabpanel&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;p&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Selected tab content&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;p&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tabpanel&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;my-tab&lt;/code&gt; component implementation uses &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM&quot;&gt;Shadow DOM&lt;/a&gt; with a template that
-has a default slot for the button label and applies styling to the button.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;my-tab&lt;/code&gt; component implementation uses &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM&quot;&gt;Shadow DOM&lt;/a&gt; with a
+template that has a default slot for the button label and applies styling to the
+button.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;style&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token style&quot;&gt;&lt;span class=&quot;token language-css&quot;&gt;
     &lt;span class=&quot;token selector&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -47,11 +50,12 @@ has a default slot for the button label and applies styling to the button.&lt;/p
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Trying to use the component with a link in the slot as it stands results in rendering the
-anchor element inside the button. To show a link &lt;em&gt;instead&lt;/em&gt; of the button it could render
-an anchor tag in the presence of an &lt;code&gt;href&lt;/code&gt; or a click event listener applied to the tab
-could drive the navigation but neither option works well. In application development a
-framework often provides a link component tied to a router so the tab should support this.&lt;/p&gt;
+&lt;p&gt;Trying to use the component with a link in the slot as it stands results in
+rendering the anchor element inside the button. To show a link &lt;em&gt;instead&lt;/em&gt; of the
+button it could render an anchor tag in the presence of an &lt;code&gt;href&lt;/code&gt; or a click
+event listener applied to the tab could drive the navigation but neither option
+works well. In application development a framework often provides a link
+component tied to a router so the tab should support this.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;&amp;lt;!-- Ends up with the anchor inside the button --&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;/tab-page&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Link tab&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 
@@ -61,8 +65,8 @@ framework often provides a link component tied to a router so the tab should sup
 --&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tab&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;/tab-page&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Link tab&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Layering slots&lt;/h2&gt;
-&lt;p&gt;To solve the problem with polymorphism in the tab element a second, named, slot around
-the button replaces it with the provided element.&lt;/p&gt;
+&lt;p&gt;To solve the problem with polymorphism in the tab element a second, named, slot
+around the button replaces it with the provided element.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;style&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token style&quot;&gt;&lt;span class=&quot;token language-css&quot;&gt;
     &lt;span class=&quot;token selector&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -75,31 +79,34 @@ the button replaces it with the provided element.&lt;/p&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Layering the slots in this way allows the element to support either a label for the button
-as before or another element to replace it. This example shows a React component implementation
-of the tab navigation that uses the slot attribute on a Next.js &lt;a href=&quot;https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component&quot;&gt;Link component&lt;/a&gt;
-to replace the button.&lt;/p&gt;
-&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; Link &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&#39;next/link&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;p&gt;Layering the slots in this way allows the element to support either a label for
+the button as before or another element to replace it. This example shows a
+React component implementation of the tab navigation that uses the slot
+attribute on a Next.js &lt;a href=&quot;https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component&quot;&gt;Link component&lt;/a&gt; to replace the button.&lt;/p&gt;
+&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; Link &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;next/link&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;TabNavigation&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; sections &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tabs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
       &lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;sections&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; title&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; path &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-tab&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;token script language-javascript&quot;&gt;&lt;span class=&quot;token script-punctuation punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;path&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Link&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;slot&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;button&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token script language-javascript&quot;&gt;&lt;span class=&quot;token script-punctuation punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;path&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Link&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
-      ))}
-    &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tabs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
-  )
-}
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+          &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Link&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;slot&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;button&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token script language-javascript&quot;&gt;&lt;span class=&quot;token script-punctuation punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;path&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Link&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tab&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token plain-text&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-tabs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Styling slotted elements&lt;/h2&gt;
-&lt;p&gt;The named slot replaces the button but the button styling doesn&#39;t get applied to the anchor
-element. To resolve this an update to the style selector targets the slotted element as well
-as the button using the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/::slotted&quot;&gt;&lt;code&gt;::slotted()&lt;/code&gt;&lt;/a&gt; pseudo-element selector.&lt;/p&gt;
+&lt;p&gt;The named slot replaces the button but the button styling doesn&#39;t get applied to
+the anchor element. To resolve this an update to the style selector targets the
+slotted element as well as the button using the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/::slotted&quot;&gt;&lt;code&gt;::slotted()&lt;/code&gt;&lt;/a&gt;
+pseudo-element selector.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;style&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token style&quot;&gt;&lt;span class=&quot;token language-css&quot;&gt;
-    &lt;span class=&quot;token selector&quot;&gt;button, ::slotted(*)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token selector&quot;&gt;button,
+    ::slotted(*)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
       &lt;span class=&quot;token comment&quot;&gt;/* button styles */&lt;/span&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
   &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;style&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -109,8 +116,8 @@ as the button using the &lt;a href=&quot;https://developer.mozilla.org/en-US/doc
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now the styling applies to any slotted element but the selector may also specify certain
-elements like an anchor or other selectors like a class name.&lt;/p&gt;
+&lt;p&gt;Now the styling applies to any slotted element but the selector may also specify
+certain elements like an anchor or other selectors like a class name.&lt;/p&gt;
 &lt;pre class=&quot;language-css&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token selector&quot;&gt;::slotted(a)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;/* anchor styles */&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
@@ -126,39 +133,45 @@ elements like an anchor or other selectors like a class name.&lt;/p&gt;
     <updated>2024-12-20T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/</id>
     <content type="html">&lt;h2&gt;What is FOUC and how does it apply to web components?&lt;/h2&gt;
-&lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Flash_of_un-styled_content&quot;&gt;flash of un-styled content&lt;/a&gt; (FOUC) occurs when content on a web page is visible
-before it has had styling applied to it. This can happen for a few reasons, often while
-loading images that are used in the site layout, using web fonts that either don&#39;t appear
-until loaded or show differently or more commonly with JavaScript that applies styling to
-content already visible in the page. Web components are susceptible to all of this and
-introduce even more opportunity to FOUC things up, especially with the use of Shadow DOM
-and slots.&lt;/p&gt;
-&lt;p&gt;I recently built the share button for my website—up in header, feel free to use
-it—that presented me with an opportunity to think about and deal with a flash of
-un-styled content &lt;em&gt;and&lt;/em&gt; a &lt;a href=&quot;https://web.dev/articles/cls&quot;&gt;cumulative layout shift&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Flash_of_un-styled_content&quot;&gt;flash of un-styled content&lt;/a&gt; (FOUC) occurs when content on a web page is
+visible before it has had styling applied to it. This can happen for a few
+reasons, often while loading images that are used in the site layout, using web
+fonts that either don&#39;t appear until loaded or show differently or more commonly
+with JavaScript that applies styling to content already visible in the page. Web
+components are susceptible to all of this and introduce even more opportunity to
+FOUC things up, especially with the use of Shadow DOM and slots.&lt;/p&gt;
+&lt;p&gt;I recently built the share button for my website—up in header, feel free
+to use it—that presented me with an opportunity to think about and deal
+with a flash of un-styled content &lt;em&gt;and&lt;/em&gt; a &lt;a href=&quot;https://web.dev/articles/cls&quot;&gt;cumulative layout shift&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here&#39;s how I prevented both.&lt;/p&gt;
 &lt;h2&gt;The share button web component&lt;/h2&gt;
 &lt;p&gt;The share button is a small web component that attempts to use the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share&quot;&gt;native share
-functionality&lt;/a&gt; in the browser. At the time of writing this feature has
-good support across browsers but I wanted to also provide a fallback list of links as the
-initial content of the component. Once the share button element is upgraded the list of
-links is replaced with a single share button.&lt;/p&gt;
+functionality&lt;/a&gt; in the browser. At the time of writing this
+feature has good support across browsers but I wanted to also provide a fallback
+list of links as the initial content of the component. Once the share button
+element is upgraded the list of links is replaced with a single share button.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Even after applying some styles to the list you can probably see that the share button will
-take up less vertical space. When the button replaces the links the page beneath the header
-will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
+&lt;p&gt;Even after applying some styles to the list you can probably see that the share
+button will take up less vertical space. When the button replaces the links the
+page beneath the header will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
 &lt;figure&gt;
   &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.webp 1864w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
   &lt;figcaption&gt;
@@ -166,11 +179,12 @@ will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
   &lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;h3&gt;How to fix cumulative layout shift&lt;/h3&gt;
-&lt;p&gt;To avoid the layout shift entirely the list of fallback links needs to occupy the same amount
-of vertical space as the share button. I could have tried to display the list items inline
-but that wouldn&#39;t go any way to resolving a flash of un-styled content, the links swapping to
-the button. To solve both issues I made the fallback work in a similar way to the share
-button by using a popover to display the links with a button as the trigger.&lt;/p&gt;
+&lt;p&gt;To avoid the layout shift entirely the list of fallback links needs to occupy
+the same amount of vertical space as the share button. I could have tried to
+display the list items inline but that wouldn&#39;t go any way to resolving a flash
+of un-styled content, the links swapping to the button. To solve both issues I
+made the fallback work in a similar way to the share button by using a popover
+to display the links with a button as the trigger.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;button&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;popovertarget&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;share-fallback&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Share&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 
@@ -179,41 +193,48 @@ button by using a popover to display the links with a button as the trigger.&lt;
 
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now if for some reason the native share functionality isn&#39;t supported or the web component isn&#39;t yet
-connected the popover with the fallback list of links is displayed when the button is clicked. Only
-issue now is the button in the web component is duplicated in the fallback content, let&#39;s fix it.&lt;/p&gt;
+&lt;p&gt;Now if for some reason the native share functionality isn&#39;t supported or the web
+component isn&#39;t yet connected the popover with the fallback list of links is
+displayed when the button is clicked. Only issue now is the button in the web
+component is duplicated in the fallback content, let&#39;s fix it.&lt;/p&gt;
 &lt;h3&gt;Using a named slot to share the button&lt;/h3&gt;
-&lt;p&gt;I could have shared the CSS to style both buttons but it seemed better yet to share the button
-itself. Sharing the button is achieved by adding a Shadow Root to the component with a single
-named slot in which to place the button.&lt;/p&gt;
+&lt;p&gt;I could have shared the CSS to style both buttons but it seemed better yet to
+share the button itself. Sharing the button is achieved by adding a Shadow Root
+to the component with a single named slot in which to place the button.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ShareButton&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token function&quot;&gt;connectedCallback&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; slot &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&#39;slot&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-    slot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&#39;name&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&#39;share-btn&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; slot &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;slot&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    slot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;share-btn&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; shadowRoot &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;attachShadow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&#39;open&#39;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-    shadowRoot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;slot&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; shadowRoot &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;attachShadow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;open&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    shadowRoot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;slot&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
     &lt;span class=&quot;token comment&quot;&gt;// Simplified for brevity&lt;/span&gt;
-    slot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&#39;click&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;ev&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-      ev&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;preventDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    slot&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;click&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;ev&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      ev&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;preventDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
       navigator&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;share&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;token literal-property property&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;token literal-property property&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; location&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;href
-      &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token literal-property property&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; location&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;href&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Add the slot attribute to the button.&lt;/p&gt;
@@ -225,28 +246,36 @@ named slot in which to place the button.&lt;/p&gt;
 
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now when the &lt;code&gt;share-button&lt;/code&gt; element is upgraded the popover will no longer be displayed
-and only the native share functionality will be observed when the button is clicked.&lt;/p&gt;
-&lt;p&gt;I&#39;ve packaged the share button into a &lt;a href=&quot;https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button&quot;&gt;shared component&lt;/a&gt; you can easily use
-in your own website.&lt;/p&gt;
+&lt;p&gt;Now when the &lt;code&gt;share-button&lt;/code&gt; element is upgraded the popover will no longer be
+displayed and only the native share functionality will be observed when the
+button is clicked.&lt;/p&gt;
+&lt;p&gt;I&#39;ve packaged the share button into a &lt;a href=&quot;https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button&quot;&gt;shared component&lt;/a&gt; you can easily
+use in your own website.&lt;/p&gt;
 &lt;h2&gt;Handling FOUC without a fallback&lt;/h2&gt;
-&lt;p&gt;The approach used to build the share button is one of &lt;a href=&quot;https://www.gov.uk/service-manual/technology/using-progressive-enhancement&quot;&gt;progressive enhancement&lt;/a&gt;.
-If the component does not have appropriate fallback or initial content then other options
-can be used to prevent the flash of un-styled content.&lt;/p&gt;
+&lt;p&gt;The approach used to build the share button is one of &lt;a href=&quot;https://www.gov.uk/service-manual/technology/using-progressive-enhancement&quot;&gt;progressive
+enhancement&lt;/a&gt;. If the component does not have
+appropriate fallback or initial content then other options can be used to
+prevent the flash of un-styled content.&lt;/p&gt;
 &lt;h3&gt;Hiding elements until they are defined&lt;/h3&gt;
-&lt;p&gt;A quick search, or prompt to your &lt;em&gt;trusted&lt;/em&gt; AI, on this subject will likely lead you to the
-&lt;code&gt;:defined&lt;/code&gt; CSS selector.&lt;/p&gt;
+&lt;p&gt;A quick search, or prompt to your &lt;em&gt;trusted&lt;/em&gt; AI, on this subject will likely lead
+you to the &lt;code&gt;:defined&lt;/code&gt; CSS selector.&lt;/p&gt;
 &lt;pre class=&quot;language-css&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;/* Hide the element until it&#39;s defined */&lt;/span&gt;
 &lt;span class=&quot;token selector&quot;&gt;my-element:not(:defined)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; none&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -256,16 +285,17 @@ can be used to prevent the flash of un-styled content.&lt;/p&gt;
 &lt;span class=&quot;token selector&quot;&gt;my-element:defined&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; block&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It&#39;s a valid approach but the potential for a cumulative layout shift is still present.
-You could toggle the &lt;code&gt;visibility&lt;/code&gt; or &lt;code&gt;opacity&lt;/code&gt; of the component instead but if the
-dimensions change when it becomes defined it will probably still cause a significant
-layout shift.&lt;/p&gt;
+&lt;p&gt;It&#39;s a valid approach but the potential for a cumulative layout shift is still
+present. You could toggle the &lt;code&gt;visibility&lt;/code&gt; or &lt;code&gt;opacity&lt;/code&gt; of the component instead
+but if the dimensions change when it becomes defined it will probably still
+cause a significant layout shift.&lt;/p&gt;
 &lt;h3&gt;Declarative Shadow DOM&lt;/h3&gt;
-&lt;p&gt;With &lt;a href=&quot;https://web.dev/articles/declarative-shadow-dom&quot;&gt;Declarative Shadow DOM&lt;/a&gt; you can render the component from a
-template that is attached to the elements shadow root when the component HTML is parsed.
-Taking the share button example, the fallback content and button styling could be encapsulated
-in the component. The component can then replace the button functionality with the native share
-API call or do nothing and maintain the fallback.&lt;/p&gt;
+&lt;p&gt;With &lt;a href=&quot;https://web.dev/articles/declarative-shadow-dom&quot;&gt;Declarative Shadow DOM&lt;/a&gt; you can render the
+component from a template that is attached to the elements shadow root when the
+component HTML is parsed. Taking the share button example, the fallback content
+and button styling could be encapsulated in the component. The component can
+then replace the button functionality with the native share API call or do
+nothing and maintain the fallback.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;shadowrootmode&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;open&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;style&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token style&quot;&gt;&lt;span class=&quot;token language-css&quot;&gt;
@@ -279,22 +309,30 @@ API call or do nothing and maintain the fallback.&lt;/p&gt;
 
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://bsky.app/intent/compose?text={title}%20{url}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🦋 Share on Bluesky&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt;
+            &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://www.linkedin.com/shareArticle?url={url}&amp;amp;title={title}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;🏢 Share on LinkedIn&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+          &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;a&lt;/span&gt;
+            &lt;span class=&quot;token attr-name&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;https://x.com/intent/post?url={url}&amp;amp;text={title}&amp;amp;via={author}&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;💩 Share on X&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;a&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
         &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;li&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
       &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;ul&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;share-button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This approach is probably more useful for content that is important for SEO as it can be
-rendered in HTML but only displayed once the component is upgraded. There won&#39;t be any
-issue with FOUC (unless the browser doesn&#39;t support Declarative Shadow DOM) but the
-potential for CLS still needs to be considered.&lt;/p&gt;
+&lt;p&gt;This approach is probably more useful for content that is important for SEO as
+it can be rendered in HTML but only displayed once the component is upgraded.
+There won&#39;t be any issue with FOUC (unless the browser doesn&#39;t support
+Declarative Shadow DOM) but the potential for CLS still needs to be considered.&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -303,41 +341,47 @@ potential for CLS still needs to be considered.&lt;/p&gt;
     <updated>2024-11-24T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/practical-web-component-reactivity-patterns/</id>
     <content type="html">&lt;h2&gt;Keeping HTML element attributes and properties in sync&lt;/h2&gt;
-&lt;p&gt;If you&#39;ve worked with HTML elements previously you&#39;ll likely be aware that attributes declared
-on an element have no default mechanism to reflect their value to properties on the underlying
-object in JavaScript. While this &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes&quot;&gt;isn&#39;t true for all elements and attributes&lt;/a&gt;
-it makes sense because object properties can represent any type of data and attributes are always
-represented as strings. Let&#39;s look at how we can keep attribute and property values in sync for
-situations that warrant it.&lt;/p&gt;
+&lt;p&gt;If you&#39;ve worked with HTML elements previously you&#39;ll likely be aware that
+attributes declared on an element have no default mechanism to reflect their
+value to properties on the underlying object in JavaScript. While this &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes&quot;&gt;isn&#39;t
+true for all elements and attributes&lt;/a&gt; it makes sense
+because object properties can represent any type of data and attributes are
+always represented as strings. Let&#39;s look at how we can keep attribute and
+property values in sync for situations that warrant it.&lt;/p&gt;
 &lt;h3&gt;The HTMLElement dataset&lt;/h3&gt;
-&lt;p&gt;The element &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset&quot;&gt;&lt;code&gt;dataset&lt;/code&gt;&lt;/a&gt; allows attributes to be set either from HTML in the &lt;code&gt;data-*&lt;/code&gt;
-format or via the object property in JavaScript. Take the &lt;code&gt;activePage&lt;/code&gt; property of the &lt;code&gt;PageFlip&lt;/code&gt;
-element that we&#39;ll cover later in the article as an example. We could use the elements &lt;code&gt;dataset&lt;/code&gt;
-to store it and provide an initial value in the HTML declaration.&lt;/p&gt;
+&lt;p&gt;The element &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset&quot;&gt;&lt;code&gt;dataset&lt;/code&gt;&lt;/a&gt; allows attributes to be set either from HTML in
+the &lt;code&gt;data-*&lt;/code&gt; format or via the object property in JavaScript. Take the
+&lt;code&gt;activePage&lt;/code&gt; property of the &lt;code&gt;PageFlip&lt;/code&gt; element that we&#39;ll cover later in the
+article as an example. We could use the elements &lt;code&gt;dataset&lt;/code&gt; to store it and
+provide an initial value in the HTML declaration.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-page-flip&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;data-active-page&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-page-flip&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;If we set the value of the active page from JavaScript then it is reflected to the attribute in
-the HTML. You&#39;ll notice that the conversion between camel casing and hyphens is handled for us
-but because the &lt;code&gt;dataset&lt;/code&gt; is represented as a &lt;code&gt;DomStringMap&lt;/code&gt; it doesn&#39;t provide us any control
-over how the values are stored and exposed—it&#39;s always a string.&lt;/p&gt;
+&lt;p&gt;If we set the value of the active page from JavaScript then it is reflected to
+the attribute in the HTML. You&#39;ll notice that the conversion between camel
+casing and hyphens is handled for us but because the &lt;code&gt;dataset&lt;/code&gt; is represented as
+a &lt;code&gt;DomStringMap&lt;/code&gt; it doesn&#39;t provide us any control over how the values are
+stored and exposed—it&#39;s always a string.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; flip &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;querySelector&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;my-page-flip&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 flip&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;dataset&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;activePage &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;my-page-flip data-active-page=&quot;1&quot;&gt;&amp;lt;/my-page-flip&gt;&lt;/span&gt;
 console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;flip&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;dataset&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;activePage&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token comment&quot;&gt;// &quot;1&quot; (string)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This isn&#39;t perfect but it works fine for simple scenarios. Let&#39;s improve the solution by
-defining our own custom attribute and property.&lt;/p&gt;
+&lt;p&gt;This isn&#39;t perfect but it works fine for simple scenarios. Let&#39;s improve the
+solution by defining our own custom attribute and property.&lt;/p&gt;
 &lt;h3&gt;Custom element attributes and properties&lt;/h3&gt;
-&lt;p&gt;Rather than use the element &lt;code&gt;dataset&lt;/code&gt; we can implement our own attributes and provide getter
-and setter functions to expose them as properties. Doing this provides us with full control over
-how the data is stored, provides better encapsulation and more control over how the element will
-react to changes. To implement this reactivity pattern we will observe attributes for changes by
-listing them in the static &lt;code&gt;observedAttributes&lt;/code&gt; property (this could be applied to &lt;code&gt;data-*&lt;/code&gt;
-attributes too). We then implement the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes&quot;&gt;&lt;code&gt;attributeChangedCallback&lt;/code&gt;&lt;/a&gt; method to
-be notified about value changes and update the state accordingly.&lt;/p&gt;
-&lt;p&gt;Here&#39;s an example of this in the &lt;code&gt;PageFlip&lt;/code&gt; element. We only want to update the attribute value
-in the HTML if it is already declared by conditionally calling &lt;code&gt;setAttribute&lt;/code&gt; from the setter
-function and letting the callback handle updating the property value.&lt;/p&gt;
+&lt;p&gt;Rather than use the element &lt;code&gt;dataset&lt;/code&gt; we can implement our own attributes and
+provide getter and setter functions to expose them as properties. Doing this
+provides us with full control over how the data is stored, provides better
+encapsulation and more control over how the element will react to changes. To
+implement this reactivity pattern we will observe attributes for changes by
+listing them in the static &lt;code&gt;observedAttributes&lt;/code&gt; property (this could be applied
+to &lt;code&gt;data-*&lt;/code&gt; attributes too). We then implement the
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes&quot;&gt;&lt;code&gt;attributeChangedCallback&lt;/code&gt;&lt;/a&gt; method to be notified about
+value changes and update the state accordingly.&lt;/p&gt;
+&lt;p&gt;Here&#39;s an example of this in the &lt;code&gt;PageFlip&lt;/code&gt; element. We only want to update the
+attribute value in the HTML if it is already declared by conditionally calling
+&lt;code&gt;setAttribute&lt;/code&gt; from the setter function and letting the callback handle updating
+the property value.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PageFlip&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Observe changes to active-page attribute&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; observedAttributes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;active-page&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -375,15 +419,18 @@ function and letting the callback handle updating the property value.&lt;/p&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Reacting to changes in sub-components&lt;/h2&gt;
-&lt;p&gt;Custom elements (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components&quot;&gt;Web Components&lt;/a&gt;, I&#39;ll refer to them as components for the rest of
-the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt; to inject content into the component tree at
-specified locations. I won&#39;t include the full implementation of each component here but you can
-&lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the code&lt;/a&gt; for the examples. When the element or elements in the slot update
-we may need to react to this change, let&#39;s explore some ways to deal with this reactivity pattern.&lt;/p&gt;
-&lt;p&gt;We&#39;ll implement a pagination component that provides controls for navigating through a list of pages.
-It&#39;ll need a template that defines the structure of the component with a default slot (the one that
-isn&#39;t named) to hold the pages, buttons to navigate to the next and previous page and a status
-indicator that displays the active page number alongside the total number of pages.&lt;/p&gt;
+&lt;p&gt;Custom elements (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components&quot;&gt;Web Components&lt;/a&gt;, I&#39;ll refer to them as
+components for the rest of the article) can define &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots&quot;&gt;slots&lt;/a&gt;
+to inject content into the component tree at specified locations. I won&#39;t
+include the full implementation of each component here but you can &lt;a href=&quot;https://github.com/p-m-p/p-m-p.github.io/tree/main/js/practical-web-component-reactivity-patterns&quot;&gt;view the
+code&lt;/a&gt; for the examples. When the element or elements in the slot
+update we may need to react to this change, let&#39;s explore some ways to deal with
+this reactivity pattern.&lt;/p&gt;
+&lt;p&gt;We&#39;ll implement a pagination component that provides controls for navigating
+through a list of pages. It&#39;ll need a template that defines the structure of the
+component with a default slot (the one that isn&#39;t named) to hold the pages,
+buttons to navigate to the next and previous page and a status indicator that
+displays the active page number alongside the total number of pages.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;template&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pagination-tmpl&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pages&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;&amp;lt;!-- default slot --&gt;&lt;/span&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;slot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -394,15 +441,17 @@ indicator that displays the active page number alongside the total number of pag
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;button&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;next&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;aria-controls&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;pages&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Next&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;button&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;template&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The component needs to react to changes in the default slot to set the total number of pages in the
-status label. It also needs to set and show the active page when pressing the buttons to navigate.&lt;/p&gt;
+&lt;p&gt;The component needs to react to changes in the default slot to set the total
+number of pages in the status label. It also needs to set and show the active
+page when pressing the buttons to navigate.&lt;/p&gt;
 &lt;h3&gt;Using the slotchange event to react to updates&lt;/h3&gt;
-&lt;p&gt;Whenever elements are assigned to a slot a &lt;code&gt;slotchange&lt;/code&gt; event is dispatched. By adding an event
-listener for these we can update the status indicator to show the total number of pages. This may
-only happen once when the document is first loaded or multiple times depending on how the pages
-are displayed.&lt;/p&gt;
-&lt;p&gt;Let&#39;s start with a basic implementation of the pagination component. We&#39;ll add an event listener for
-the slot change and display the active page by setting the CSS display property of the pages.&lt;/p&gt;
+&lt;p&gt;Whenever elements are assigned to a slot a &lt;code&gt;slotchange&lt;/code&gt; event is dispatched. By
+adding an event listener for these we can update the status indicator to show
+the total number of pages. This may only happen once when the document is first
+loaded or multiple times depending on how the pages are displayed.&lt;/p&gt;
+&lt;p&gt;Let&#39;s start with a basic implementation of the pagination component. We&#39;ll add
+an event listener for the slot change and display the active page by setting the
+CSS display property of the pages.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Currently selected page index&lt;/span&gt;
   #selectedPageIndex &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -452,16 +501,18 @@ the slot change and display the active page by setting the CSS display property 
     &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
   &lt;/my-pagination&gt;
 &lt;/div&gt;
-&lt;p&gt;This already works well to update the status indicator and display the active page. Next we&#39;ll add a
-component that animates the page changes and look at how we handle inter-component reactivity.&lt;/p&gt;
+&lt;p&gt;This already works well to update the status indicator and display the active
+page. Next we&#39;ll add a component that animates the page changes and look at how
+we handle inter-component reactivity.&lt;/p&gt;
 &lt;h3&gt;Using events for web component interactivity&lt;/h3&gt;
-&lt;p&gt;If we move the responsibility of displaying the active page with an animation to a new &lt;code&gt;PageFlip&lt;/code&gt;
-component we&#39;ll need it to provide a way to notify the &lt;code&gt;Pagination&lt;/code&gt; component of changes to update
-the status indicator.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;PageFlip&lt;/code&gt; component will expose an &lt;code&gt;activePage&lt;/code&gt; property (we saw this earlier) to control the
-visible page when the navigation buttons are clicked. For the reactivity pattern we&#39;ll use a
-&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent&quot;&gt;custom event&lt;/a&gt; named &lt;code&gt;pagechange&lt;/code&gt; that is dispatched when the active page or total
-number of pages changes. The event is set to bubble so we can apply the listener to the slot
+&lt;p&gt;If we move the responsibility of displaying the active page with an animation to
+a new &lt;code&gt;PageFlip&lt;/code&gt; component we&#39;ll need it to provide a way to notify the
+&lt;code&gt;Pagination&lt;/code&gt; component of changes to update the status indicator.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;PageFlip&lt;/code&gt; component will expose an &lt;code&gt;activePage&lt;/code&gt; property (we saw this
+earlier) to control the visible page when the navigation buttons are clicked.
+For the reactivity pattern we&#39;ll use a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent&quot;&gt;custom event&lt;/a&gt; named
+&lt;code&gt;pagechange&lt;/code&gt; that is dispatched when the active page or total number of pages
+changes. The event is set to bubble so we can apply the listener to the slot
 element and not to the &lt;code&gt;PageFlip&lt;/code&gt; component directly.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PageFlip&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;//... getter, setters and lifecycle methods&lt;/span&gt;
@@ -482,8 +533,9 @@ element and not to the &lt;code&gt;PageFlip&lt;/code&gt; component directly.&lt;
     &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Adding the page flip means the default slot now plays host to this component and the slot change event
-we used previously will be dispatched only when this element is assigned.&lt;/p&gt;
+&lt;p&gt;Adding the page flip means the default slot now plays host to this component and
+the slot change event we used previously will be dispatched only when this
+element is assigned.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-pagination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;my-page-flip&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;active-page&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Page one&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
@@ -491,9 +543,9 @@ we used previously will be dispatched only when this element is assigned.&lt;/p&
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;Page three&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;div&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
   &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-page-flip&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;my-pagination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We&#39;ll update the &lt;code&gt;Pagination&lt;/code&gt; component to remove the page display functionality and add the &lt;code&gt;pagechange&lt;/code&gt;
-event listener. This component is simpler now and only responsible for navigating pages and setting the
-status indicator label.&lt;/p&gt;
+&lt;p&gt;We&#39;ll update the &lt;code&gt;Pagination&lt;/code&gt; component to remove the page display functionality
+and add the &lt;code&gt;pagechange&lt;/code&gt; event listener. This component is simpler now and only
+responsible for navigating pages and setting the status indicator label.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Page selection indicator&lt;/span&gt;
   #selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -529,19 +581,23 @@ status indicator label.&lt;/p&gt;
     &lt;div class=&quot;page&quot; role=&quot;group&quot;&gt;Page three&lt;/div&gt;
   &lt;/my-page-flip&gt;
 &lt;/my-pagination-event&gt;
-&lt;p&gt;Events are fundamental to how we build user interfaces on the web with all kinds of existing events. By
-applying this pattern to our own components we are able to split our applications into discrete parts that
-can be combined together to create rich user experiences.&lt;/p&gt;
+&lt;p&gt;Events are fundamental to how we build user interfaces on the web with all kinds
+of existing events. By applying this pattern to our own components we are able
+to split our applications into discrete parts that can be combined together to
+create rich user experiences.&lt;/p&gt;
 &lt;h3&gt;Using a MutationObserver to react to sub component updates&lt;/h3&gt;
-&lt;p&gt;Sometimes, we might not have an event like &lt;code&gt;pagechange&lt;/code&gt; available. Maybe we have to deal with
-integrating a new feature into a legacy codebase or use a third party library we have no control
-over. In these scenarios we can achieve a similar result with a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver&quot;&gt;&lt;code&gt;MutationObserver&lt;/code&gt;&lt;/a&gt;
-to observe changes to the attributes and children of the element.&lt;/p&gt;
-&lt;p&gt;This approach here will rely on the &lt;code&gt;active-page&lt;/code&gt; attribute correctly reflecting the &lt;code&gt;activePage&lt;/code&gt;
-property value and some confidence that the list of pages are the elements direct children (although,
-we could also apply the observer to the entire element subtree).&lt;/p&gt;
-&lt;p&gt;Here&#39;s what the &lt;code&gt;Pagination&lt;/code&gt; component would look like if we updated it to use a &lt;code&gt;MutationObserver&lt;/code&gt; to
-control the status indicator instead of the &lt;code&gt;pagechange&lt;/code&gt; event.&lt;/p&gt;
+&lt;p&gt;Sometimes, we might not have an event like &lt;code&gt;pagechange&lt;/code&gt; available. Maybe we have
+to deal with integrating a new feature into a legacy codebase or use a third
+party library we have no control over. In these scenarios we can achieve a
+similar result with a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver&quot;&gt;&lt;code&gt;MutationObserver&lt;/code&gt;&lt;/a&gt; to observe changes
+to the attributes and children of the element.&lt;/p&gt;
+&lt;p&gt;This approach here will rely on the &lt;code&gt;active-page&lt;/code&gt; attribute correctly reflecting
+the &lt;code&gt;activePage&lt;/code&gt; property value and some confidence that the list of pages are
+the elements direct children (although, we could also apply the observer to the
+entire element subtree).&lt;/p&gt;
+&lt;p&gt;Here&#39;s what the &lt;code&gt;Pagination&lt;/code&gt; component would look like if we updated it to use a
+&lt;code&gt;MutationObserver&lt;/code&gt; to control the status indicator instead of the &lt;code&gt;pagechange&lt;/code&gt;
+event.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pagination&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HTMLElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token comment&quot;&gt;// Page selection indicator&lt;/span&gt;
   #selectionIndicator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -595,10 +651,12 @@ control the status indicator instead of the &lt;code&gt;pagechange&lt;/code&gt; 
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Takeaway&lt;/h2&gt;
-&lt;p&gt;Custom events are a power tool for implementing components that both work in isolation and can be combined to
-create dynamic applications for the web. Consider also the encapsulation of state through the use of custom
-property getters and setters and a pragmatic approach of reflecting this to attribute values and we have some
-solid patterns for adding reactivity to our component development.&lt;/p&gt;
+&lt;p&gt;Custom events are a power tool for implementing components that both work in
+isolation and can be combined to create dynamic applications for the web.
+Consider also the encapsulation of state through the use of custom property
+getters and setters and a pragmatic approach of reflecting this to attribute
+values and we have some solid patterns for adding reactivity to our component
+development.&lt;/p&gt;
 &lt;style&gt;
 .pagination {
   height: 300px;
@@ -681,8 +739,9 @@ my-page-flip {
     <updated>2024-10-27T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/typescript-package-entry-points/</id>
     <content type="html">&lt;h2&gt;TypeScript vs JavaScript module resolution&lt;/h2&gt;
-&lt;p&gt;TypeScript generally has the same import syntax as &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules&quot;&gt;JavaScript modules&lt;/a&gt; with additional features
-from CommonJS that aren&#39;t supported in JavaScript modules.&lt;/p&gt;
+&lt;p&gt;TypeScript generally has the same import syntax as &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules&quot;&gt;JavaScript
+modules&lt;/a&gt; with additional features from CommonJS that aren&#39;t
+supported in JavaScript modules.&lt;/p&gt;
 &lt;p&gt;Take this basic example of a library module structure.&lt;/p&gt;
 &lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;.&lt;/span&gt;
 ├── package.json
@@ -692,20 +751,23 @@ from CommonJS that aren&#39;t supported in JavaScript modules.&lt;/p&gt;
 │   │   └── index.ts
 │   └── index.ts
 └── tsconfig.json&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;With TypeScript it&#39;s possible to import from the directory via it&#39;s index file or from another file without
-the extension.&lt;/p&gt;
+&lt;p&gt;With TypeScript it&#39;s possible to import from the directory via it&#39;s index file
+or from another file without the extension.&lt;/p&gt;
 &lt;pre class=&quot;language-ts&quot;&gt;&lt;code class=&quot;language-ts&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; Component &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./feature&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; Component &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./feature/Component&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;JavaScript modules require the full path and the file extension.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; Component &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./feature/index.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; Component &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./feature/Component.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;To export JavaScript modules from the compiled TypeScript all import statements need to use the ESM syntax. To do this
-the TypeScript configuration option for &lt;code&gt;module&lt;/code&gt; needs to be set to &lt;code&gt;nodenext&lt;/code&gt; as does &lt;code&gt;moduleResolution&lt;/code&gt; (see
-&lt;a href=&quot;https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries&quot;&gt;Module resolution for libraries&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;You&#39;d be easily mistaken here to think that compiling with other module settings work fine when consuming the library
-with a bundler that doesn&#39;t apply the strict ESM resolution algorithm but when used with Node.js it will result in
+&lt;p&gt;To export JavaScript modules from the compiled TypeScript all import statements
+need to use the ESM syntax. To do this the TypeScript configuration option for
+&lt;code&gt;module&lt;/code&gt; needs to be set to &lt;code&gt;nodenext&lt;/code&gt; as does &lt;code&gt;moduleResolution&lt;/code&gt; (see &lt;a href=&quot;https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries&quot;&gt;Module
+resolution for libraries&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;You&#39;d be easily mistaken here to think that compiling with other module settings
+work fine when consuming the library with a bundler that doesn&#39;t apply the
+strict ESM resolution algorithm but when used with Node.js it will result in
 module import errors.&lt;/p&gt;
-&lt;p&gt;Here&#39;s an example of a minimal TypeScript configuration for compiling to JavaScript modules.&lt;/p&gt;
+&lt;p&gt;Here&#39;s an example of a minimal TypeScript configuration for compiling to
+JavaScript modules.&lt;/p&gt;
 &lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;compilerOptions&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;token property&quot;&gt;&quot;esModuleInterop&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
@@ -715,41 +777,54 @@ module import errors.&lt;/p&gt;
     &lt;span class=&quot;token property&quot;&gt;&quot;target&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;esnext&quot;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It seems weird importing &lt;code&gt;.ts&lt;/code&gt; and &lt;code&gt;.tsx&lt;/code&gt; files with a &lt;code&gt;.js&lt;/code&gt; extension, and there are other ways to fix the import
-paths via plugins for bundlers like ESBuild and Rollup, but it does at least make the intent explicit.&lt;/p&gt;
+&lt;p&gt;It seems weird importing &lt;code&gt;.ts&lt;/code&gt; and &lt;code&gt;.tsx&lt;/code&gt; files with a &lt;code&gt;.js&lt;/code&gt; extension, and
+there are other ways to fix the import paths via plugins for bundlers like
+ESBuild and Rollup, but it does at least make the intent explicit.&lt;/p&gt;
 &lt;h2&gt;Packaging library modules&lt;/h2&gt;
-&lt;p&gt;A common solution for exposing library modules is to use a bundler to create a single entry point. This is fine, and
-possibly even preferred, for small packages but on a larger scale for packages with many modules exporting them
-individually will help to reduce unused JavaScript and optimise build performance through &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking&quot;&gt;tree shaking&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A common solution for exposing library modules is to use a bundler to create a
+single entry point. This is fine, and possibly even preferred, for small
+packages but on a larger scale for packages with many modules exporting them
+individually will help to reduce unused JavaScript and optimise build
+performance through &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking&quot;&gt;tree shaking&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;Build options&lt;/h3&gt;
-&lt;p&gt;If the compiled JavaScript files are relative to package.json they could be imported from the file system path.&lt;/p&gt;
+&lt;p&gt;If the compiled JavaScript files are relative to package.json they could be
+imported from the file system path.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; Component &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;myLib/feature/index.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It can get messy with this approach, having the compiled files strewn across the project during development. Some of
-this can be overcome with &lt;a href=&quot;https://git-scm.com/docs/gitignore&quot;&gt;Git ignore&lt;/a&gt; rules and use of the &lt;a href=&quot;https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files&quot;&gt;files configuration&lt;/a&gt; in package.json
-but it also means a key advantage of the module pattern is lost, &lt;a href=&quot;https://en.wikipedia.org/wiki/Information_hiding&quot;&gt;information hiding&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Node.js modules are able to provide a map of &lt;a href=&quot;https://philparsons.co.uk/blog/typescript-package-entry-points/entry-points&quot;&gt;package entry points&lt;/a&gt; in package.json to expose only the
-public modules. When using this approach the compiled JavaScript modules can be output to a separate build directory.&lt;/p&gt;
-&lt;p&gt;Here&#39;s an example package.json with entry points for the JavaScript modules compiled to a directory named &lt;code&gt;dist&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;It can get messy with this approach, having the compiled files strewn across the
+project during development. Some of this can be overcome with &lt;a href=&quot;https://git-scm.com/docs/gitignore&quot;&gt;Git
+ignore&lt;/a&gt; rules and use of the &lt;a href=&quot;https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files&quot;&gt;files configuration&lt;/a&gt; in
+package.json but it also means a key advantage of the module pattern is lost,
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Information_hiding&quot;&gt;information hiding&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Node.js modules are able to provide a map of
+&lt;a href=&quot;https://philparsons.co.uk/blog/typescript-package-entry-points/entry-points&quot;&gt;package entry points&lt;/a&gt; in package.json to expose only the public
+modules. When using this approach the compiled JavaScript modules can be output
+to a separate build directory.&lt;/p&gt;
+&lt;p&gt;Here&#39;s an example package.json with entry points for the JavaScript modules
+compiled to a directory named &lt;code&gt;dist&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;myLib&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;module&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;files&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;dist&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;exports&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token property&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./dist/index.js&quot;&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./dist/index.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
     &lt;span class=&quot;token property&quot;&gt;&quot;./feature&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./dist/feature/index.js&quot;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now it&#39;s possible to import the package modules from the named entry points, noticeably without the file name and extension.&lt;/p&gt;
-&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; ComponentA &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&#39;myLib/componentA&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now it&#39;s possible to import the package modules from the named entry points,
+noticeably without the file name and extension.&lt;/p&gt;
+&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; ComponentA &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;myLib/componentA&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;Automated entry point generation&lt;/h3&gt;
-&lt;p&gt;Maintaining the entry points manually will be a burden that likely becomes a source of errors with keeping things in sync.
-Automating the generation of the package entry points removes this risk but presents a new problem, the need to update
-package.json.&lt;/p&gt;
-&lt;p&gt;Generating the entry points and updating package.json could run as a &lt;a href=&quot;https://docs.npmjs.com/cli/v9/using-npm/scripts#pre--post-scripts&quot;&gt;prepublish&lt;/a&gt; phase, a
-&lt;a href=&quot;https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks&quot;&gt;pre-commit hook&lt;/a&gt; or on a build server. Given there is a separate &lt;code&gt;dist&lt;/code&gt; directory another
-approach is to create a package.json in that directory and publish the package from there.&lt;/p&gt;
-&lt;p&gt;This Node.js script generates the entry points and writes a new package.json file in the &lt;code&gt;dist&lt;/code&gt; directory. All public
-modules under the &lt;code&gt;src&lt;/code&gt; directory contain an &lt;code&gt;index.ts&lt;/code&gt; file and this is used as the entry point.&lt;/p&gt;
+&lt;p&gt;Maintaining the entry points manually will be a burden that likely becomes a
+source of errors with keeping things in sync. Automating the generation of the
+package entry points removes this risk but presents a new problem, the need to
+update package.json.&lt;/p&gt;
+&lt;p&gt;Generating the entry points and updating package.json could run as a
+&lt;a href=&quot;https://docs.npmjs.com/cli/v9/using-npm/scripts#pre--post-scripts&quot;&gt;prepublish&lt;/a&gt; phase, a &lt;a href=&quot;https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks&quot;&gt;pre-commit hook&lt;/a&gt; or on
+a build server. Given there is a separate &lt;code&gt;dist&lt;/code&gt; directory another approach is
+to create a package.json in that directory and publish the package from there.&lt;/p&gt;
+&lt;p&gt;This Node.js script generates the entry points and writes a new package.json
+file in the &lt;code&gt;dist&lt;/code&gt; directory. All public modules under the &lt;code&gt;src&lt;/code&gt; directory
+contain an &lt;code&gt;index.ts&lt;/code&gt; file and this is used as the entry point.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// generateExports.js&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; copyFile&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; readFile&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; writeFile &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;fs/promises&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; join &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;path&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -797,9 +872,10 @@ modules under the &lt;code&gt;src&lt;/code&gt; directory contain an &lt;code&gt;
 &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; file &lt;span class=&quot;token keyword&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;README.md&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;LICENCE&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;copyFile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; file&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dist&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; file&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This script can be run during the build and publishing of the library. Everything in the &lt;code&gt;dist&lt;/code&gt; directory can
-be ignored from source control and now there&#39;s no risk of forgetting to update the entry points or exposing
-library internals that may be subject to change in the future.&lt;/p&gt;
+&lt;p&gt;This script can be run during the build and publishing of the library.
+Everything in the &lt;code&gt;dist&lt;/code&gt; directory can be ignored from source control and now
+there&#39;s no risk of forgetting to update the entry points or exposing library
+internals that may be subject to change in the future.&lt;/p&gt;
 </content>
   </entry>
 </feed>

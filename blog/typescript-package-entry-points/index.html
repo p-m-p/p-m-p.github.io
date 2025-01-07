@@ -20,7 +20,8 @@
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
-  <style>figure {}
+  <style>figure {
+}
 
 figcaption {
   font-size: 0.875rem;
@@ -106,8 +107,10 @@ figcaption {
 }
 
 .post-date {
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
   font-size: 0.875rem;
 }
 
@@ -209,8 +212,10 @@ figcaption {
   align-items: center;
   background: transparent;
   border: none;
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
@@ -299,13 +304,13 @@ pre[class*="language-"] {
   hyphens: none;
 }
 
-:not(pre)>code[class*="language-"],
+:not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
 }
 
 /* Inline code */
-:not(pre)>code[class*="language-"] {
+:not(pre) > code[class*="language-"] {
   padding: 0.1em;
   border-radius: 0.3em;
   white-space: normal;
@@ -382,14 +387,13 @@ pre[class*="language-"] {
 }
 
 @media screen and (-ms-high-contrast: active) {
-
   code[class*="language-"],
   pre[class*="language-"] {
     color: windowText;
     background: window;
   }
 
-  :not(pre)>code[class*="language-"],
+  :not(pre) > code[class*="language-"],
   pre[class*="language-"] {
     background: window;
   }
@@ -438,23 +442,37 @@ pre[class*="language-"] {
   --color-secondary-dark: #6b705c;
   --color-secondary-darker: #3f4238;
 
-  --color-text-primary: light-dark(var(--color-secondary-darker),
-      var(--color-primary-light));
-  --color-text-inverted: light-dark(var(--color-primary-light),
-      var(--color-secondary-darker));
+  --color-text-primary: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-light)
+  );
+  --color-text-inverted: light-dark(
+    var(--color-primary-light),
+    var(--color-secondary-darker)
+  );
 
   --color-link-primary: var(--color-text-primary);
-  --color-link-underline: light-dark(var(--color-secondary),
-      var(--color-primary));
-  --color-link-underline-hover: light-dark(var(--color-primary),
-      var(--color-primary-dark));
-  --color-link-visited: light-dark(var(--color-secondary-dark),
-      var(--color-secondary-light));
+  --color-link-underline: light-dark(
+    var(--color-secondary),
+    var(--color-primary)
+  );
+  --color-link-underline-hover: light-dark(
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  --color-link-visited: light-dark(
+    var(--color-secondary-dark),
+    var(--color-secondary-light)
+  );
 
-  --color-surface-primary: light-dark(var(--color-primary-lighter),
-      var(--color-secondary-darker));
-  --color-surface-inverted: light-dark(var(--color-secondary-darker),
-      var(--color-primary-lighter));
+  --color-surface-primary: light-dark(
+    var(--color-primary-lighter),
+    var(--color-secondary-darker)
+  );
+  --color-surface-inverted: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-lighter)
+  );
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
@@ -576,8 +594,9 @@ a {
   <main class="post-content container">
     <p class="post-description">Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.</p>
     <h2>TypeScript vs JavaScript module resolution</h2>
-<p>TypeScript generally has the same import syntax as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">JavaScript modules</a> with additional features
-from CommonJS that aren't supported in JavaScript modules.</p>
+<p>TypeScript generally has the same import syntax as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">JavaScript
+modules</a> with additional features from CommonJS that aren't
+supported in JavaScript modules.</p>
 <p>Take this basic example of a library module structure.</p>
 <pre class="language-shell"><code class="language-shell"><span class="token builtin class-name">.</span>
 ├── package.json
@@ -587,20 +606,23 @@ from CommonJS that aren't supported in JavaScript modules.</p>
 │   │   └── index.ts
 │   └── index.ts
 └── tsconfig.json</code></pre>
-<p>With TypeScript it's possible to import from the directory via it's index file or from another file without
-the extension.</p>
+<p>With TypeScript it's possible to import from the directory via it's index file
+or from another file without the extension.</p>
 <pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component"</span><span class="token punctuation">;</span></code></pre>
 <p>JavaScript modules require the full path and the file extension.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature/index.js"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component.js"</span><span class="token punctuation">;</span></code></pre>
-<p>To export JavaScript modules from the compiled TypeScript all import statements need to use the ESM syntax. To do this
-the TypeScript configuration option for <code>module</code> needs to be set to <code>nodenext</code> as does <code>moduleResolution</code> (see
-<a href="https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries">Module resolution for libraries</a>).</p>
-<p>You'd be easily mistaken here to think that compiling with other module settings work fine when consuming the library
-with a bundler that doesn't apply the strict ESM resolution algorithm but when used with Node.js it will result in
+<p>To export JavaScript modules from the compiled TypeScript all import statements
+need to use the ESM syntax. To do this the TypeScript configuration option for
+<code>module</code> needs to be set to <code>nodenext</code> as does <code>moduleResolution</code> (see <a href="https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries">Module
+resolution for libraries</a>).</p>
+<p>You'd be easily mistaken here to think that compiling with other module settings
+work fine when consuming the library with a bundler that doesn't apply the
+strict ESM resolution algorithm but when used with Node.js it will result in
 module import errors.</p>
-<p>Here's an example of a minimal TypeScript configuration for compiling to JavaScript modules.</p>
+<p>Here's an example of a minimal TypeScript configuration for compiling to
+JavaScript modules.</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"compilerOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"esModuleInterop"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
@@ -610,41 +632,54 @@ module import errors.</p>
     <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"esnext"</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p>It seems weird importing <code>.ts</code> and <code>.tsx</code> files with a <code>.js</code> extension, and there are other ways to fix the import
-paths via plugins for bundlers like ESBuild and Rollup, but it does at least make the intent explicit.</p>
+<p>It seems weird importing <code>.ts</code> and <code>.tsx</code> files with a <code>.js</code> extension, and
+there are other ways to fix the import paths via plugins for bundlers like
+ESBuild and Rollup, but it does at least make the intent explicit.</p>
 <h2>Packaging library modules</h2>
-<p>A common solution for exposing library modules is to use a bundler to create a single entry point. This is fine, and
-possibly even preferred, for small packages but on a larger scale for packages with many modules exporting them
-individually will help to reduce unused JavaScript and optimise build performance through <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree shaking</a>.</p>
+<p>A common solution for exposing library modules is to use a bundler to create a
+single entry point. This is fine, and possibly even preferred, for small
+packages but on a larger scale for packages with many modules exporting them
+individually will help to reduce unused JavaScript and optimise build
+performance through <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree shaking</a>.</p>
 <h3>Build options</h3>
-<p>If the compiled JavaScript files are relative to package.json they could be imported from the file system path.</p>
+<p>If the compiled JavaScript files are relative to package.json they could be
+imported from the file system path.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/feature/index.js"</span><span class="token punctuation">;</span></code></pre>
-<p>It can get messy with this approach, having the compiled files strewn across the project during development. Some of
-this can be overcome with <a href="https://git-scm.com/docs/gitignore">Git ignore</a> rules and use of the <a href="https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files">files configuration</a> in package.json
-but it also means a key advantage of the module pattern is lost, <a href="https://en.wikipedia.org/wiki/Information_hiding">information hiding</a>.</p>
-<p>Node.js modules are able to provide a map of <a href="entry-points">package entry points</a> in package.json to expose only the
-public modules. When using this approach the compiled JavaScript modules can be output to a separate build directory.</p>
-<p>Here's an example package.json with entry points for the JavaScript modules compiled to a directory named <code>dist</code>.</p>
+<p>It can get messy with this approach, having the compiled files strewn across the
+project during development. Some of this can be overcome with <a href="https://git-scm.com/docs/gitignore">Git
+ignore</a> rules and use of the <a href="https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files">files configuration</a> in
+package.json but it also means a key advantage of the module pattern is lost,
+<a href="https://en.wikipedia.org/wiki/Information_hiding">information hiding</a>.</p>
+<p>Node.js modules are able to provide a map of
+<a href="entry-points">package entry points</a> in package.json to expose only the public
+modules. When using this approach the compiled JavaScript modules can be output
+to a separate build directory.</p>
+<p>Here's an example package.json with entry points for the JavaScript modules
+compiled to a directory named <code>dist</code>.</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"myLib"</span><span class="token punctuation">,</span>
   <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"module"</span><span class="token punctuation">,</span>
   <span class="token property">"files"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"dist"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"exports"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"."</span><span class="token operator">:</span> <span class="token string">"./dist/index.js"</span>
+    <span class="token property">"."</span><span class="token operator">:</span> <span class="token string">"./dist/index.js"</span><span class="token punctuation">,</span>
     <span class="token property">"./feature"</span><span class="token operator">:</span> <span class="token string">"./dist/feature/index.js"</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p>Now it's possible to import the package modules from the named entry points, noticeably without the file name and extension.</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> ComponentA <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'myLib/componentA'</span></code></pre>
+<p>Now it's possible to import the package modules from the named entry points,
+noticeably without the file name and extension.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> ComponentA <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/componentA"</span><span class="token punctuation">;</span></code></pre>
 <h3>Automated entry point generation</h3>
-<p>Maintaining the entry points manually will be a burden that likely becomes a source of errors with keeping things in sync.
-Automating the generation of the package entry points removes this risk but presents a new problem, the need to update
-package.json.</p>
-<p>Generating the entry points and updating package.json could run as a <a href="https://docs.npmjs.com/cli/v9/using-npm/scripts#pre--post-scripts">prepublish</a> phase, a
-<a href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks">pre-commit hook</a> or on a build server. Given there is a separate <code>dist</code> directory another
-approach is to create a package.json in that directory and publish the package from there.</p>
-<p>This Node.js script generates the entry points and writes a new package.json file in the <code>dist</code> directory. All public
-modules under the <code>src</code> directory contain an <code>index.ts</code> file and this is used as the entry point.</p>
+<p>Maintaining the entry points manually will be a burden that likely becomes a
+source of errors with keeping things in sync. Automating the generation of the
+package entry points removes this risk but presents a new problem, the need to
+update package.json.</p>
+<p>Generating the entry points and updating package.json could run as a
+<a href="https://docs.npmjs.com/cli/v9/using-npm/scripts#pre--post-scripts">prepublish</a> phase, a <a href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks">pre-commit hook</a> or on
+a build server. Given there is a separate <code>dist</code> directory another approach is
+to create a package.json in that directory and publish the package from there.</p>
+<p>This Node.js script generates the entry points and writes a new package.json
+file in the <code>dist</code> directory. All public modules under the <code>src</code> directory
+contain an <code>index.ts</code> file and this is used as the entry point.</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// generateExports.js</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> copyFile<span class="token punctuation">,</span> readFile<span class="token punctuation">,</span> writeFile <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fs/promises"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> join <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"path"</span><span class="token punctuation">;</span>
@@ -692,9 +727,10 @@ modules under the <code>src</code> directory contain an <code>index.ts</code> fi
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> file <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"README.md"</span><span class="token punctuation">,</span> <span class="token string">"LICENCE"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> <span class="token function">copyFile</span><span class="token punctuation">(</span><span class="token function">join</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">join</span><span class="token punctuation">(</span>dist<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>This script can be run during the build and publishing of the library. Everything in the <code>dist</code> directory can
-be ignored from source control and now there's no risk of forgetting to update the entry points or exposing
-library internals that may be subject to change in the future.</p>
+<p>This script can be run during the build and publishing of the library.
+Everything in the <code>dist</code> directory can be ignored from source control and now
+there's no risk of forgetting to update the entry points or exposing library
+internals that may be subject to change in the future.</p>
 
   </main>
 
