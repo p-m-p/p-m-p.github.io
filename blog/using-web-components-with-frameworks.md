@@ -17,36 +17,35 @@ draft: true
 
 ## A quick note on Angular, Vue and Svelte
 
-The Angular, Vue and Svelte frameworks have long had first class support for web
-components with a component template syntax that uses HTML. As per the tests on
-[custome elements everywhere][custom-elements-everywhere]
+The Angular, Vue, Svelte and other frameworks have long supported custom
+elements with a component template syntax that utilises and extends standard
+HTML. As per the tests on [custom elements
+everywhere][custom-elements-everywhere] these frameworks provide support for
+attribute/property binding and the handling of custom events.
 
-## The common React denominator
+## Changes to custom element handling in React 19
 
-If you create a new project with React 19 by following the official
-documentation then you probably landed with a Next.js or Remix application. For
-the purposes of this article I will use a Next.js application with Typescript
-and explore the steps needed to consume web components from the BlueprintUI
-design system.
+Before version 19 React had some limitations in using custom elements. In these
+older version applying props to custom elements results in serializing the value
+as a string and setting it as an attribute. This prevents the use of elements
+with complex properties and results in the need for a proxy component around the
+element to get and set the properties and also deal with applying the
+`className` prop as the `class` attribute.
 
-## Importing a component
+## A use case for custom elements
 
-After creating the application and adding the BlueprintUI CSS I proceeded to
-replace the button on the example home page.
+Ignoring recent debate<sup>[1]</sup> around the usefulness of custom elements in
+a world of component based JavaScript frameworks, you can't deny that they make
+a good fit as the core of a design system. Building component primitives with
+custom elements provides a platform on which organisations can experiment,
+easily pivot on technology choice and profit from performance gains in areas
+like marketing that often don't require the use of a framework like React.
 
-```tsx
-import "@acme-corp/ds/tabs";
+## Creating a good developer experience
 
-export function Dashboard() {
-  return null;
-}
-```
+## Using elements with TypeScript
 
-## ReferenceError: HTMLElement is not defined
-
-## Property 'acme-tabs' does not exist on type 'JSX.IntrinsicElements'
-
-## Property 'size' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>'
+## Auto completion of HTML/JSX attributes
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [react]: https://react.dev/learn
