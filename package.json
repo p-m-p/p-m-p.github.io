@@ -14,15 +14,15 @@
   "license": "MIT",
   "dependencies": {
     "@11ty/eleventy": "3.0.0",
-    "@11ty/eleventy-img": "^5.0.0",
-    "@11ty/eleventy-plugin-rss": "^2.0.2",
+    "@11ty/eleventy-img": "^6.0.1",
+    "@11ty/eleventy-plugin-rss": "^2.0.3",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
     "luxon": "^3.5.0",
-    "zod": "^3.23.8",
+    "zod": "^3.24.1",
     "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
-    "prettier": "3.3.3",
-    "prettier-plugin-jinja-template": "^1.5.0"
+    "prettier": "3.4.2",
+    "prettier-plugin-jinja-template": "^2.0.0"
   }
 }
