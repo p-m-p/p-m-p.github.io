@@ -1,5 +1,5 @@
 ---
-title: Why use custom elements in a world of JavaScript frameworks?
+title: Custom elements in a world of JavaScript frameworks
 description:
   React 19 shipped with long awaited support for custom HTML elements. Being the
   most popular of the JavaScript frameworks this development provides an
@@ -54,7 +54,7 @@ with complex properties and results in the need for a proxy component around the
 element to get and set the properties and also deal with applying the
 `className` prop as the `class` attribute.
 
-## Creating a good developer experience for custom elements
+## Optimising the developer experience
 
 Focusing on React as a framework, and ignoring fundamental aspects like
 consistency and performance, let's run through what we expect from a component
@@ -66,16 +66,67 @@ or Remix.
 As library authors we can't ignore TypeScript if we want to provide a rich user
 experience. Well defined types help prevent misuse of components, enable auto
 completion in the development workflow and aid with other forms of code
-generation. Let's take a look at how to create custom element types with an
+generation. Let's take a look at how to create custom element types for an
 example card component.
 
 ```html
-<my-card variant="product">
-  <h2 slot="title">Card title</h2>
+<my-card variant="tile">
+  <h2 slot="title">Title</h2>
   <p slot="content">Card content</p>
   <a slot="action" href="/">Card action</a>
 </my-card>
 ```
+
+The element has a single attribute named `variant` with a matching property on
+the underlying object class. The interface for this class extends `HTMLElement`
+and defines the property with the available variants.
+
+```ts
+export interface CardElement extends HTMLElement {
+  variant: "tile" | "section";
+}
+S;
+
+export class Card implements CardElement {
+  // ...class definition
+}
+```
+
+To use the card element in a project with a framework that has both TypeScript
+and JSX, type definitions for the elements in the JSX name space also need
+defining. To do this for React, extend the `IntrinsicElements` interface and add
+the custom element definitions. The module for defining these types depends on
+the TypeScript configuration for the `jsx` compiler option.
+
+Without these type definitions use of the element will result in a TypeScript
+error about the unknown element.
+
+```tsx
+declare module "react/jsx-runtime" {
+  namespace JSX {
+    interface IntrinsicElements {
+      "my-card": DetailedHTMLProps<HTMLAttributes<CardElement>, CardElement> & {
+        variant: CardElement["variant"];
+      };
+    }
+  }
+}
+```
+
+Immediately this looks complex and having to maintain these types by hand will
+surely result in future issues. Instead we can automate the generation of these
+types from a custom element manifest. The manifest format outlined [in this
+project][custom-element-manifest] proposes a schema format for defining elements
+for this purpose. As library authors we want to provide a manifest for the
+components and we can automate this step with [this
+analyzer][custom-element-analyzer] and generate the type definitions from the
+generated manifest using [this plugin][cem-plugin] for the analyzer.
+
+To generate editor extensions to use the custom elements with standard HTML
+syntax, Burton Smith (GitHub user break-stuff) has also kindly provided plugins
+for VS Code and JetBrains IDEs.
+
+### Flexible bundling and loading options
 
 ### Server Side Rendering (SSR)
 
@@ -86,3 +137,8 @@ example card component.
 [matt-pocock]: https://www.mattpocock.com/
 [github-discussion]:
   https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/71395
+[custom-element-manifest]:
+  https://github.com/webcomponents/custom-elements-manifest
+[custom-element-analyzer]: https://github.com/open-wc/custom-elements-manifest
+[cem-plugin]:
+  https://github.com/break-stuff/cem-tools/tree/main/packages/jsx-integration#readme
