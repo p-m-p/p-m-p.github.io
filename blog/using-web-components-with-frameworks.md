@@ -95,14 +95,15 @@ export class Card implements CardElement {
 To use the card element in a project with a framework that has both TypeScript
 and JSX, type definitions for the elements in the JSX name space also need
 defining. To do this for React, extend the `IntrinsicElements` interface and add
-the custom element definitions. The module for defining these types depends on
-the TypeScript configuration for the `jsx` compiler option.
+the custom element definitions. The module in which these types exist depends on
+the TypeScript configuration for the `jsx` compiler option so need adding for
+each (`react`, `react/jsx-runtime` etc).
 
 Without these type definitions use of the element will result in a TypeScript
 error about the unknown element.
 
 ```tsx
-declare module "react/jsx-runtime" {
+declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
       "my-card": DetailedHTMLProps<HTMLAttributes<CardElement>, CardElement> & {
@@ -114,29 +115,58 @@ declare module "react/jsx-runtime" {
 ```
 
 Immediately this looks complex and having to maintain these types by hand will
-surely result in future issues. Instead we can automate the generation of these
-types from a custom element manifest. The manifest format outlined [in this
-project][custom-element-manifest] proposes a schema format for defining elements
-for this purpose. As library authors we want to provide a manifest for the
-components and we can automate this step with [this
-analyzer][custom-element-analyzer] and generate the type definitions from the
-generated manifest using [this plugin][cem-plugin] for the analyzer.
+surely result in headaches down the line. Instead, we should automate the
+generation of these types from a custom element manifest as outlined [in this
+project][custom-element-manifest] that defines a schema format for this purpose.
 
-To generate editor extensions to use the custom elements with standard HTML
-syntax, Burton Smith (GitHub user break-stuff) has also kindly provided plugins
+To provide both a manifest and type definitions for out components we can use
+[this analyzer][custom-element-analyzer] to generate the manifest and feed that
+to [this plugin][cem-plugin] to generate the types. The analyzer will surface
+the attributes, properties and custom events but may require a bit of finessing
+with JSDoc comments to describe them.
+
+To generate editor extensions for using the custom elements with standard HTML
+syntax, GitHub user break-stuff (Burton Smith) has also kindly provided plugins
 for VS Code and JetBrains IDEs.
 
 ### Flexible bundling and loading options
 
+JavaScript for the library elements needs to either load independently in the
+document or get bundled with the rest of the application code. To support either
+scenario the library can export the unregistered element class and expose a
+module with the element registered. If we want to try and maintain control of
+the element names we can supply a method on or with the class to register the
+element.
+
+```ts
+// class exported as @ds/my-element/MyElement
+// defined element exported as @ds/my-element
+export class MyElement extends HTMLElement {
+  static register(tagName = "my-element") {
+    customElements.define(tagName, this);
+  }
+}
+```
+
+Application developers who want finer control over code bundling can import the
+class and register it where required. See this article I wrote on how to
+generate named exports for library files.
+
+```ts
+import { MyElement } from "@ds/my-element/MyElement";
+
+MyElement.register();
+```
+
+Each component gets exported both ways from the library as either a separate
+package or module in a single package to install with a package manager or
+import from a CDN. This approach works for single page applications but to
+support server rendering in some of the latest meta frameworks we need to ensure
+the browser only code doesn't get loaded in the server environment.
+
 ### Server Side Rendering (SSR)
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
-[react]: https://react.dev/learn
-[nextjs]: https://nextjs.org/docs/app/getting-started/installation
-[use-client]: https://react.dev/reference/rsc/use-client
-[matt-pocock]: https://www.mattpocock.com/
-[github-discussion]:
-  https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/71395
 [custom-element-manifest]:
   https://github.com/webcomponents/custom-elements-manifest
 [custom-element-analyzer]: https://github.com/open-wc/custom-elements-manifest
