@@ -1,11 +1,12 @@
 ---
-title: Custom elements in a world of JavaScript frameworks
+title: A place for custom elements in a world of JavaScript frameworks
 description:
-  React 19 shipped with long awaited support for custom HTML elements. Being the
-  most popular of the JavaScript frameworks this development provides an
+  Last year, React 19 shipped with full support for custom HTML elements. Being
+  the most popular of the JavaScript frameworks this release provides an
   opportunity to push for the adoption of web components in areas like design
-  system component libraries. In this post I'll take a look at what is needed
-  for adoption of web components across some of the major frameworks.
+  system component libraries. In this post I'll take a look at how we can
+  provide a good developer experience to aid for adoption of web components in
+  this area.
 tags:
   - posts
   - web components
@@ -17,42 +18,40 @@ draft: true
 
 ## An argument for custom elements
 
-Ignoring recent debate<sup>[1]</sup> around the usefulness of custom elements in
-a world of component based JavaScript frameworks, you really can't deny that
-they fit well as single use components like a carousel, share button, copy to
-clipboard, code block etc. Develop these elements with a consistent API and
-shared styling and they come together to create a component library or design
-system, a copy to clipboard button inside the code block component for instance.
+Set aside the debate from last year around the usefulness of custom elements in
+this world of component based JavaScript frameworks and libraries and you really
+can't deny that they provide the perfect opportunity to build framework agnostic
+components to support your business growth now and into the future.
 
-You can of course achieve similar results by focusing efforts on a JavaScript
-framework, React, and in the past companies made this choice based on factors
-like talent acquisition, technology trends and well, herd mentality. Before
-version 19 React had limited support for custom elements and as the most popular
-framework in the industry this influenced decisions around adoption in this
-area&mdash;something I experienced first hand.
+You can of course achieve similar results by focusing efforts upon a single
+JavaScript framework like React, ignoring the web platform and shackling
+yourself to its future developments. In the past I've seen companies make this
+choice using factors like talent acquisition, technology trends and well, let's
+face it, herd mentality as reasoning.
 
-With React 19 I believe that we should build components, even if only the
-primitives, with a platform first mindset using custom elements. Not
-revolutionary thinking on my part, just observing this as a golden opportunity,
-but I want to dig into this and see how to ensure we provide a first class
-developer experience.
+Before version 19 React had limited support for custom elements and as the most
+popular framework in the industry this did nothing to aid their adoption. With
+this resolved I believe that we should advocate for building shared components,
+even if only the primitives, with a platform first mindset using custom
+elements. Not revolutionary thinking on my part, I know, just an observation of
+this golden opportunity. With me? Let's see how to ensure we provide a first
+class developer experience to aid adoption.
+
+### What changed for custom elements in React 19?
+
+Before version 19 React applied props to custom elements by serializing the
+value as a string and setting it as an attribute. This prevented the use of
+elements with complex properties and resulted in the need for a proxy component
+wrapper around the element to get and set the properties, deal with applying the
+`className` prop as the `class` attribute and provide props to handle custom
+events.
 
 ### A quick note on Angular, Vue and Svelte
 
 The Angular, Vue, Svelte and other frameworks have long supported custom
-elements with a component template syntax that utilises and extends standard
-HTML. As per the tests on [custom elements
-everywhere][custom-elements-everywhere] these frameworks provide support for
-attribute/property binding and the handling of custom events.
-
-### Changes to custom element handling in React 19
-
-Before version 19 React had some limitations in using custom elements. In these
-older version applying props to custom elements results in serializing the value
-as a string and setting it as an attribute. This prevents the use of elements
-with complex properties and results in the need for a proxy component around the
-element to get and set the properties and also deal with applying the
-`className` prop as the `class` attribute.
+elements. You can view the tests on [custom elements
+everywhere][custom-elements-everywhere] to see all the frameworks that currently
+ship full support for custom elements.
 
 ## Optimising the developer experience
 
@@ -82,22 +81,56 @@ the underlying object class. The interface for this class extends `HTMLElement`
 and defines the property with the available variants.
 
 ```ts
+type Variant = "tile" | "section";
+
 export interface CardElement extends HTMLElement {
-  variant: "tile" | "section";
+  variant: Variant;
 }
-S;
 
 export class Card implements CardElement {
-  // ...class definition
+  #variant: Variant;
+
+  get variant() {
+    return this.#variant;
+  }
+
+  set variant(variant: Variant) {
+    this.#variant = variant;
+  }
 }
 ```
 
+To make this element known to TypeScript we extend the `HTMLElementTagNameMap`
+interface so that newly created elements `document.createElement('my-card')`
+have the correct type as do DOM queries for the element.
+
+```ts
+declare global {
+  interface HTMLElementTagNameMap {
+    "my-card": CardElement;
+  }
+}
+
+const card = document.createElement("my-card");
+// Type '"product"' is not assignable to type 'Variant'
+card.variant = "product";
+
+// type HTMLCollectionOf<CardElement>
+const cards = document.getElementsByTagName("my-card");
+
+// type CardElement or null
+const qCard = document.querySelector("my-card");
+
+// type NodeListOf<CardElement>
+const qCards = document.querySelectorAll("my-card");
+```
+
 To use the card element in a project with a framework that has both TypeScript
-and JSX, type definitions for the elements in the JSX name space also need
-defining. To do this for React, extend the `IntrinsicElements` interface and add
-the custom element definitions. The module in which these types exist depends on
-the TypeScript configuration for the `jsx` compiler option so need adding for
-each (`react`, `react/jsx-runtime` etc).
+and JSX, type definitions for the elements in the JSX name space need defining.
+To do this for React, extend the `IntrinsicElements` interface and add the
+custom element definitions. The module in which these types exist depends on the
+TypeScript configuration for the `jsx` compiler option so need adding for each
+(`react`, `react/jsx-runtime` etc).
 
 Without these type definitions use of the element will result in a TypeScript
 error about the unknown element.
@@ -158,13 +191,24 @@ import { MyElement } from "@ds/my-element/MyElement";
 MyElement.register();
 ```
 
-Each component gets exported both ways from the library as either a separate
-package or module in a single package to install with a package manager or
-import from a CDN. This approach works for single page applications but to
-support server rendering in some of the latest meta frameworks we need to ensure
-the browser only code doesn't get loaded in the server environment.
+Each component gets exported both ways from the library, either as a separate
+package or a module in a package. The components then get installed with a
+package manager or imported from a CDN. This approach works for fine for browser
+(client) pages and applications but to support the server rendering seen in some
+of the latest meta frameworks we need to ensure the browser only code doesn't
+get loaded in the server environment.
 
 ### Server Side Rendering (SSR)
+
+As HTML, custom elements without the accompanying JavaScript that upgrades them
+require no special treatment for server side rendering. For more traditional
+page rendering like that of PHP or Ruby on rails the custom element JavaScript
+just needs including in the rendered page. Full stack JavaScript frameworks that
+run JavaScript on the server work the same way but introduce the risk that the
+custom element JavaScript gets included in the server bundle. This often results
+in the `HTMLElement is not defined` error and requires that the code for the
+component gets segregated for loading on the client only, `use client` in
+Next.js for instance.
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [custom-element-manifest]:
