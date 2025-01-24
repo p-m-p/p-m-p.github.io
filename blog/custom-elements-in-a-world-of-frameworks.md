@@ -50,7 +50,7 @@ Angular, Vue.js, Svelte and other frameworks have long supported custom
 elements. You can view the list of frameworks on [custom elements
 everywhere][custom-elements-everywhere] that currently ship with full support.
 
-## Optimising the developer experience
+## Optimising custom element developer experience
 
 Let's consider a component library like [Material][material-web] as an example
 to run through what we expect from a component library and how we can leverage
@@ -178,10 +178,7 @@ export class MyElement extends HTMLElement {
 ```
 
 Application developers who want finer control over code bundling can import the
-class and register the elements where they wish. Users doing prototyping or
-those who only wish to use a small set of the components can import the defined
-elements individually. I have [this article][exports-article] outlining a
-strategy for generating named exports of library files in a single package.
+class and register the elements where they wish.
 
 ```ts
 import { MyElement } from "@ds/my-element/MyElement";
@@ -189,24 +186,46 @@ import { MyElement } from "@ds/my-element/MyElement";
 MyElement.register();
 ```
 
-Each component gets exported both ways from the library, either as a separate
-package or a module in a package. The components then get installed with a
-package manager or imported from a CDN. This approach works for fine for browser
-(client) pages and applications but to support the server rendering seen in some
-of the latest meta frameworks we need to ensure the browser only code doesn't
-get loaded in the server environment.
+Users doing rapid development like prototyping or those who only wish to use a
+small set of the components can import the defined elements individually. An
+script with type `importmap` helps here to maintain the location of the package
+in a single location.
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@ds/": "https://cdn.example/ds/esm/"
+    }
+  }
+</script>
+
+<script type="module">
+  import "@ds/my-element";
+</script>
+
+<my-element>
+  <!-- Upgraded component -->
+</my-element>
+```
+
+I wrote [this article][exports-article] outlining a strategy for generating
+library exports when working with TypeScript that might help with this too.
 
 ### Server Side Rendering (SSR)
 
-As HTML, custom elements without the accompanying JavaScript that upgrades them
-require no special treatment for server side rendering. For more traditional
-page rendering like that of PHP or Ruby on rails the custom element JavaScript
-just needs including in the rendered page. Full stack JavaScript frameworks that
-run JavaScript on the server work the same way but introduce the risk that the
-custom element JavaScript gets included in the server bundle. This often results
-in the `HTMLElement is not defined` error and requires that the code for the
-component gets segregated for loading on the client only, `use client` in
-Next.js for instance.
+To support the server rendering seen in some of the latest meta frameworks we
+need to ensure the browser only code doesn't get loaded in the server
+environment. As HTML, custom elements without the JavaScript that upgrades them
+requires no special treatment for server side rendering. For more traditional
+page rendering like that of a server application written in PHP or Ruby the
+custom element JavaScript just needs including in the rendered page.
+
+Full stack JavaScript frameworks that run JavaScript on the server work the same
+way but introduce the risk that the custom element JavaScript gets included in
+the server bundle. This often results in the `HTMLElement is not defined` error
+and requires that the code for the component gets segregated for loading on the
+client only, `use client` in Next.js for instance.
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [custom-element-manifest]:
