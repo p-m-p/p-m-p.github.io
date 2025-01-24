@@ -4,9 +4,8 @@ description:
   Last year, React 19 shipped with full support for custom HTML elements. Being
   the most popular of the JavaScript frameworks this release provides an
   opportunity to push for the adoption of web components in areas like design
-  system component libraries. In this post I'll take a look at how we can
-  provide a good developer experience to aid for adoption of web components in
-  this area.
+  system component libraries. In this post I take a look at how to provide a
+  good developer experience to aid adoption in this area.
 tags:
   - posts
   - web components
@@ -16,7 +15,7 @@ date: 2025-01-16
 draft: true
 ---
 
-## An argument for custom elements
+## The argument for custom elements
 
 Set aside the debate from last year around the usefulness of custom elements in
 this world of component based JavaScript frameworks and libraries and you really
@@ -30,43 +29,40 @@ choice using factors like talent acquisition, technology trends and well, let's
 face it, herd mentality as reasoning.
 
 Before version 19 React had limited support for custom elements and as the most
-popular framework in the industry this did nothing to aid their adoption. With
-this resolved I believe that we should advocate for building shared components,
-even if only the primitives, with a platform first mindset using custom
-elements. Not revolutionary thinking on my part, I know, just an observation of
-this golden opportunity. With me? Let's see how to ensure we provide a first
-class developer experience to aid adoption.
+popular framework in the industry this has done nothing to aid their adoption.
+With these issues resolved I believe that we should advocate for building
+reusable components, even if only the core primitives, with a platform first
+mindset using custom elements. Not revolutionary thinking on my part, I know,
+just an observation of the opportunity. With me? Cool, let's see how to ensure
+we provide a first class developer experience to aid adoption.
 
-### What changed for custom elements in React 19?
+### What exactly changed for custom elements in React 19?
 
 Before version 19 React applied props to custom elements by serializing the
 value as a string and setting it as an attribute. This prevented the use of
-elements with complex properties and resulted in the need for a proxy component
-wrapper around the element to get and set the properties, deal with applying the
-`className` prop as the `class` attribute and provide props to handle custom
-events.
+elements with complex properties and resulted in the need for a component
+wrapper around the element to deal with the properties, apply the `className`
+prop as the `class` attribute and define props for custom events.
 
-### A quick note on Angular, Vue and Svelte
+### A quick note on the other frameworks
 
-The Angular, Vue, Svelte and other frameworks have long supported custom
-elements. You can view the tests on [custom elements
-everywhere][custom-elements-everywhere] to see all the frameworks that currently
-ship full support for custom elements.
+Angular, Vue.js, Svelte and other frameworks have long supported custom
+elements. You can view the list of frameworks on [custom elements
+everywhere][custom-elements-everywhere] that currently ship with full support.
 
 ## Optimising the developer experience
 
-Focusing on React as a framework, and ignoring fundamental aspects like
-consistency and performance, let's run through what we expect from a component
-library and how we can leverage it within a full stack environment like Next.js
-or Remix.
+Let's consider a component library like [Material][material-web] as an example
+to run through what we expect from a component library and how we can leverage
+it within a full stack JavaScript environment like Next.js or Remix.
 
 ### Type safety
 
 As library authors we can't ignore TypeScript if we want to provide a rich user
 experience. Well defined types help prevent misuse of components, enable auto
 completion in the development workflow and aid with other forms of code
-generation. Let's take a look at how to create custom element types for an
-example card component.
+generation. Let's take a look at how to create custom element types for a card
+component.
 
 ```html
 <my-card variant="tile">
@@ -88,7 +84,7 @@ export interface CardElement extends HTMLElement {
 }
 
 export class Card implements CardElement {
-  #variant: Variant;
+  #variant: Variant = "tile";
 
   get variant() {
     return this.#variant;
@@ -100,9 +96,9 @@ export class Card implements CardElement {
 }
 ```
 
-To make this element known to TypeScript we extend the `HTMLElementTagNameMap`
-interface so that newly created elements `document.createElement('my-card')`
-have the correct type as do DOM queries for the element.
+To make this element known to TypeScript we need to extend the
+`HTMLElementTagNameMap` interface so that elements have the correct type when
+working with the DOM API in JavaScript.
 
 ```ts
 declare global {
@@ -112,28 +108,28 @@ declare global {
 }
 
 const card = document.createElement("my-card");
-// Type '"product"' is not assignable to type 'Variant'
+// Error: Type '"product"' is not assignable to type 'Variant'
 card.variant = "product";
 
-// type HTMLCollectionOf<CardElement>
+// cards has type HTMLCollectionOf<CardElement>
 const cards = document.getElementsByTagName("my-card");
 
-// type CardElement or null
+// qCard has type CardElement or null
 const qCard = document.querySelector("my-card");
 
-// type NodeListOf<CardElement>
+// qCards has type NodeListOf<CardElement>
 const qCards = document.querySelectorAll("my-card");
 ```
 
-To use the card element in a project with a framework that has both TypeScript
-and JSX, type definitions for the elements in the JSX name space need defining.
-To do this for React, extend the `IntrinsicElements` interface and add the
-custom element definitions. The module in which these types exist depends on the
-TypeScript configuration for the `jsx` compiler option so need adding for each
-(`react`, `react/jsx-runtime` etc).
+For frameworks that use both TypeScript and JSX, type definitions for the
+elements in the JSX name space need defining. To do this for React, we extend
+the `IntrinsicElements` interface to add the custom element class and
+attributes. The module in which these types exist depends on the TypeScript
+configuration for the `jsx` compiler option and need adding for each (`react`,
+`react/jsx-runtime` etc).
 
-Without these type definitions use of the element will result in a TypeScript
-error about the unknown element.
+Without these type definitions use of the element in JSX will result in a
+TypeScript error for the unknown element.
 
 ```tsx
 declare module "react" {
@@ -147,33 +143,33 @@ declare module "react" {
 }
 ```
 
-Immediately this looks complex and having to maintain these types by hand will
-surely result in headaches down the line. Instead, we should automate the
-generation of these types from a custom element manifest as outlined [in this
-project][custom-element-manifest] that defines a schema format for this purpose.
+Now, this immediately looks complex and having to maintain these types by hand
+will surely result in headaches and mistakes down the line. Instead, we can
+automate the generation of these types from a [custom element
+manifest][custom-element-manifest].
 
-To provide both a manifest and type definitions for out components we can use
-[this analyzer][custom-element-analyzer] to generate the manifest and feed that
-to [this plugin][cem-plugin] to generate the types. The analyzer will surface
-the attributes, properties and custom events but may require a bit of finessing
-with JSDoc comments to describe them.
+In fact, we can provide both a manifest and type definitions for our components
+by using [this analyzer][custom-element-analyzer] to generate the manifest and
+[this plugin][cem-plugin] to generate the types. The analyzer will surface the
+attributes, properties and custom events but, depending on the use case, may
+require a bit of finessing with JsDoc comments.
 
-To generate editor extensions for using the custom elements with standard HTML
-syntax, GitHub user break-stuff (Burton Smith) has also kindly provided plugins
-for VS Code and JetBrains IDEs.
+To generate editor extensions for using the elements with standard HTML syntax,
+GitHub user break-stuff (Burton Smith) also kindly provided [plugins][cem-tools]
+for VS Code and JetBrains IDEs among other tools.
 
 ### Flexible bundling and loading options
 
-JavaScript for the library elements needs to either load independently in the
+JavaScript for custom elements needs to either load independently in the
 document or get bundled with the rest of the application code. To support either
-scenario the library can export the unregistered element class and expose a
-module with the element registered. If we want to try and maintain control of
-the element names we can supply a method on or with the class to register the
-element.
+scenario the library can export the unregistered element class and expose
+another module with the element defined. If we want to try and maintain control
+of the element names we can supply a method on or with the class to perform the
+registration.
 
 ```ts
-// class exported as @ds/my-element/MyElement
-// defined element exported as @ds/my-element
+// class from named export @ds/my-element/MyElement
+// defined element from named export @ds/my-element
 export class MyElement extends HTMLElement {
   static register(tagName = "my-element") {
     customElements.define(tagName, this);
@@ -182,8 +178,10 @@ export class MyElement extends HTMLElement {
 ```
 
 Application developers who want finer control over code bundling can import the
-class and register it where required. See this article I wrote on how to
-generate named exports for library files.
+class and register the elements where they wish. Users doing prototyping or
+those who only wish to use a small set of the components can import the defined
+elements individually. I have [this article][exports-article] outlining a
+strategy for generating named exports of library files in a single package.
 
 ```ts
 import { MyElement } from "@ds/my-element/MyElement";
@@ -214,5 +212,8 @@ Next.js for instance.
 [custom-element-manifest]:
   https://github.com/webcomponents/custom-elements-manifest
 [custom-element-analyzer]: https://github.com/open-wc/custom-elements-manifest
+[cem-tools]: https://github.com/break-stuff/cem-tools
 [cem-plugin]:
   https://github.com/break-stuff/cem-tools/tree/main/packages/jsx-integration#readme
+[material-web]: https://m3.material.io/develop/web
+[exports-article]: /blog/typescript-package-entry-points/
