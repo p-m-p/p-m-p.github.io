@@ -17,24 +17,23 @@ draft: true
 
 ## The argument for custom elements
 
-Set aside the debate from last year around the usefulness of custom elements in
-this world of component based JavaScript frameworks and libraries and you really
-can't deny that they provide the perfect opportunity to build framework agnostic
-components to support your business growth now and into the future.
+Setting aside the debate from last year on the usefulness of custom elements in
+this world of component based JavaScript frameworks and libraries, you really
+can't deny that custom elements provide the perfect opportunity for us to build
+framework agnostic components that support growth now and into the future.
 
-You can of course achieve similar results by focusing efforts upon a single
-JavaScript framework like React, ignoring the web platform and shackling
-yourself to its future developments. In the past I've seen companies make this
-choice using factors like talent acquisition, technology trends and well, let's
-face it, herd mentality as reasoning.
+We could of course focus efforts upon a single JavaScript framework like React,
+ignoring the web platform and shackling ourselves to future framework decisions
+like Server Components. Many of us will make this choice using factors like talent
+acquisition, technology trends and well, let's face it, herd mentality as reasoning.
 
-Before version 19 React had limited support for custom elements and as the most
-popular framework in the industry this has done nothing to aid their adoption.
+Before version 19, React had limited support for custom elements and as the clear
+No.1 framework in the industry this has done nothing to aid their adoption.
 With these issues resolved I believe that we should advocate for building
 reusable components, even if only the core primitives, with a platform first
 mindset using custom elements. Not revolutionary thinking on my part, I know,
-just an observation of the opportunity. With me? Cool, let's see how to ensure
-we provide a first class developer experience to aid adoption.
+just an observation of the opportunities ahead. With me? Cool, let's see how to
+ensure we provide a first class developer experience to aid adoption.
 
 ### What exactly changed for custom elements in React 19?
 
@@ -221,11 +220,34 @@ requires no special treatment for server side rendering. For more traditional
 page rendering like that of a server application written in PHP or Ruby the
 custom element JavaScript just needs including in the rendered page.
 
-Full stack JavaScript frameworks that run JavaScript on the server work the same
-way but introduce the risk that the custom element JavaScript gets included in
-the server bundle. This often results in the `HTMLElement is not defined` error
-and requires that the code for the component gets segregated for loading on the
-client only, `use client` in Next.js for instance.
+Full stack frameworks that run JavaScript on the server to render HTML work the
+same way but with an added risk of including custom element JavaScript in the
+server context. This normally results in the `HTMLElement is not defined`
+error or some other missing browser global like `customElements`.
+
+To best support server rendering we can ensure library modules that don't reference the browser APS get exported independently. This allows importing domain objects like
+a theme configuration into the application context.
+
+```tsx
+'use client'
+
+// createTheme is safe to import and use during server rendering
+import { createTheme } from '@ds/theme'
+import AppContext from './AppContext'
+import ThemeSwitch from './ThemeSwitch'
+import usePreferences from './usePreferences'
+
+export default function Layout({ children }: React.PropsWithChildren) {
+  const theme = createTheme({ mode: usePreferences('theme') })
+
+  return (
+    <AppContent theme={theme}>
+      <div class="page">{children}</div>
+      <ThemeSwitch />
+    </AppContext>
+  )
+}
+```
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [custom-element-manifest]:
