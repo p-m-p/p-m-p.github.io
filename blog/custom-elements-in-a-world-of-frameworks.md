@@ -77,7 +77,7 @@ export interface CardElement extends HTMLElement {
   variant: Variant;
 }
 
-export class Card implements CardElement {
+export class Card extends HTMLElement implements CardElement {
   #variant: Variant = "tile";
 
   get variant() {
