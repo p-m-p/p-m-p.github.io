@@ -45,9 +45,11 @@ everywhere][custom-elements-everywhere] that currently ship with full support.
 
 ## Optimising custom element developer experience
 
-Catering for many frameworks might seems like a daunting task at first so let's
-break it down and look at what developers expect and how they might leverage the
-elements within a full stack JavaScript environment like Next.js.
+Frameworks do a good job of abstracting away lower level constructs of the web
+platform like event handling and DOM updates. Developers will expect to leverage
+our elements in the same way as framework specific components so we need to
+provide the tools and structure to support this, especially for full stack
+JavaScript environments like Next.js or Remix.
 
 ### Type safety
 
