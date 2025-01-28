@@ -38,9 +38,11 @@ prop as the &lt;code&gt;class&lt;/code&gt; attribute and define props for custom
 elements. You can view the list of frameworks on &lt;a href=&quot;https://custom-elements-everywhere.com/&quot;&gt;custom elements
 everywhere&lt;/a&gt; that currently ship with full support.&lt;/p&gt;
 &lt;h2&gt;Optimising custom element developer experience&lt;/h2&gt;
-&lt;p&gt;Catering for many frameworks might seems like a daunting task at first so let&#39;s
-break it down and look at what developers expect and how they might leverage the
-elements within a full stack JavaScript environment like Next.js.&lt;/p&gt;
+&lt;p&gt;Frameworks do a good job of abstracting away lower level constructs of the web
+platform like event handling and DOM updates. Developers will expect to leverage
+our elements in the same way as framework specific components so we need to
+provide the tools and structure to support this, especially for full stack
+JavaScript environments like Next.js or Remix.&lt;/p&gt;
 &lt;h3&gt;Type safety&lt;/h3&gt;
 &lt;p&gt;As library authors we can&#39;t ignore TypeScript if we want to provide a rich user
 experience. Well defined types help prevent misuse of components, enable auto

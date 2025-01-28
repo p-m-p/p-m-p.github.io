@@ -616,9 +616,11 @@ prop as the <code>class</code> attribute and define props for custom events.</p>
 elements. You can view the list of frameworks on <a href="https://custom-elements-everywhere.com/">custom elements
 everywhere</a> that currently ship with full support.</p>
 <h2>Optimising custom element developer experience</h2>
-<p>Catering for many frameworks might seems like a daunting task at first so let's
-break it down and look at what developers expect and how they might leverage the
-elements within a full stack JavaScript environment like Next.js.</p>
+<p>Frameworks do a good job of abstracting away lower level constructs of the web
+platform like event handling and DOM updates. Developers will expect to leverage
+our elements in the same way as framework specific components so we need to
+provide the tools and structure to support this, especially for full stack
+JavaScript environments like Next.js or Remix.</p>
 <h3>Type safety</h3>
 <p>As library authors we can't ignore TypeScript if we want to provide a rich user
 experience. Well defined types help prevent misuse of components, enable auto
