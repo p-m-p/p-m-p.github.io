@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A place for custom elements in a world of JavaScript frameworks</title>
+  <meta name="description" content="Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/custom-elements-in-a-world-of-frameworks/">
+  <meta property="og:title" content="A place for custom elements in a world of JavaScript frameworks">
+  <meta property="og:description" content="Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/custom-elements-in-a-world-of-frameworks/">
+  <meta property="twitter:title" content="A place for custom elements in a world of JavaScript frameworks">
+  <meta property="twitter:description" content="Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>figure {
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 1rem;
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+
+  a {
+    color: var(--color-link-primary);
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-link-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-primary);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--bg-highlight);
+  margin: 0 0 1rem;
+  padding: 1rem 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: right;
+  padding: 1rem 0 0.5rem;
+}
+
+.post-date {
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
+  font-size: 0.875rem;
+}
+
+.post-content {
+  p {
+    margin: 0 0 1rem;
+
+    code {
+      font-size: 0.875rem;
+    }
+  }
+
+  h2,
+  h3,
+  h4 {
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 2rem;
+    overflow: auto;
+    padding: 0.5rem;
+  }
+
+  img {
+    background: var(--bg-highlight);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 1rem;
+  }
+}
+
+.post-description {
+  font-size: 1.125rem;
+}
+
+.post-footer {
+  background: var(--bg-highlight);
+  border-top: solid 1px var(--border-primary);
+  padding: 1rem 0;
+}
+
+.licence {
+  line-height: 1.75;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: 2rem;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: light-dark(
+    var(--color-secondary-darker),
+    var(--color-secondary-light)
+  );
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: 2rem 0 0;
+  }
+
+  .post-date,
+  .share-btn {
+    font-size: 1rem;
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-primary-lighter: #fefae0;
+  --color-primary-light: #ffe8d6;
+  --color-primary: #ddbea9;
+  --color-primary-dark: #cb997e;
+  --color-primary-darker: #b98b73;
+  --color-secondary-light: #b7b7a4;
+  --color-secondary: #a5a58d;
+  --color-secondary-dark: #6b705c;
+  --color-secondary-darker: #3f4238;
+
+  --color-text-primary: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-light)
+  );
+  --color-text-inverted: light-dark(
+    var(--color-primary-light),
+    var(--color-secondary-darker)
+  );
+
+  --color-link-primary: var(--color-text-primary);
+  --color-link-underline: light-dark(
+    var(--color-secondary),
+    var(--color-primary)
+  );
+  --color-link-underline-hover: light-dark(
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  --color-link-visited: light-dark(
+    var(--color-secondary-dark),
+    var(--color-secondary-light)
+  );
+
+  --color-surface-primary: light-dark(
+    var(--color-primary-lighter),
+    var(--color-secondary-darker)
+  );
+  --color-surface-inverted: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-lighter)
+  );
+
+  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
+  --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    text-decoration-color: var(--color-primary);
+  }
+
+  &:active {
+    position: relative;
+    top: 0.125rem;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: var(--color-link-underline-hover);
+  }
+}</style>
+
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>A place for custom elements in a world of JavaScript frameworks</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title">A place for custom elements in a world of JavaScript frameworks</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-01-28">28 January 2025</time></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/@parsonic/share-button@1.0.0/min.js" defer=""></script>
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=A%20place%20for%20custom%20elements%20in%20a%20world%20of%20JavaScript%20frameworks%20https://philparsons.co.uk//blog/custom-elements-in-a-world-of-frameworks/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/custom-elements-in-a-world-of-frameworks/&title=A%20place%20for%20custom%20elements%20in%20a%20world%20of%20JavaScript%20frameworks">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/custom-elements-in-a-world-of-frameworks/&text=A%20place%20for%20custom%20elements%20in%20a%20world%20of%20JavaScript%20frameworks&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.</p>
+    <h2>An argument for custom elements</h2>
+<p>Setting aside the recent debate on the usefulness of custom elements in this
+world of component based JavaScript frameworks and libraries, custom elements
+provide the perfect opportunity for us to build framework agnostic components
+that support web development projects now and into the future.</p>
+<p>Before version 19, React had limited support for custom elements and as the
+industry leading framework this has done nothing to aid their adoption. With
+these issues now resolved I believe that we should advocate for building
+reusable components, even if only the core primitives, with a platform first
+mindset using custom elements. Not revolutionary thinking on my part, I know,
+just an observation of the opportunity. With me? Great, let's see how to ensure
+we provide a first class developer experience when using our elements.</p>
+<h3>What exactly changed for custom elements in React 19?</h3>
+<p>Older versions of React would apply props to custom elements by serializing the
+value as a string and setting it as an attribute. This prevented the use of
+elements with complex properties and often resulted in the need for a component
+wrapper around the element to deal with the properties, apply the <code>className</code>
+prop as the <code>class</code> attribute and define props for custom events.</p>
+<h3>A side note on the other frameworks</h3>
+<p>Angular, Vue.js, Svelte and other frameworks have long supported custom
+elements. You can view the list of frameworks on <a href="https://custom-elements-everywhere.com/">custom elements
+everywhere</a> that currently ship with full support.</p>
+<h2>Optimising custom element developer experience</h2>
+<p>Catering for many frameworks might seems like a daunting task at first so let's
+break it down and look at what developers expect and how they might leverage the
+elements within a full stack JavaScript environment like Next.js.</p>
+<h3>Type safety</h3>
+<p>As library authors we can't ignore TypeScript if we want to provide a rich user
+experience. Well defined types help prevent misuse of components, enable auto
+completion in the development workflow and aid with other forms of code
+generation.</p>
+<p>Consider the types for this custom card element.</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Title<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Card content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Card action<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card</span><span class="token punctuation">></span></span></code></pre>
+<p>The element has a single attribute named <code>variant</code> and a matching property on
+the underlying object class. The interface for this class extends <code>HTMLElement</code>
+and defines the property with the available variants.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">type</span> <span class="token class-name">Variant</span> <span class="token operator">=</span> <span class="token string">"tile"</span> <span class="token operator">|</span> <span class="token string">"section"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">CardElement</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
+  variant<span class="token operator">:</span> Variant<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Card</span> <span class="token keyword">implements</span> <span class="token class-name">CardElement</span> <span class="token punctuation">{</span>
+  #variant<span class="token operator">:</span> Variant <span class="token operator">=</span> <span class="token string">"tile"</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">get</span> <span class="token function">variant</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#variant<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">set</span> <span class="token function">variant</span><span class="token punctuation">(</span>variant<span class="token operator">:</span> Variant<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>#variant <span class="token operator">=</span> variant<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>To make the card element known to TypeScript we need to extend the
+<code>HTMLElementTagNameMap</code> interface so that developers have the correct type when
+working with the DOM API.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">declare</span> global <span class="token punctuation">{</span>
+  <span class="token keyword">interface</span> <span class="token class-name">HTMLElementTagNameMap</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">"my-card"</span><span class="token operator">:</span> CardElement<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> card <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"my-card"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Error: Type '"product"' is not assignable to type 'Variant'</span>
+card<span class="token punctuation">.</span>variant <span class="token operator">=</span> <span class="token string">"product"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// cards has type HTMLCollectionOf&lt;CardElement></span>
+<span class="token keyword">const</span> cards <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">"my-card"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// qCard has type CardElement or null</span>
+<span class="token keyword">const</span> qCard <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"my-card"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// qCards has type NodeListOf&lt;CardElement></span>
+<span class="token keyword">const</span> qCards <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">"my-card"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>For frameworks that use TypeScript and JSX, type definitions for the elements
+need defining in the JSX name space. To do this for React, we extend the
+<code>IntrinsicElements</code> interface to add the custom element properties and
+attributes. The module in which these types exist depends on the TypeScript
+configuration for the <code>jsx</code> compiler option and needs defining for each
+(<code>react</code>, <code>react/jsx-runtime</code> etc).</p>
+<p>Without the type definitions use of the element in JSX will result in a
+TypeScript error for the unknown element.</p>
+<pre class="language-tsx"><code class="language-tsx"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">"react"</span> <span class="token punctuation">{</span>
+  <span class="token keyword">namespace</span> <span class="token constant">JSX</span> <span class="token punctuation">{</span>
+    <span class="token keyword">interface</span> <span class="token class-name">IntrinsicElements</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">"my-card"</span><span class="token operator">:</span> DetailedHTMLProps<span class="token operator">&lt;</span>HTMLAttributes<span class="token operator">&lt;</span>CardElement<span class="token operator">></span><span class="token punctuation">,</span> CardElement<span class="token operator">></span> <span class="token operator">&amp;</span> <span class="token punctuation">{</span>
+        variant<span class="token operator">:</span> CardElement<span class="token punctuation">[</span><span class="token string">"variant"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Now, this immediately looks complex and having to maintain these types by hand
+will likely result in mistakes down the line. Instead, we can automate their
+generation from a <a href="https://github.com/webcomponents/custom-elements-manifest">custom element manifest</a>.</p>
+<p>We can even generate the manifest and the type definitions for our elements by
+using <a href="https://github.com/open-wc/custom-elements-manifest">this analyzer</a> to first generate the manifest
+and <a href="https://github.com/break-stuff/cem-tools/tree/main/packages/jsx-integration#readme">this plugin</a> to generate the types. The analyzer will surface
+the attributes, properties and custom events but, depending on the element
+implementation, may require a bit of finessing with JsDoc comments.</p>
+<p>To generate editor extensions from the element manifest to aid with development
+when using the elements in HTML, GitHub user break-stuff also kindly provided
+<a href="https://github.com/break-stuff/cem-tools">plugins</a> for VS Code and JetBrains IDEs among other tools.</p>
+<h3>Flexible bundling and loading options</h3>
+<p>JavaScript for custom elements needs to either load independently in the
+document or get bundled with the rest of the application code. To support either
+scenario the library can export the unregistered element class and expose
+another module with the element defined. If we want to maintain a level of
+control of the element names we can supply a method on or with the class to
+perform the registration.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token comment">// class is exported from @ds/my-element/MyElement and the</span>
+<span class="token comment">// defined element from named export @ds/my-element</span>
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">MyElement</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> <span class="token function">register</span><span class="token punctuation">(</span>tagName <span class="token operator">=</span> <span class="token string">"my-element"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    customElements<span class="token punctuation">.</span><span class="token function">define</span><span class="token punctuation">(</span>tagName<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Application developers who want finer control over code bundling can import the
+class and register the elements where and when they wish.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyElement <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/my-element/MyElement"</span><span class="token punctuation">;</span>
+
+MyElement<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Developers doing rapid development like prototyping or those who only wish to
+use a small set of the components can import the defined elements individually.
+A script with type <code>importmap</code> helps here to maintain the root URI of the
+package in a single location.</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>importmap<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token punctuation">{</span>
+    <span class="token string-property property">"imports"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">"@ds/"</span><span class="token operator">:</span> <span class="token string">"https://cdn.example/ds/esm/"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">import</span> <span class="token string">"@ds/my-element"</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- Upgraded element --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-element</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-element</span><span class="token punctuation">></span></span></code></pre>
+<p>I wrote <a href="/blog/typescript-package-entry-points/">this article</a> outlining a strategy for generating ESM
+library exports when working with TypeScript that might help here.</p>
+<h3>Server Side Rendering (SSR)</h3>
+<p>To support server rendering in some of the latest meta frameworks we need to
+ensure that browser only code doesn't get included in the server environment. As
+HTML, custom elements without the JavaScript that upgrades them requires no
+special treatment for server side rendering. For more traditional page rendering
+like that of a server application written in PHP or Ruby the custom element
+JavaScript just needs including with the document.</p>
+<p>Full stack frameworks that run JavaScript on the server to render HTML work in a
+similar way but actually run the JavaScript to create the render tree. If the
+element code gets included here it normally results in a
+<code>HTMLElement is not defined</code> error or some other missing browser global like
+<code>customElements</code>.</p>
+<p>To best support server rendering we can ensure library modules that don't
+reference the browser APS get exported independently. This allows importing
+domain objects like a theme configuration into the application context.</p>
+<pre class="language-tsx"><code class="language-tsx"><span class="token string">"use client"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// createTheme is safe to import and use during server rendering</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> createTheme <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/theme"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> AppContext <span class="token keyword">from</span> <span class="token string">"./AppContext"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> ThemeSwitch <span class="token keyword">from</span> <span class="token string">"./ThemeSwitch"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> usePreferences <span class="token keyword">from</span> <span class="token string">"./usePreferences"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">Layout</span><span class="token punctuation">(</span><span class="token punctuation">{</span> children <span class="token punctuation">}</span><span class="token operator">:</span> React<span class="token punctuation">.</span>PropsWithChildren<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> theme <span class="token operator">=</span> <span class="token function">createTheme</span><span class="token punctuation">(</span><span class="token punctuation">{</span> mode<span class="token operator">:</span> <span class="token function">usePreferences</span><span class="token punctuation">(</span><span class="token string">"theme"</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">AppContext</span></span> <span class="token attr-name">theme</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>theme<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>children<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">ThemeSwitch</span></span> <span class="token punctuation">/></span></span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">AppContext</span></span><span class="token punctuation">></span></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>I'll close on this point, we should consider the needs of framework developers
+and provide utilities that improve the experience of working with our elements.
+That might come in the form of utility objects to apply type safe styling for
+other components in the application or perhaps even framework extensions like
+context providers.</p>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+
+  
+
+
+</body>
+
+</html>
