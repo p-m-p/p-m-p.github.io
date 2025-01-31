@@ -131,9 +131,8 @@ TypeScript error for the unknown element.
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
-      "my-card": DetailedHTMLProps<HTMLAttributes<CardElement>, CardElement> & {
-        variant: CardElement["variant"];
-      };
+      "my-card": DetailedHTMLProps<HTMLAttributes<CardElement>, CardElement> &
+        Pick<CardElement, "variant">;
     }
   }
 }
@@ -163,10 +162,10 @@ control of the element names we can supply a method on or with the class to
 perform the registration.
 
 ```ts
-// class is exported from @ds/my-element/MyElement and the
-// defined element from named export @ds/my-element
-export class MyElement extends HTMLElement {
-  static register(tagName = "my-element") {
+// class is exported from @ds/card/Card the
+// defined element from named export @ds/card
+export class Card extends HTMLElement {
+  static register(tagName = "my-card") {
     customElements.define(tagName, this);
   }
 }
@@ -176,9 +175,9 @@ Application developers who want finer control over code bundling can import the
 class and register the elements where and when they wish.
 
 ```ts
-import { MyElement } from "@ds/my-element/MyElement";
+import { MyElement } from "@ds/card/Card";
 
-MyElement.register();
+Card.register();
 ```
 
 Developers doing rapid development like prototyping or those who only wish to
