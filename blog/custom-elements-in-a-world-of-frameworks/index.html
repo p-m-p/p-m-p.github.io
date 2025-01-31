@@ -684,9 +684,8 @@ TypeScript error for the unknown element.</p>
 <pre class="language-tsx"><code class="language-tsx"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">"react"</span> <span class="token punctuation">{</span>
   <span class="token keyword">namespace</span> <span class="token constant">JSX</span> <span class="token punctuation">{</span>
     <span class="token keyword">interface</span> <span class="token class-name">IntrinsicElements</span> <span class="token punctuation">{</span>
-      <span class="token string-property property">"my-card"</span><span class="token operator">:</span> DetailedHTMLProps<span class="token operator">&lt;</span>HTMLAttributes<span class="token operator">&lt;</span>CardElement<span class="token operator">></span><span class="token punctuation">,</span> CardElement<span class="token operator">></span> <span class="token operator">&amp;</span> <span class="token punctuation">{</span>
-        variant<span class="token operator">:</span> CardElement<span class="token punctuation">[</span><span class="token string">"variant"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      <span class="token string-property property">"my-card"</span><span class="token operator">:</span> DetailedHTMLProps<span class="token operator">&lt;</span>HTMLAttributes<span class="token operator">&lt;</span>CardElement<span class="token operator">></span><span class="token punctuation">,</span> CardElement<span class="token operator">></span> <span class="token operator">&amp;</span>
+        Pick<span class="token operator">&lt;</span>CardElement<span class="token punctuation">,</span> <span class="token string">"variant"</span><span class="token operator">></span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
@@ -708,18 +707,18 @@ scenario the library can export the unregistered element class and expose
 another module with the element defined. If we want to maintain a level of
 control of the element names we can supply a method on or with the class to
 perform the registration.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token comment">// class is exported from @ds/my-element/MyElement and the</span>
-<span class="token comment">// defined element from named export @ds/my-element</span>
-<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">MyElement</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
-  <span class="token keyword">static</span> <span class="token function">register</span><span class="token punctuation">(</span>tagName <span class="token operator">=</span> <span class="token string">"my-element"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-ts"><code class="language-ts"><span class="token comment">// class is exported from @ds/card/Card the</span>
+<span class="token comment">// defined element from named export @ds/card</span>
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Card</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> <span class="token function">register</span><span class="token punctuation">(</span>tagName <span class="token operator">=</span> <span class="token string">"my-card"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     customElements<span class="token punctuation">.</span><span class="token function">define</span><span class="token punctuation">(</span>tagName<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <p>Application developers who want finer control over code bundling can import the
 class and register the elements where and when they wish.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyElement <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/my-element/MyElement"</span><span class="token punctuation">;</span>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyElement <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/card/Card"</span><span class="token punctuation">;</span>
 
-MyElement<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+Card<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Developers doing rapid development like prototyping or those who only wish to
 use a small set of the components can import the defined elements individually.
 A script with type <code>importmap</code> helps here to maintain the root URI of the
