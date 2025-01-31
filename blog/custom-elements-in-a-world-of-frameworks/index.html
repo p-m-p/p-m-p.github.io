@@ -716,7 +716,7 @@ perform the registration.</p>
 <span class="token punctuation">}</span></code></pre>
 <p>Application developers who want finer control over code bundling can import the
 class and register the elements where and when they wish.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyElement <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/card/Card"</span><span class="token punctuation">;</span>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Card <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/card/Card"</span><span class="token punctuation">;</span>
 
 Card<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Developers doing rapid development like prototyping or those who only wish to
@@ -732,11 +732,11 @@ package in a single location.</p>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">import</span> <span class="token string">"@ds/my-element"</span><span class="token punctuation">;</span>
+  <span class="token keyword">import</span> <span class="token string">"@ds/card"</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
 
 <span class="token comment">&lt;!-- Upgraded element --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-element</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-element</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card</span><span class="token punctuation">></span></span></code></pre>
 <p>I wrote <a href="/blog/typescript-package-entry-points/">this article</a> outlining a strategy for generating ESM
 library exports when working with TypeScript that might help here.</p>
 <h3>Server Side Rendering (SSR)</h3>
