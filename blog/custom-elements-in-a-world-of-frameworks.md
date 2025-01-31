@@ -175,7 +175,7 @@ Application developers who want finer control over code bundling can import the
 class and register the elements where and when they wish.
 
 ```ts
-import { MyElement } from "@ds/card/Card";
+import { Card } from "@ds/card/Card";
 
 Card.register();
 ```
@@ -195,11 +195,11 @@ package in a single location.
 </script>
 
 <script type="module">
-  import "@ds/my-element";
+  import "@ds/card";
 </script>
 
 <!-- Upgraded element -->
-<my-element></my-element>
+<my-card></my-card>
 ```
 
 I wrote [this article][exports-article] outlining a strategy for generating ESM
