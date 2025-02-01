@@ -237,10 +237,10 @@ export default function Layout({ children }: React.PropsWithChildren) {
   const theme = createTheme({ mode: usePreferences("theme") });
 
   return (
-    <AppContext theme={theme}>
+    <AppContext.Provider value={{ theme }}>
       <div class="page">{children}</div>
       <ThemeSwitch />
-    </AppContext>
+    </AppContext.Provider>
   );
 }
 ```
