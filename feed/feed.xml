@@ -199,7 +199,7 @@ element in a server component, loading the script tag in the document.&lt;/p&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;To best support server rendering of client components we can ensure library
-modules that don&#39;t reference the browser APS get exported independently. This
+modules that don&#39;t reference the browser API get exported independently. This
 allows importing domain objects like a theme configuration into the application
 context.&lt;/p&gt;
 &lt;pre class=&quot;language-tsx&quot;&gt;&lt;code class=&quot;language-tsx&quot;&gt;&lt;span class=&quot;token string&quot;&gt;&quot;use client&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
