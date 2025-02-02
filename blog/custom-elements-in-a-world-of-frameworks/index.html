@@ -561,7 +561,7 @@ a {
       <div class="post-meta">
         <div class="post-date"><time datetime="2025-01-28">28 January 2025</time></div>
 
-        <script src="https://cdn.jsdelivr.net/npm/@parsonic/share-button@1.0.0/min.js" defer=""></script>
+        <script src="https://cdn.jsdelivr.net/npm/@parsonic/share-button@1.2.1/min.js" defer=""></script>
         <share-button>
           <button class="share-btn" slot="button" popovertarget="share-fallback">
             Share
@@ -751,9 +751,35 @@ similar way but actually run the JavaScript to create the render tree. If the
 element code gets included here it normally results in a
 <code>HTMLElement is not defined</code> error or some other missing browser global like
 <code>customElements</code>.</p>
-<p>To best support server rendering we can ensure library modules that don't
-reference the browser APS get exported independently. This allows importing
-domain objects like a theme configuration into the application context.</p>
+<p>In the below code you can see an example of this in Next.js with the card
+element in a server component, loading the script tag in the document.</p>
+<pre class="language-tsx"><code class="language-tsx"><span class="token keyword">import</span> Script <span class="token keyword">from</span> <span class="token string">"next/script"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> listPosts <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"../db/posts"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> styles <span class="token keyword">from</span> <span class="token string">"./posts.module.css"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">Posts</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> posts <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">listPosts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">.</span>posts<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Script</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.example/ds/esm/card<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span class="token plain-text">
+
+      </span><span class="token punctuation">{</span>posts<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>post<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span> <span class="token attr-name">className</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">.</span>post<span class="token punctuation">}</span></span> <span class="token attr-name">key</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>post<span class="token punctuation">.</span>id<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>post<span class="token punctuation">.</span>title<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span><span class="token plain-text">
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>post<span class="token punctuation">.</span>summary<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span><span class="token plain-text">
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>post<span class="token punctuation">.</span>url<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+            Read more...
+          </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card</span><span class="token punctuation">></span></span>
+      <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>To best support server rendering of client components we can ensure library
+modules that don't reference the browser APS get exported independently. This
+allows importing domain objects like a theme configuration into the application
+context.</p>
 <pre class="language-tsx"><code class="language-tsx"><span class="token string">"use client"</span><span class="token punctuation">;</span>
 
 <span class="token comment">// createTheme is safe to import and use during server rendering</span>
@@ -772,11 +798,11 @@ domain objects like a theme configuration into the application context.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">AppContext.Provider</span></span><span class="token punctuation">></span></span>
   <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>I'll close on this point, we should consider the needs of framework developers
-and provide utilities that improve the experience of working with our elements.
-That might come in the form of utility objects to apply type safe styling for
-other components in the application or perhaps even framework extensions like
-context providers.</p>
+<p>We should consider the needs of framework developers and provide utilities that
+improve the experience of working with our elements. This might come in the form
+of utility objects to apply type safe styling to other components in the
+application or perhaps framework extensions like context providers to more
+easily access shared state.</p>
 
   </main>
 
