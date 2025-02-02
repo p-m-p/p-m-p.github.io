@@ -250,7 +250,7 @@ export default async function Posts() {
 ```
 
 To best support server rendering of client components we can ensure library
-modules that don't reference the browser APS get exported independently. This
+modules that don't reference the browser API get exported independently. This
 allows importing domain objects like a theme configuration into the application
 context.
 
