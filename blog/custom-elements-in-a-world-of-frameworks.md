@@ -233,7 +233,7 @@ export default async function Posts() {
 
   return (
     <div class={styles.posts}>
-      <Script src="https://cdn.example/ds/esm/card" />
+      <Script src="https://cdn.example/ds/esm/card.js" />
 
       {posts.map((post) => (
         <my-card className={styles.post} key={post.id}>
