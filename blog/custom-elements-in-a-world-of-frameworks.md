@@ -220,9 +220,39 @@ element code gets included here it normally results in a
 `HTMLElement is not defined` error or some other missing browser global like
 `customElements`.
 
-To best support server rendering we can ensure library modules that don't
-reference the browser APS get exported independently. This allows importing
-domain objects like a theme configuration into the application context.
+In the below code you can see an example of this in Next.js with the card
+element in a server component, loading the script tag in the document.
+
+```tsx
+import Script from "next/script";
+import { listPosts } from "../db/posts";
+import styles from "./posts.module.css";
+
+export default async function Posts() {
+  const posts = await listPosts();
+
+  return (
+    <div class={styles.posts}>
+      <Script src="https://cdn.example/ds/esm/card" />
+
+      {posts.map((post) => (
+        <my-card className={styles.post} key={post.id}>
+          <h2 slot="title">{post.title}</h2>
+          <p slot="content">{post.summary}</p>
+          <a slot="action" href={post.url}>
+            Read more...
+          </a>
+        </my-card>
+      ))}
+    </div>
+  );
+}
+```
+
+To best support server rendering of client components we can ensure library
+modules that don't reference the browser APS get exported independently. This
+allows importing domain objects like a theme configuration into the application
+context.
 
 ```tsx
 "use client";
@@ -245,11 +275,11 @@ export default function Layout({ children }: React.PropsWithChildren) {
 }
 ```
 
-I'll close on this point, we should consider the needs of framework developers
-and provide utilities that improve the experience of working with our elements.
-That might come in the form of utility objects to apply type safe styling for
-other components in the application or perhaps even framework extensions like
-context providers.
+We should consider the needs of framework developers and provide utilities that
+improve the experience of working with our elements. This might come in the form
+of utility objects to apply type safe styling to other components in the
+application or perhaps framework extensions like context providers to more
+easily access shared state.
 
 [custom-elements-everywhere]: https://custom-elements-everywhere.com/
 [cem]: https://github.com/webcomponents/custom-elements-manifest
