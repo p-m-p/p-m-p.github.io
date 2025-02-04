@@ -12,6 +12,7 @@ tags:
   - typescript
   - react
 date: 2025-01-28
+social_card: custom-elements-in-a-world-of-frameworks.jpg
 ---
 
 ## An argument for custom elements
@@ -267,7 +268,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
   const theme = createTheme({ mode: usePreferences("theme") });
 
   return (
-    <AppContext.Provider value={{ theme }}>
+    <AppContext.Provider value={theme}>
       <div class="page">{children}</div>
       <ThemeSwitch />
     </AppContext.Provider>
