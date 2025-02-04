@@ -10,13 +10,13 @@
   <meta property="og:url" content="https://philparsons.co.uk/blog/custom-elements-in-a-world-of-frameworks/">
   <meta property="og:title" content="A place for custom elements in a world of JavaScript frameworks">
   <meta property="og:description" content="Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.">
-  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/custom-elements-in-a-world-of-frameworks.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/custom-elements-in-a-world-of-frameworks/">
   <meta property="twitter:title" content="A place for custom elements in a world of JavaScript frameworks">
   <meta property="twitter:description" content="Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.">
-  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/custom-elements-in-a-world-of-frameworks.jpg">
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
@@ -792,10 +792,10 @@ context.</p>
   <span class="token keyword">const</span> theme <span class="token operator">=</span> <span class="token function">createTheme</span><span class="token punctuation">(</span><span class="token punctuation">{</span> mode<span class="token operator">:</span> <span class="token function">usePreferences</span><span class="token punctuation">(</span><span class="token string">"theme"</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
-    <span class="token operator">&lt;</span>AppContext<span class="token punctuation">.</span>Provider value<span class="token operator">=></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>children<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">ThemeSwitch</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">AppContext.Provider</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">AppContext.Provider</span></span> <span class="token attr-name">value</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>theme<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>page<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>children<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">ThemeSwitch</span></span> <span class="token punctuation">/></span></span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">AppContext.Provider</span></span><span class="token punctuation">></span></span>
   <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <p>We should consider the needs of framework developers and provide utilities that
