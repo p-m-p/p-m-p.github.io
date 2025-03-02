@@ -389,12 +389,14 @@ element is upgraded the list of links is replaced with a single share button.&lt
 &lt;/copy-to-clipboard&gt;&lt;p&gt;Even after applying some styles to the list you can probably see that the share
 button will take up less vertical space. When the button replaces the links the
 page beneath the header will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
-&lt;figure&gt;
-  &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.webp 1864w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/blog/dont-fouc-up-your-web-components/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
-  &lt;figcaption&gt;
-    Cumulative layout shift between the fallback links and share button
-  &lt;/figcaption&gt;
-&lt;/figure&gt;
+&lt;copy-to-clipboard data-url=&quot;/img/blog/dont-fouc-up-your-web-components/cls-comparison.png&quot; class=&quot;ctc-image&quot;&gt;
+  &lt;figure&gt;
+    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.webp 1864w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
+    &lt;figcaption&gt;
+      Cumulative layout shift between the fallback links and share button
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/copy-to-clipboard&gt;
 &lt;h3&gt;How to fix cumulative layout shift&lt;/h3&gt;
 &lt;p&gt;To avoid the layout shift entirely the list of fallback links needs to occupy
 the same amount of vertical space as the share button. I could have tried to
