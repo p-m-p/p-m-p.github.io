@@ -612,8 +612,8 @@ the <code>data-*</code> format or via the object property in JavaScript. Take th
 <code>activePage</code> property of the <code>PageFlip</code> element that we'll cover later in the
 article as an example. We could use the elements <code>dataset</code> to store it and
 provide an initial value in the HTML declaration.</p>
-<copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-page-flip</span> <span class="token attr-name">data-active-page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-page-flip</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>If we set the value of the active page from JavaScript then it is reflected to
+<copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-page-flip</span> <span class="token attr-name">data-active-page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-page-flip</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>If we set the value of the active page from JavaScript then it is reflected to
 the attribute in the HTML. You'll notice that the conversion between camel
 casing and hyphens is handled for us but because the <code>dataset</code> is represented as
 a <code>DomStringMap</code> it doesn't provide us any control over how the values are
@@ -623,8 +623,8 @@ stored and exposed—it's always a string.</p>
 flip<span class="token punctuation">.</span>dataset<span class="token punctuation">.</span>activePage <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
 <span class="token comment">// &lt;my-page-flip data-active-page="1">&lt;/my-page-flip></span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>flip<span class="token punctuation">.</span>dataset<span class="token punctuation">.</span>activePage<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// "1" (string)</span></code></pre>
-</copy-to-clipboard><p>This isn't perfect but it works fine for simple scenarios. Let's improve the
+<span class="token comment">// "1" (string)</span></code></pre></copy-to-clipboard>
+<p>This isn't perfect but it works fine for simple scenarios. Let's improve the
 solution by defining our own custom attribute and property.</p>
 <h3>Custom element attributes and properties</h3>
 <p>Rather than use the element <code>dataset</code> we can implement our own attributes and
@@ -675,8 +675,8 @@ the property value.</p>
     <span class="token comment">// ...run animation so show page</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#activePage <span class="token operator">=</span> pageIndex<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><h2>Reacting to changes in sub-components</h2>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Reacting to changes in sub-components</h2>
 <p>Custom elements (<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components">Web Components</a>, I'll refer to them as
 components for the rest of the article) can define <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots">slots</a>
 to inject content into the component tree at specified locations. I won't
@@ -698,8 +698,8 @@ displays the active page number alongside the total number of pages.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prev<span class="token punctuation">"</span></span> <span class="token attr-name">aria-controls</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Previous<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>next<span class="token punctuation">"</span></span> <span class="token attr-name">aria-controls</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Next<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>The component needs to react to changes in the default slot to set the total
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>The component needs to react to changes in the default slot to set the total
 number of pages in the status label. It also needs to set and show the active
 page when pressing the buttons to navigate.</p>
 <h3>Using the slotchange event to react to updates</h3>
@@ -751,8 +751,8 @@ CSS display property of the pages.</p>
     <span class="token comment">// Update indicator to show selected page</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Page </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>pageIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>#pages<span class="token punctuation">.</span>length<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><div class="code-demo">
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<div class="code-demo">
   <my-pagination class="pagination" aria-roledescription="carousel" aria-label="Example pagination container">
     <div class="page" role="group">Page one</div>
     <div class="page" role="group">Page two</div>
@@ -790,8 +790,8 @@ element and not to the <code>PageFlip</code> component directly.</p>
       <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>Adding the page flip means the default slot now plays host to this component and
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Adding the page flip means the default slot now plays host to this component and
 the slot change event we used previously will be dispatched only when this
 element is assigned.</p>
 <copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-pagination</span><span class="token punctuation">></span></span>
@@ -800,8 +800,8 @@ element is assigned.</p>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>Page two<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>Page three<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-page-flip</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-pagination</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>We'll update the <code>Pagination</code> component to remove the page display functionality
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-pagination</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>We'll update the <code>Pagination</code> component to remove the page display functionality
 and add the <code>pagechange</code> event listener. This component is simpler now and only
 responsible for navigating pages and setting the status indicator label.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Pagination</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
@@ -831,8 +831,8 @@ responsible for navigating pages and setting the status indicator label.</p>
       <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Page </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>activePage <span class="token operator">+</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>totalPages<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><my-pagination-event class="pagination" aria-roledescription="carousel" aria-label="Example pagination container with animation">
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<my-pagination-event class="pagination" aria-roledescription="carousel" aria-label="Example pagination container with animation">
   <my-page-flip active-page="0">
     <div class="page" role="group">Page one</div>
     <div class="page" role="group">Page two</div>
@@ -907,8 +907,8 @@ event.</p>
 
     <span class="token keyword">this</span><span class="token punctuation">.</span>#selectionIndicator<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Page </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>page<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>totalPages<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><h2>Takeaway</h2>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Takeaway</h2>
 <p>Custom events are a power tool for implementing components that both work in
 isolation and can be combined to create dynamic applications for the web.
 Consider also the encapsulation of state through the use of custom property

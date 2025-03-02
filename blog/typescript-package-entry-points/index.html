@@ -610,15 +610,15 @@ supported in JavaScript modules.</p>
 │   │   ├── Component.ts
 │   │   └── index.ts
 │   └── index.ts
-└── tsconfig.json</code></pre>
-</copy-to-clipboard><p>With TypeScript it's possible to import from the directory via it's index file
+└── tsconfig.json</code></pre></copy-to-clipboard>
+<p>With TypeScript it's possible to import from the directory via it's index file
 or from another file without the extension.</p>
 <copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature"</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component"</span><span class="token punctuation">;</span></code></pre>
-</copy-to-clipboard><p>JavaScript modules require the full path and the file extension.</p>
+<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component"</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>JavaScript modules require the full path and the file extension.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./feature/index.js"</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component.js"</span><span class="token punctuation">;</span></code></pre>
-</copy-to-clipboard><p>To export JavaScript modules from the compiled TypeScript all import statements
+<span class="token keyword">import</span> Component <span class="token keyword">from</span> <span class="token string">"./feature/Component.js"</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>To export JavaScript modules from the compiled TypeScript all import statements
 need to use the ESM syntax. To do this the TypeScript configuration option for
 <code>module</code> needs to be set to <code>nodenext</code> as does <code>moduleResolution</code> (see <a href="https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution-for-libraries">Module
 resolution for libraries</a>).</p>
@@ -636,8 +636,8 @@ JavaScript modules.</p>
     <span class="token property">"moduleResolution"</span><span class="token operator">:</span> <span class="token string">"nodenext"</span><span class="token punctuation">,</span>
     <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"esnext"</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>It seems weird importing <code>.ts</code> and <code>.tsx</code> files with a <code>.js</code> extension, and
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>It seems weird importing <code>.ts</code> and <code>.tsx</code> files with a <code>.js</code> extension, and
 there are other ways to fix the import paths via plugins for bundlers like
 ESBuild and Rollup, but it does at least make the intent explicit.</p>
 <h2>Packaging library modules</h2>
@@ -649,8 +649,8 @@ performance through <a href="https://developer.mozilla.org/en-US/docs/Glossary/T
 <h3>Build options</h3>
 <p>If the compiled JavaScript files are relative to package.json they could be
 imported from the file system path.</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/feature/index.js"</span><span class="token punctuation">;</span></code></pre>
-</copy-to-clipboard><p>It can get messy with this approach, having the compiled files strewn across the
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/feature/index.js"</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>It can get messy with this approach, having the compiled files strewn across the
 project during development. Some of this can be overcome with <a href="https://git-scm.com/docs/gitignore">Git
 ignore</a> rules and use of the <a href="https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files">files configuration</a> in
 package.json but it also means a key advantage of the module pattern is lost,
@@ -669,11 +669,11 @@ compiled to a directory named <code>dist</code>.</p>
     <span class="token property">"."</span><span class="token operator">:</span> <span class="token string">"./dist/index.js"</span><span class="token punctuation">,</span>
     <span class="token property">"./feature"</span><span class="token operator">:</span> <span class="token string">"./dist/feature/index.js"</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>Now it's possible to import the package modules from the named entry points,
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Now it's possible to import the package modules from the named entry points,
 noticeably without the file name and extension.</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> ComponentA <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/componentA"</span><span class="token punctuation">;</span></code></pre>
-</copy-to-clipboard><h3>Automated entry point generation</h3>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> ComponentA <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"myLib/componentA"</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h3>Automated entry point generation</h3>
 <p>Maintaining the entry points manually will be a burden that likely becomes a
 source of errors with keeping things in sync. Automating the generation of the
 package entry points removes this risk but presents a new problem, the need to
@@ -731,8 +731,8 @@ contain an <code>index.ts</code> file and this is used as the entry point.</p>
 <span class="token comment">// Copy other files required in the published package</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> file <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"README.md"</span><span class="token punctuation">,</span> <span class="token string">"LICENCE"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> <span class="token function">copyFile</span><span class="token punctuation">(</span><span class="token function">join</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">join</span><span class="token punctuation">(</span>dist<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>This script can be run during the build and publishing of the library.
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>This script can be run during the build and publishing of the library.
 Everything in the <code>dist</code> directory can be ignored from source control and now
 there's no risk of forgetting to update the entry points or exposing library
 internals that may be subject to change in the future.</p>

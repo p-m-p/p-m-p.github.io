@@ -634,8 +634,8 @@ element is upgraded the list of links is replaced with a single share button.</p
       <span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>Even after applying some styles to the list you can probably see that the share
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>Even after applying some styles to the list you can probably see that the share
 button will take up less vertical space. When the button replaces the links the
 page beneath the header will shift upwards and causes a cumulative layout shift.</p>
 <copy-to-clipboard data-url="/img/blog/dont-fouc-up-your-web-components/cls-comparison.png" class="ctc-image">
@@ -677,8 +677,8 @@ to display the links with a button as the trigger.</p>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>Now if for some reason the native share functionality isn't supported or the web
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>Now if for some reason the native share functionality isn't supported or the web
 component isn't yet connected the popover with the fallback list of links is
 displayed when the button is clicked. Only issue now is the button in the web
 component is duplicated in the fallback content, let's fix it.</p>
@@ -704,8 +704,8 @@ to the component with a single named slot in which to place the button.</p>
       <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>Add the slot attribute to the button.</p>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Add the slot attribute to the button.</p>
 <copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>share-button</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>share-btn<span class="token punctuation">"</span></span> <span class="token attr-name">popovertarget</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>share-fallback<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Share<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 
@@ -730,8 +730,8 @@ to the component with a single named slot in which to place the button.</p>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>Now when the <code>share-button</code> element is upgraded the popover will no longer be
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>Now when the <code>share-button</code> element is upgraded the popover will no longer be
 displayed and only the native share functionality will be observed when the
 button is clicked.</p>
 <p>I've packaged the share button into a <a href="https://github.com/p-m-p/parsonic?tab=readme-ov-file#share-button">shared component</a> you can easily
@@ -752,8 +752,8 @@ you to the <code>:defined</code> CSS selector.</p>
 <span class="token comment">/* Show and style the element in it's defined state */</span>
 <span class="token selector">my-element:defined</span> <span class="token punctuation">{</span>
   <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-</copy-to-clipboard><p>It's a valid approach but the potential for a cumulative layout shift is still
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>It's a valid approach but the potential for a cumulative layout shift is still
 present. You could toggle the <code>visibility</code> or <code>opacity</code> of the component instead
 but if the dimensions change when it becomes defined it will probably still
 cause a significant layout shift.</p>
@@ -796,8 +796,8 @@ nothing and maintain the fallback.</p>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre>
-</copy-to-clipboard><p>This approach is probably more useful for content that is important for SEO as
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>share-button</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<p>This approach is probably more useful for content that is important for SEO as
 it can be rendered in HTML but only displayed once the component is upgraded.
 There won't be any issue with FOUC (unless the browser doesn't support
 Declarative Shadow DOM) but the potential for CLS still needs to be considered.</p>
