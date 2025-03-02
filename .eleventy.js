@@ -3,7 +3,7 @@ import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { DateTime } from "luxon";
 
-export default function (eleventyConfig) {
+export default function(eleventyConfig) {
   eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
     extensions: "html",
     formats: ["webp", "jpeg"],
@@ -63,4 +63,15 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.addPlugin(syntaxHighlight);
+  eleventyConfig.amendLibrary("md", (mdLib) => {
+    const defaultRender = mdLib.renderer.rules.fence;
+
+    mdLib.renderer.rules.fence = function(...args) {
+      let html = defaultRender(...args);
+
+      html = `<copy-to-clipboard>${html}</copy-to-clipboard>`;
+
+      return html;
+    };
+  });
 }
