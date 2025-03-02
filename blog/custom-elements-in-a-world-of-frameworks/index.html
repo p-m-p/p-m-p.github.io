@@ -627,15 +627,15 @@ experience. Well defined types help prevent misuse of components, enable auto
 completion in the development workflow and aid with other forms of code
 generation.</p>
 <p>Consider the types for this custom card element.</p>
-<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Title<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Card content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Card action<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card</span><span class="token punctuation">></span></span></code></pre>
-<p>The element has a single attribute named <code>variant</code> and a matching property on
+</copy-to-clipboard><p>The element has a single attribute named <code>variant</code> and a matching property on
 the underlying object class. The interface for this class extends <code>HTMLElement</code>
 and defines the property with the available variants.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token keyword">type</span> <span class="token class-name">Variant</span> <span class="token operator">=</span> <span class="token string">"tile"</span> <span class="token operator">|</span> <span class="token string">"section"</span><span class="token punctuation">;</span>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">type</span> <span class="token class-name">Variant</span> <span class="token operator">=</span> <span class="token string">"tile"</span> <span class="token operator">|</span> <span class="token string">"section"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">CardElement</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   variant<span class="token operator">:</span> Variant<span class="token punctuation">;</span>
@@ -652,10 +652,10 @@ and defines the property with the available variants.</p>
     <span class="token keyword">this</span><span class="token punctuation">.</span>#variant <span class="token operator">=</span> variant<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p>To make the card element known to TypeScript we need to extend the
+</copy-to-clipboard><p>To make the card element known to TypeScript we need to extend the
 <code>HTMLElementTagNameMap</code> interface so that developers have the correct type when
 working with the DOM API.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token keyword">declare</span> global <span class="token punctuation">{</span>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">declare</span> global <span class="token punctuation">{</span>
   <span class="token keyword">interface</span> <span class="token class-name">HTMLElementTagNameMap</span> <span class="token punctuation">{</span>
     <span class="token string-property property">"my-card"</span><span class="token operator">:</span> CardElement<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
@@ -673,7 +673,7 @@ card<span class="token punctuation">.</span>variant <span class="token operator"
 
 <span class="token comment">// qCards has type NodeListOf&lt;CardElement></span>
 <span class="token keyword">const</span> qCards <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">"my-card"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>For frameworks that use TypeScript and JSX, type definitions for the elements
+</copy-to-clipboard><p>For frameworks that use TypeScript and JSX, type definitions for the elements
 need defining in the JSX name space. To do this for React, we extend the
 <code>IntrinsicElements</code> interface to add the custom element properties and
 attributes. The module in which these types exist depends on the TypeScript
@@ -681,7 +681,7 @@ configuration for the <code>jsx</code> compiler option and needs defining for ea
 (<code>react</code>, <code>react/jsx-runtime</code> etc).</p>
 <p>Without the type definitions use of the element in JSX will result in a
 TypeScript error for the unknown element.</p>
-<pre class="language-tsx"><code class="language-tsx"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">"react"</span> <span class="token punctuation">{</span>
+<copy-to-clipboard><pre class="language-tsx"><code class="language-tsx"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">"react"</span> <span class="token punctuation">{</span>
   <span class="token keyword">namespace</span> <span class="token constant">JSX</span> <span class="token punctuation">{</span>
     <span class="token keyword">interface</span> <span class="token class-name">IntrinsicElements</span> <span class="token punctuation">{</span>
       <span class="token string-property property">"my-card"</span><span class="token operator">:</span> DetailedHTMLProps<span class="token operator">&lt;</span>HTMLAttributes<span class="token operator">&lt;</span>CardElement<span class="token operator">></span><span class="token punctuation">,</span> CardElement<span class="token operator">></span> <span class="token operator">&amp;</span>
@@ -689,7 +689,7 @@ TypeScript error for the unknown element.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p>Now, this immediately looks complex and having to maintain these types by hand
+</copy-to-clipboard><p>Now, this immediately looks complex and having to maintain these types by hand
 will likely result in mistakes down the line. Instead, we can automate their
 generation from a <a href="https://github.com/webcomponents/custom-elements-manifest">custom element manifest</a>.</p>
 <p>We can even generate the manifest and the type definitions for our elements by
@@ -707,23 +707,23 @@ scenario the library can export the unregistered element class and expose
 another module with the element defined. If we want to maintain a level of
 control of the element names we can supply a method on or with the class to
 perform the registration.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token comment">// class is exported from @ds/card/Card the</span>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token comment">// class is exported from @ds/card/Card the</span>
 <span class="token comment">// defined element from named export @ds/card</span>
 <span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Card</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span>
   <span class="token keyword">static</span> <span class="token function">register</span><span class="token punctuation">(</span>tagName <span class="token operator">=</span> <span class="token string">"my-card"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     customElements<span class="token punctuation">.</span><span class="token function">define</span><span class="token punctuation">(</span>tagName<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p>Application developers who want finer control over code bundling can import the
+</copy-to-clipboard><p>Application developers who want finer control over code bundling can import the
 class and register the elements where and when they wish.</p>
-<pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Card <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/card/Card"</span><span class="token punctuation">;</span>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> Card <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/card/Card"</span><span class="token punctuation">;</span>
 
 Card<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>Developers doing rapid development like prototyping or those who only wish to
+</copy-to-clipboard><p>Developers doing rapid development like prototyping or those who only wish to
 use a small set of the components can import the defined elements individually.
 A script with type <code>importmap</code> helps here to maintain the root URI of the
 package in a single location.</p>
-<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>importmap<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+<copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>importmap<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
   <span class="token punctuation">{</span>
     <span class="token string-property property">"imports"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token string-property property">"@ds/"</span><span class="token operator">:</span> <span class="token string">"https://cdn.example/ds/esm/"</span>
@@ -737,7 +737,7 @@ package in a single location.</p>
 
 <span class="token comment">&lt;!-- Upgraded element --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card</span><span class="token punctuation">></span></span></code></pre>
-<p>I wrote <a href="/blog/typescript-package-entry-points/">this article</a> outlining a strategy for generating ESM
+</copy-to-clipboard><p>I wrote <a href="/blog/typescript-package-entry-points/">this article</a> outlining a strategy for generating ESM
 library exports when working with TypeScript that might help here.</p>
 <h3>Server Side Rendering (SSR)</h3>
 <p>To support server rendering in some of the latest meta frameworks we need to
@@ -753,7 +753,7 @@ element code gets included here it normally results in a
 <code>customElements</code>.</p>
 <p>In the below code you can see an example of this in Next.js with the card
 element in a server component, loading the script tag in the document.</p>
-<pre class="language-tsx"><code class="language-tsx"><span class="token keyword">import</span> Script <span class="token keyword">from</span> <span class="token string">"next/script"</span><span class="token punctuation">;</span>
+<copy-to-clipboard><pre class="language-tsx"><code class="language-tsx"><span class="token keyword">import</span> Script <span class="token keyword">from</span> <span class="token string">"next/script"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> listPosts <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"../db/posts"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> styles <span class="token keyword">from</span> <span class="token string">"./posts.module.css"</span><span class="token punctuation">;</span>
 
@@ -776,11 +776,11 @@ element in a server component, loading the script tag in the document.</p>
     </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>To best support server rendering of client components we can ensure library
+</copy-to-clipboard><p>To best support server rendering of client components we can ensure library
 modules that don't reference the browser API get exported independently. This
 allows importing domain objects like a theme configuration into the application
 context.</p>
-<pre class="language-tsx"><code class="language-tsx"><span class="token string">"use client"</span><span class="token punctuation">;</span>
+<copy-to-clipboard><pre class="language-tsx"><code class="language-tsx"><span class="token string">"use client"</span><span class="token punctuation">;</span>
 
 <span class="token comment">// createTheme is safe to import and use during server rendering</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> createTheme <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@ds/theme"</span><span class="token punctuation">;</span>
@@ -798,7 +798,7 @@ context.</p>
     </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">AppContext.Provider</span></span><span class="token punctuation">></span></span>
   <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>We should consider the needs of framework developers and provide utilities that
+</copy-to-clipboard><p>We should consider the needs of framework developers and provide utilities that
 improve the experience of working with our elements. This might come in the form
 of utility objects to apply type safe styling to other components in the
 application or perhaps framework extensions like context providers to more
@@ -818,6 +818,7 @@ easily access shared state.</p>
 
   
 
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/copy-to-clipboard@0.2.0/min.js" defer=""></script>
 
 </body>
 
