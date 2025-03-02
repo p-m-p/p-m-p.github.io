@@ -66,10 +66,10 @@ export default function(eleventyConfig) {
   eleventyConfig.amendLibrary("md", (mdLib) => {
     const defaultRender = mdLib.renderer.rules.fence;
 
-    mdLib.renderer.rules.fence = function(...args) {
+    mdLib.renderer.rules.fence = function fence(...args) {
       let html = defaultRender(...args);
 
-      html = `<copy-to-clipboard>${html}</copy-to-clipboard>`;
+      html = `<copy-to-clipboard>${html.trim()}</copy-to-clipboard>\n`;
 
       return html;
     };
