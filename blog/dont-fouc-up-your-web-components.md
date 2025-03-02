@@ -62,12 +62,14 @@ Even after applying some styles to the list you can probably see that the share
 button will take up less vertical space. When the button replaces the links the
 page beneath the header will shift upwards and causes a cumulative layout shift.
 
-<figure>
-  <img src="./cls-comparison.png" alt="Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards">
-  <figcaption>
-    Cumulative layout shift between the fallback links and share button
-  </figcaption>
-</figure>
+<copy-to-clipboard data-url="/img/blog/dont-fouc-up-your-web-components/cls-comparison.png" class="ctc-image">
+  <figure>
+    <img src="/img/blog/dont-fouc-up-your-web-components/cls-comparison.png" alt="Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards">
+    <figcaption>
+      Cumulative layout shift between the fallback links and share button
+    </figcaption>
+  </figure>
+</copy-to-clipboard>
 
 ### How to fix cumulative layout shift
 

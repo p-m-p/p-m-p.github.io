@@ -1,4 +1,13 @@
-figure {
+.ctc-image {
+  &::part(button) {
+    opacity: 0;
+    background: rgb(0 0 0 / 80%);
+    transition: opacity 150ms;
+  }
+
+  &:hover::part(button) {
+    opacity: 1;
+  }
 }
 
 figcaption {
@@ -85,10 +94,8 @@ figcaption {
 }
 
 .post-date {
-  color: light-dark(
-    var(--color-secondary-darker),
-    var(--color-secondary-light)
-  );
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
   font-size: 0.875rem;
 }
 
@@ -190,10 +197,8 @@ figcaption {
   align-items: center;
   background: transparent;
   border: none;
-  color: light-dark(
-    var(--color-secondary-darker),
-    var(--color-secondary-light)
-  );
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
