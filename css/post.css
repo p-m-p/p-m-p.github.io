@@ -10,6 +10,12 @@
   }
 }
 
+back-to-top {
+  --btt-button-background: var(--bg-highlight);
+  --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
+  --btt-button-color: var(--color-text-primary);
+}
+
 figcaption {
   font-size: 0.875rem;
   text-align: center;

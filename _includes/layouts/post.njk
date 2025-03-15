@@ -71,9 +71,12 @@ layout: layouts/base.njk
   </footer>
 </article>
 
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
 {% block script %}
   {% if script %}
     <script src="/js/{{ script }}" type="module" defer></script>
   {% endif %}
 {% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/@parsonic/copy-to-clipboard@0.2.0/min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/copy-to-clipboard@1.0.2/min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/back-to-top@0.2.1/min.js" defer></script>
