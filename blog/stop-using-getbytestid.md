@@ -9,12 +9,24 @@ date: 2025-03-18
 draft: true
 ---
 
-## Modern test tooling
+## Where did test ids come from?
 
-Two popular testing frameworks, Playwright and Testing Library, have a similar
-API for locating and asserting the state of elements in the document. This
-article will use Playwright for code examples but in most cases will have the
-same or similar API in Testing Library.
+Going back 10 or more years the testing tools we had back then followed the
+browser API more closely with limited methods for selecting elements and
+asserting state. Selenium WebDriver, the most popular tool I remember before the
+rise of what you might consider modern, followed this pattern and while I've not
+touched it for many years now it appears to have a similar strategy today. This
+limitation led to the rise of the test id pattern where developers would apply
+test ids for the sole purpose of selecting elements in tests. The logic for
+using test ids came from the argument of decoupling the tests from the
+application development and this made sense over using selectors based on class
+names or, shudders, XPath expressions that would often result in brittle tests
+that failed after refactoring code or developing new features.
+
+Two popular testing tools, Playwright and Testing Library, have a similar API
+for locating and asserting the state of elements in the document. This article
+will use Playwright for code examples but in most cases the same or similar API
+exists in Testing Library.
 
 ## Accessibility and User Focus
 
@@ -87,14 +99,14 @@ The selector allows us to refine the query based on accessible attributes like
 pressed buttons, checked or disabled form controls, expanded menus or sections.
 
 ```js
-test("closes FAQ item", async ({ page }) => {
-  const faqItem = page.getByRole("region", {
-    name: "Shipping costs",
-    expanded: true,
-  });
-
+test("toggles FAQ item", async ({ page }) => {
   await page.getByRole("button", { name: "Shipping costs" }).click();
-  await expect(faqSection).not.toBeVisible();
+  await expect(
+    page.getByRole("region", {
+      name: "Shipping costs",
+      expanded: true,
+    }),
+  ).toBeVisible();
 });
 ```
 
