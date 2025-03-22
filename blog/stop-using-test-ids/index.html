@@ -622,15 +622,16 @@ assert a good user experience and follow a test driven approach to feature
 development with a focus on accessibility.</p>
 <p>The code examples in this article show use of Playwright that can easily
 translate to Testing Library which has a similar selector and assertion API.</p>
-<h2>The arguments against semantic queries</h2>
+<h2>An argument against semantic queries</h2>
 <p>Dedicated QA engineers (those separate to the developers building the
-application) who tend to take ownership of test ID maintenance will likely push
-back on a more semantic approach. The reason for this normally stems from a
-desire to have a separation of concerns, a valid argument when not testing early
-in the development lifecycle. The points I raise in this article focus more on
-developers who take responsibility for all aspects of software quality that want
-to incorporate assertions for functionality, accessibility and usability in a
-single suite of tests.</p>
+application) who take ownership of test ID maintenance will likely push back on
+a more semantic approach. The reason for this normally stems from a desire to
+have a separation of concerns, a valid argument if not testing early in the
+development lifecycle.</p>
+<p>The points I raise against the use of the test ID strategy in this article still
+apply but focus more on developers taking responsibility for all aspects of
+software quality that want to incorporate assertions for functionality,
+accessibility and usability in a single suite of tests.</p>
 <h2>False positives from test ids</h2>
 <p>A test ID has little to no relation to the element it appears on and this can
 mislead us into accepting changes that have passing tests but break the
