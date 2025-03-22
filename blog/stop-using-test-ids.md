@@ -1,7 +1,7 @@
 ---
 title: Stop using Test IDs and assert usability instead
 description:
-  The pattern of applying a test ID to an element to more easily selected it in
+  The pattern of applying a Test ID to an element to more easily selected it in
   tests has existed for a while. During that time the tools we use as developers
   and testers have improved greatly and offer a more user centric approach to
   asserting our applications behave as expected.
