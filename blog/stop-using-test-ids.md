@@ -179,6 +179,13 @@ test("navigates to home page from main navigation", async ({ page }) => {
 });
 ```
 
+### A note on accessible labels
+
+Labels may come from a content management system, possibly even translated, and
+like any other application state we want to isolate this content in our tests.
+The strategy for this will depend on the tooling used to manage the content but
+could additionally assert for content correctness.
+
 ## Should we ever use test a test ID?
 
 Selector performance often comes up in a debate over the use of the test ID
