@@ -4,17 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stop using a test ID and assert usability instead</title>
+  <title>Stop using Test IDs and assert usability instead</title>
   <meta name="description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/stop-using-test-ids/">
-  <meta property="og:title" content="Stop using a test ID and assert usability instead">
+  <meta property="og:title" content="Stop using Test IDs and assert usability instead">
   <meta property="og:description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/stop-using-test-ids/">
-  <meta property="twitter:title" content="Stop using a test ID and assert usability instead">
+  <meta property="twitter:title" content="Stop using Test IDs and assert usability instead">
   <meta property="twitter:description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
@@ -542,7 +542,7 @@ a {
 }</style>
   <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
 
-  <title>Stop using a test ID and assert usability instead</title>
+  <title>Stop using Test IDs and assert usability instead</title>
 </head>
 
 <body>
@@ -566,7 +566,7 @@ a {
 <article class="post">
   <header class="post-header">
     <div class="container">
-      <h1 class="post-title">Stop using a test ID and assert usability instead</h1>
+      <h1 class="post-title">Stop using Test IDs and assert usability instead</h1>
 
       <div class="post-meta">
         <div class="post-date"><time datetime="2025-03-18">18 March 2025</time></div>
@@ -584,13 +584,13 @@ a {
             <h2 class="share-fallback-title">Share this post</h2>
             <ul class="share-fallback-links">
               <li>
-                <a href="https://bsky.app/intent/compose?text=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead%20https://philparsons.co.uk//blog/stop-using-test-ids/">🦋 Share on Bluesky</a>
+                <a href="https://bsky.app/intent/compose?text=Stop%20using%20Test%20IDs%20and%20assert%20usability%20instead%20https://philparsons.co.uk//blog/stop-using-test-ids/">🦋 Share on Bluesky</a>
               </li>
               <li>
-                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/stop-using-test-ids/&title=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead">🏢 Share on LinkedIn</a>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/stop-using-test-ids/&title=Stop%20using%20Test%20IDs%20and%20assert%20usability%20instead">🏢 Share on LinkedIn</a>
               </li>
               <li>
-                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/stop-using-test-ids/&text=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead&via=phil_parsons">
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/stop-using-test-ids/&text=Stop%20using%20Test%20IDs%20and%20assert%20usability%20instead&via=phil_parsons">
                   💩 Share on X
                 </a>
               </li>
@@ -616,24 +616,22 @@ The problem then? This separation comes at a cost that I'll try to cover in this
 post, the industry recognised this and the tooling has adapted accordingly.</p>
 <p>Modern test tools like <a href="https://playwright.dev/">Playwright</a> and <a href="https://testing-library.com/">Testing
 Library</a> provide an API based much more closely on usability
-with language that helps to describe how a user interacts with an application.
+with semantics that help to describe how a user interacts with an application.
 Using these tools we can avoid the test ID pattern in favour of selectors that
-assert a good user experience and follow a test driven approach to feature
-development with a focus on accessibility.</p>
+assert a good user experience with a focus on accessibility.</p>
 <p>The code examples in this article show use of Playwright that can easily
 translate to Testing Library which has a similar selector and assertion API.</p>
-<h2>An argument against semantic queries</h2>
-<p>Dedicated QA engineers (those separate to the developers building the
-application) who take ownership of test ID maintenance will likely push back on
-a more semantic approach. The reason for this normally stems from a desire to
-have a separation of concerns, a valid argument if not testing early in the
-development lifecycle.</p>
-<p>The points I raise against the use of the test ID strategy in this article still
-apply but focus more on developers taking responsibility for all aspects of
-software quality that want to incorporate assertions for functionality,
+<h2>Addressing the argument against semantic queries</h2>
+<p>Engineers within dedicated QA teams who take ownership of Test ID maintenance
+will likely push back on a more semantic approach. The reason for this normally
+stems from a desire to have a separation of concerns, a valid argument when not
+testing early in the development lifecycle.</p>
+<p>The points I raise against the use of the Test ID in this article still apply in
+that scenario but focus more on a full lifecycle of feature development
+incorporating all aspects of software quality with assertions for functionality,
 accessibility and usability in a single suite of tests.</p>
-<h2>False positives from test ids</h2>
-<p>A test ID has little to no relation to the element it appears on and this can
+<h2>False positives from Test ID</h2>
+<p>A Test ID has little to no relation to the element it appears on and this can
 mislead us into accepting changes that have passing tests but break the
 underlying implementation or negatively impact user experience.</p>
 <p>Take this test for a button that opens a terms and conditions dialog.</p>
@@ -641,11 +639,12 @@ underlying implementation or negatively impact user experience.</p>
   <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-button"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-dialog"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>While the test ID names do allude to the role of the elements the test does not
-check or enforce them. This allows for a poor implementation in the HTML that
-doesn't cause the tests to fail.</p>
-<p>If the button gets implemented as a div, keyboard users can't access it but the
-tests still pass. This particular one I've seen more times than I can remember!</p>
+<p>While the Test ID names allude to the role of the elements the test does not
+check or enforce them. This allows for a poor implementation of the HTML that
+doesn't cause the test to fail.</p>
+<p>If someone implements the button as a div, keyboard users can't access it but
+the test still passes. This particular one I've seen more times than I care to
+remember!</p>
 <copy-to-clipboard><pre class="language-jsx"><code class="language-jsx"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
   <span class="token attr-name">data-testid</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>view-terms-button<span class="token punctuation">"</span></span>
   <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>btn btn-outlined<span class="token punctuation">"</span></span>
@@ -655,46 +654,45 @@ tests still pass. This particular one I've seen more times than I can remember!<
 <h2>Test ID maintenance costs</h2>
 <p>Test IDs introduce clutter in the HTML markup that serves no purpose in the live
 application, unless you YOLO it and test in production. Strategies to <a href="https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties">remove
-test ids during builds</a> exist and while this seems like a bad
-idea, if you don't do it someone will probably write some code at some point
-using a test ID in a weird and wonderful way.</p>
+the Test ID during builds</a> exist and while this seems like a
+bad idea, if you don't do it someone will probably write some code at some point
+using a Test ID in a weird and wonderful way.</p>
 <p>Test ID naming also becomes a problem at scale. It requires a system to ensure
 uniqueness while logically grouping related IDs within a feature. This can lead
 to a lack of clear intent in the tests that inevitably become harder to maintain
-over time.</p>
+over time. In my time I've even seen Jira story numbers incorporated into the
+Test ID, no joke.</p>
 <h2>Clear intention results in maintainable tests</h2>
-<p>Okay, so how do modern testing tools solve these problems? Let's look first at
-the Swiss Army Knife of the element locators, <code>getByRole</code>.</p>
+<p>Okay, so how do these modern testing tools solve the problem? Let's focus on the
+Swiss Army Knife of the element locators they provide, <code>getByRole</code>.</p>
 <p>This selector queries for elements by their semantic role (like button, link,
 menu etc). Selecting elements this way mirrors how real users and assistive
-technologies interact with the page and helps ensure that our features function
-correctly for all users.</p>
+technologies interact with the application and helps ensure that our features
+function correctly for <em>all</em> users.</p>
 <p>On top of that, if we follow a test driven approach to development using roles
-to select elements helps us to think about user experience design and how we
-should better structure our HTML.</p>
-<p>Let's change the terms and conditions test from before to use <code>getByRole</code>
-locators.</p>
+to select elements helps us to think more deeply about user experience design
+and how we should better structure our HTML.</p>
+<p>Let's change the terms and conditions test from before to use <code>getByRole</code>.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"View terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
     page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"dialog"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>This test will fail with the div implementation of the button as it does not
-have the accessible button role. We could naively add a role attribute to make
-the tests pass but we'd instead update it to use a button element.</p>
+<p>This test will fail with the div implementation of the button that does not have
+the accessible button role. We could naively add a role attribute to make the
+tests pass but, of course, we'd instead update the code to use a button element.</p>
 <p>Role based queries like this make implementing accessibility more deliberate and
-enable us to test for it early in our feature development. Having this in the
-tests also makes them more descriptive and maintainable.</p>
-<h3>How far does <code>getByRole</code> take us?</h3>
+enable us to test for it early in feature development. Having this in the tests
+also makes them more readable end ultimately more maintainable.</p>
+<h3>How far can we take <code>getByRole</code>?</h3>
 <p>While not every element will have a clear role to select, we can cover probably
-99.9% of cases using the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">available roles</a> combined with query options.</p>
-<p>Options refine a query based on the state of the element with attributes like
+99% of cases using the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">available roles</a> combined with query options.</p>
+<p>Options refine a query based on the state of the element through attributes like
 name, pressed, checked and selected that have the added benefit of providing
 even more clear intent.</p>
-<p>An example here with a test that expands an accordion item within an FAQ
-section.</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"expands FAQ section"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+<p>An example here, a test that expands an accordion item within an FAQ section.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"expands shipping costs"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Shipping costs"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
     page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"region"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
@@ -703,12 +701,12 @@ section.</p>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>We can write queries that distinguish elements with the same role and name by
-chaining locators to select within a region. To do this we might select a
-landmark close to the element first (like navigation regions, headers, sidebars)
-and query for the element within it.</p>
-<p>This test follows the home page link in the main navigation in a page with a
-link that has the same name around a logo.</p>
+<p>We write queries to distinguish elements with the same role and name by chaining
+locators to select within a region. To do this we select a landmark close to the
+element first (like navigation regions, headers, sidebars) and query for the
+element within it.</p>
+<p>This example test follows the home page link in the main navigation. Another
+link with the same name exists around a logo in the main header.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"navigates to home page from main navigation"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> page
     <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"navigation"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Main navigation"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -716,32 +714,44 @@ link that has the same name around a logo.</p>
     <span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>Broad selectors like this won't break if the structure of the navigation
+<p>Broad selectors like this don't break if the structure of the navigation
 changes. They also assure us that we have properly structured HTML and paint a
-clearer picture of the feature under test.</p>
-<p>Consider the same test with an ID, we have to rely solely on the test
-description and have no assurance that the navigation functions correctly.</p>
+clearer picture of the feature under test when we return to the code at a later
+date.</p>
+<p>Consider the same test with a Test ID. We have to rely solely on the test
+description and have no assurance that the previous developer implemented the
+navigation structure correctly.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"navigates to home page from main navigation"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"nav-home-link"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h3>A note on accessible labels</h3>
-<p>Labels may come from a content management system, possibly even translated, and
-like any other application state we want to isolate this content in our tests.
-The strategy for this will depend on the tooling used to manage the content but
-could additionally assert for content correctness.</p>
-<h2>Should we ever use test a test ID?</h2>
-<p>Selector performance often comes up in a debate over the use of the test ID
-strategy and while the argument has merit, we need to consider the benefits
-gained from using semantic queries. <code>getByRole</code> is slower than <code>getByTestId</code> due
-to the algorithm used to select the element and perform checks to assert its
-accessibility.</p>
-<p>Narrowing focus of selectors using locator chaining as shown above and ensuring
-we address performance within the application itself will help. We <em>can</em> also
-introduce a test ID at this point to further improve selector performance but
-this should not impact the semantics of the tests.</p>
+<p>The tests examples above use the accessible name option in the locator options.
+Labels like this may come from a content management system, possibly even
+translated, and like any other application state we need to isolate this content
+in our tests. The strategy for this will depend on the tooling used to manage
+the content and presents a good opportunity to also assert for content
+correctness.</p>
+<p>An example here with Playwright, provide an extension to the test fixture and
+run the same tests against the different languages.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"navigates to home page from main navigation"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page<span class="token punctuation">,</span> t <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page
+    <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"navigation"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token function">t</span><span class="token punctuation">(</span><span class="token string">"navigation.label"</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"link"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token function">t</span><span class="token punctuation">(</span><span class="token string">"navigation.links.home"</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Should we ever use a Test ID?</h2>
+<p>Selector performance often comes up in a debate over the use of the Test ID
+strategy and while the argument has merit, we need to consider this against the
+benefits gained from using semantic queries. Yes, <code>getByRole</code> performs more
+slowly than <code>getByTestId</code> due to the algorithm used to select the element and
+for accessibility.</p>
+<p>If performance becomes a problem with well structured tests that run in parallel
+and narrowing focus of selectors using locator chaining doesn't help, we <em>can</em>
+introduce a Test ID.</p>
 <p>As an example, here we narrow the focus of the terms and conditions test by
-chaining locators with a test ID.</p>
+chaining locators starting with a test ID.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> page
     <span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"terms-and-conditions"</span><span class="token punctuation">)</span>
@@ -750,6 +760,23 @@ chaining locators with a test ID.</p>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
     page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"dialog"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>Another, more intrusive pattern, involves applying accessibility tests after
+selecting the element with a Test ID. This will help a lot with selector
+performance but requires much more discipline in writing tests.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> button <span class="token operator">=</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-button"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>button<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>button<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveAccessibleName</span><span class="token punctuation">(</span><span class="token string">"View terms and conditions"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> button<span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> dialog <span class="token operator">=</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-dialog"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>dialog<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>dialog<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveRole</span><span class="token punctuation">(</span><span class="token string">"dialog"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>button<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveAccessibleName</span><span class="token punctuation">(</span><span class="token string">"Terms and conditions"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 
   </main>
