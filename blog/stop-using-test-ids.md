@@ -6,6 +6,7 @@ description:
   and testers have improved greatly and offer a more user centric approach to
   asserting our applications behave as expected.
 date: 2025-03-18
+social_card: stop-using-test-ids.jpg
 ---
 
 ## Where did the test ID come from?
