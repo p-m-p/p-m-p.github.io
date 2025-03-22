@@ -16,24 +16,33 @@
     <updated>2025-03-18T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/stop-using-test-ids/</id>
     <content type="html">&lt;h2&gt;Where did the test ID come from?&lt;/h2&gt;
-&lt;p&gt;Mature testing tools like Selenium WebDriver supply a somewhat limited set of
-methods for selecting elements and asserting state. This limitation led to the
-rise of the test ID pattern used by developers to apply an attribute to elements
-for the sole purpose of selecting them in tests. If I recall correctly, the
-birth of this pattern came from the logic of decoupling tests from the
-application state and sure, this makes a lot of sense. Using the selectors based
-on class name or, shudders, XPath expressions result in brittle tests that often
-fail after refactoring code or developing new features. The problem then? This
-separation comes at a cost, the industry recognised this and the tooling adapted
-accordingly.&lt;/p&gt;
-&lt;p&gt;Modern testing tools like &lt;a href=&quot;https://playwright.dev/&quot;&gt;Playwright&lt;/a&gt; and &lt;a href=&quot;https://testing-library.com/&quot;&gt;Testing
+&lt;p&gt;Mature testing tools like &lt;a href=&quot;https://www.selenium.dev/documentation/webdriver/&quot;&gt;Selenium WebDriver&lt;/a&gt; provide a somewhat
+limited set of methods for selecting elements and asserting state. This
+limitation led to the rise of the test ID pattern used by developers to apply an
+attribute to elements for the sole purpose of selecting them in tests. If I
+recall correctly, the birth of this pattern came from the logic of decoupling
+tests from the application state and, sure, this makes sense.&lt;/p&gt;
+&lt;p&gt;Using selectors based on class name or, shudders, XPath expressions results in
+brittle tests that often fail when refactoring code or developing new features.
+The problem then? This separation comes at a cost that I&#39;ll try to cover in this
+post, the industry recognised this and the tooling has adapted accordingly.&lt;/p&gt;
+&lt;p&gt;Modern test tools like &lt;a href=&quot;https://playwright.dev/&quot;&gt;Playwright&lt;/a&gt; and &lt;a href=&quot;https://testing-library.com/&quot;&gt;Testing
 Library&lt;/a&gt; provide an API based much more closely on usability
-with language that does a great job of describing how a user interacts with an
-application. Using these tools we can avoid the test id pattern, embrace user
-experience in our tests and iterate quickly with a test driven approach to
-feature development.&lt;/p&gt;
-&lt;p&gt;The code examples in this article show use of Playwright but translate to
-Testing Library which has a similar API for writing tests.&lt;/p&gt;
+with language that helps to describe how a user interacts with an application.
+Using these tools we can avoid the test ID pattern in favour of selectors that
+assert a good user experience and follow a test driven approach to feature
+development with a focus on accessibility.&lt;/p&gt;
+&lt;p&gt;The code examples in this article show use of Playwright that can easily
+translate to Testing Library which has a similar selector and assertion API.&lt;/p&gt;
+&lt;h2&gt;The arguments against semantic queries&lt;/h2&gt;
+&lt;p&gt;Dedicated QA engineers (those separate to the developers building the
+application) who tend to take ownership of test ID maintenance will likely push
+back on a more semantic approach. The reason for this normally stems from a
+desire to have a separation of concerns, a valid argument when not testing early
+in the development lifecycle. The points I raise in this article focus more on
+developers who take responsibility for all aspects of software quality that want
+to incorporate assertions for functionality, accessibility and usability in a
+single suite of tests.&lt;/p&gt;
 &lt;h2&gt;False positives from test ids&lt;/h2&gt;
 &lt;p&gt;A test ID has little to no relation to the element it appears on and this can
 mislead us into accepting changes that have passing tests but break the
@@ -44,7 +53,7 @@ underlying implementation or negatively impact user experience.&lt;/p&gt;
   &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;page&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getByTestId&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;view-terms-dialog&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toBeVisible&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;p&gt;While the test ID names do allude to the role of the elements the test does not
-check or enforce it. This allows for a poor implementation in the HTML that
+check or enforce them. This allows for a poor implementation in the HTML that
 doesn&#39;t cause the tests to fail.&lt;/p&gt;
 &lt;p&gt;If the button gets implemented as a div, keyboard users can&#39;t access it but the
 tests still pass. This particular one I&#39;ve seen more times than I can remember!&lt;/p&gt;
@@ -58,12 +67,12 @@ tests still pass. This particular one I&#39;ve seen more times than I can rememb
 &lt;p&gt;Test IDs introduce clutter in the HTML markup that serves no purpose in the live
 application, unless you YOLO it and test in production. Strategies to &lt;a href=&quot;https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties&quot;&gt;remove
 test ids during builds&lt;/a&gt; exist and while this seems like a bad
-idea, if you don&#39;t do it someone will probably write some production code at
-some point using a test ID in a weird and wonderful way.&lt;/p&gt;
-&lt;p&gt;Test ID naming can also becomes a problem at scale. It requires a naming system
-to ensure uniqueness while logically grouping related IDs within a feature. This
-will likely lead to a lack of clear intent in the tests that become gradually
-harder to maintain.&lt;/p&gt;
+idea, if you don&#39;t do it someone will probably write some code at some point
+using a test ID in a weird and wonderful way.&lt;/p&gt;
+&lt;p&gt;Test ID naming also becomes a problem at scale. It requires a system to ensure
+uniqueness while logically grouping related IDs within a feature. This can lead
+to a lack of clear intent in the tests that inevitably become harder to maintain
+over time.&lt;/p&gt;
 &lt;h2&gt;Clear intention results in maintainable tests&lt;/h2&gt;
 &lt;p&gt;Okay, so how do modern testing tools solve these problems? Let&#39;s look first at
 the Swiss Army Knife of the element locators, &lt;code&gt;getByRole&lt;/code&gt;.&lt;/p&gt;
