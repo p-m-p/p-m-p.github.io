@@ -10,26 +10,38 @@ date: 2025-03-18
 
 ## Where did the test ID come from?
 
-Mature testing tools like Selenium WebDriver supply a somewhat limited set of
-methods for selecting elements and asserting state. This limitation led to the
-rise of the test ID pattern used by developers to apply an attribute to elements
-for the sole purpose of selecting them in tests. If I recall correctly, the
-birth of this pattern came from the logic of decoupling tests from the
-application state and sure, this makes a lot of sense. Using the selectors based
-on class name or, shudders, XPath expressions result in brittle tests that often
-fail after refactoring code or developing new features. The problem then? This
-separation comes at a cost, the industry recognised this and the tooling adapted
-accordingly.
+Mature testing tools like [Selenium WebDriver][webdriver] provide a somewhat
+limited set of methods for selecting elements and asserting state. This
+limitation led to the rise of the test ID pattern used by developers to apply an
+attribute to elements for the sole purpose of selecting them in tests. If I
+recall correctly, the birth of this pattern came from the logic of decoupling
+tests from the application state and, sure, this makes sense.
 
-Modern testing tools like [Playwright][playwright] and [Testing
+Using selectors based on class name or, shudders, XPath expressions results in
+brittle tests that often fail when refactoring code or developing new features.
+The problem then? This separation comes at a cost that I'll try to cover in this
+post, the industry recognised this and the tooling has adapted accordingly.
+
+Modern test tools like [Playwright][playwright] and [Testing
 Library][testing-library] provide an API based much more closely on usability
-with language that does a great job of describing how a user interacts with an
-application. Using these tools we can avoid the test id pattern, embrace user
-experience in our tests and iterate quickly with a test driven approach to
-feature development.
+with language that helps to describe how a user interacts with an application.
+Using these tools we can avoid the test ID pattern in favour of selectors that
+assert a good user experience and follow a test driven approach to feature
+development with a focus on accessibility.
 
-The code examples in this article show use of Playwright but translate to
-Testing Library which has a similar API for writing tests.
+The code examples in this article show use of Playwright that can easily
+translate to Testing Library which has a similar selector and assertion API.
+
+## The arguments against semantic queries
+
+Dedicated QA engineers (those separate to the developers building the
+application) who tend to take ownership of test ID maintenance will likely push
+back on a more semantic approach. The reason for this normally stems from a
+desire to have a separation of concerns, a valid argument when not testing early
+in the development lifecycle. The points I raise in this article focus more on
+developers who take responsibility for all aspects of software quality that want
+to incorporate assertions for functionality, accessibility and usability in a
+single suite of tests.
 
 ## False positives from test ids
 
@@ -47,7 +59,7 @@ test("opens terms and conditions", async ({ page }) => {
 ```
 
 While the test ID names do allude to the role of the elements the test does not
-check or enforce it. This allows for a poor implementation in the HTML that
+check or enforce them. This allows for a poor implementation in the HTML that
 doesn't cause the tests to fail.
 
 If the button gets implemented as a div, keyboard users can't access it but the
@@ -67,13 +79,13 @@ tests still pass. This particular one I've seen more times than I can remember!
 Test IDs introduce clutter in the HTML markup that serves no purpose in the live
 application, unless you YOLO it and test in production. Strategies to [remove
 test ids during builds][remove-test-ids] exist and while this seems like a bad
-idea, if you don't do it someone will probably write some production code at
-some point using a test ID in a weird and wonderful way.
+idea, if you don't do it someone will probably write some code at some point
+using a test ID in a weird and wonderful way.
 
-Test ID naming can also becomes a problem at scale. It requires a naming system
-to ensure uniqueness while logically grouping related IDs within a feature. This
-will likely lead to a lack of clear intent in the tests that become gradually
-harder to maintain.
+Test ID naming also becomes a problem at scale. It requires a system to ensure
+uniqueness while logically grouping related IDs within a feature. This can lead
+to a lack of clear intent in the tests that inevitably become harder to maintain
+over time.
 
 ## Clear intention results in maintainable tests
 
@@ -193,9 +205,11 @@ test("opens terms and conditions", async ({ page }) => {
 });
 ```
 
+[webdriver]: https://www.selenium.dev/documentation/webdriver/
 [playwright]: https://playwright.dev/
 [testing-library]: https://testing-library.com/
 [roles]:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles
 [remove-test-ids]:
   https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties
+[qa-role]: https://newsletter.pragmaticengineer.com/p/qa-across-tech
