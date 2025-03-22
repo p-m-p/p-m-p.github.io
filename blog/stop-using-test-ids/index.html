@@ -725,6 +725,11 @@ description and have no assurance that the navigation functions correctly.</p>
   <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"nav-home-link"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h3>A note on accessible labels</h3>
+<p>Labels may come from a content management system, possibly even translated, and
+like any other application state we want to isolate this content in our tests.
+The strategy for this will depend on the tooling used to manage the content but
+could additionally assert for content correctness.</p>
 <h2>Should we ever use test a test ID?</h2>
 <p>Selector performance often comes up in a debate over the use of the test ID
 strategy and while the argument has merit, we need to consider the benefits
