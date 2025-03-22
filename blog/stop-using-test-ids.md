@@ -1,37 +1,39 @@
 ---
-title: Stop using test ids and embrace user experience testing
+title: Stop using a test ID and assert usability instead
 description:
-  The pattern of using data-testid attributes to locate elements in UI tests has
-  been around a while. Over that time the tools we use in testing have developed
-  and while test ids still have a place in our toolkit, there is a better
-  approach.
+  The pattern of applying a test ID to an element to more easily selected it in
+  tests has existed for a while. During that time the tools we use as developers
+  and testers have improved greatly and offer a more user centric approach to
+  asserting our applications behave as expected.
 date: 2025-03-18
-draft: true
 ---
 
-## Where do test ids come from?
+## Where did the test ID come from?
 
-Legacy testing tools like Selenium WebDriver follow the browser API more closely
-with limited methods for selecting elements and asserting state. This limitation
-led to the rise of the test id pattern used by developers to apply test ids for
-the sole purpose of selecting elements in tests. The argument for using these
-test ids came from the logic of decoupling the tests from the application state
-and this makes sense. Using selectors based on class names or, shudders, XPath
-expressions result in brittle tests that often fail after refactoring code or
-developing new features.
+Mature testing tools like Selenium WebDriver supply a somewhat limited set of
+methods for selecting elements and asserting state. This limitation led to the
+rise of the test ID pattern used by developers to apply an attribute to elements
+for the sole purpose of selecting them in tests. If I recall correctly, the
+birth of this pattern came from the logic of decoupling tests from the
+application state and sure, this makes a lot of sense. Using the selectors based
+on class name or, shudders, XPath expressions result in brittle tests that often
+fail after refactoring code or developing new features. The problem then? This
+separation comes at a cost, the industry recognised this and the tooling adapted
+accordingly.
 
 Modern testing tools like [Playwright][playwright] and [Testing
-Library][testing-library] provide an API based on usability with a language that
-closely resembles how a user interacts with an application. With these tools we
-can avoid the test id pattern, embrace user experience and iterate quickly with
-a test driven approach to feature development.
+Library][testing-library] provide an API based much more closely on usability
+with language that does a great job of describing how a user interacts with an
+application. Using these tools we can avoid the test id pattern, embrace user
+experience in our tests and iterate quickly with a test driven approach to
+feature development.
 
-The code examples in this article show the use of Playwright and Testing Library
-has a similar API for writing tests.
+The code examples in this article show use of Playwright but translate to
+Testing Library which has a similar API for writing tests.
 
-## False positives from using test ids
+## False positives from test ids
 
-Test IDs have little to no relation to the elements they appear on and this can
+A test ID has little to no relation to the element it appears on and this can
 mislead us into accepting changes that have passing tests but break the
 underlying implementation or negatively impact user experience.
 
@@ -44,13 +46,12 @@ test("opens terms and conditions", async ({ page }) => {
 });
 ```
 
-The names of the test ids allude to the role of the elements but do not enforce
-this and allow someone to change the structure of the HTML without causing the
-tests to fail.
+While the test ID names do allude to the role of the elements the test does not
+check or enforce it. This allows for a poor implementation in the HTML that
+doesn't cause the tests to fail.
 
-For example, the button gets implemented as a div and keyboard users can't
-access it but the tests still pass. This one I've seen more times than I can
-remember!
+If the button gets implemented as a div, keyboard users can't access it but the
+tests still pass. This particular one I've seen more times than I can remember!
 
 ```jsx
 <div
@@ -61,39 +62,35 @@ remember!
 </div>
 ```
 
-## HTML clutter and inconsistent naming
+## Test ID maintenance costs
 
-Test IDS introduce clutter in the HTML that serves no purpose in the live
-application or website, unless you YOLO it and test in production. Strategies to
-[remove them during builds][remove-test-ids] exist and this seems like a bad
-idea but if you don't, someone will probably write some production code at some
-point that naively targets a test id.
+Test IDs introduce clutter in the HTML markup that serves no purpose in the live
+application, unless you YOLO it and test in production. Strategies to [remove
+test ids during builds][remove-test-ids] exist and while this seems like a bad
+idea, if you don't do it someone will probably write some production code at
+some point using a test ID in a weird and wonderful way.
 
-Naming test ids also becomes a problem at scale. You need a system for naming to
-keep them unique that inevitably becomes related to some robot generated string
-that includes a Jira story number and results in the intent of selectors in
-tests becoming even less clear. You may even want to keep an inventory of test
-ids to track usage, maybe you will need automated checks for this during the
-build too. I say these things somewhat jokingly but I have seen it all, even
-dedicated QA teams making code changes to apply test ids after features had
-launched in production.
+Test ID naming can also becomes a problem at scale. It requires a naming system
+to ensure uniqueness while logically grouping related IDs within a feature. This
+will likely lead to a lack of clear intent in the tests that become gradually
+harder to maintain.
 
-## Clear intentions lead to more maintainable tests
+## Clear intention results in maintainable tests
 
-Okay, so how do semantic queries solve these problems? Let's look at the Swiss
-Army Knife of the element locators, `getByRole`.
+Okay, so how do modern testing tools solve these problems? Let's look first at
+the Swiss Army Knife of the element locators, `getByRole`.
 
 This selector queries for elements by their semantic role (like button, link,
 menu etc). Selecting elements this way mirrors how real users and assistive
-technologies interact with the page and helps us to ensure that the page
-functions correctly for all users.
+technologies interact with the page and helps ensure that our features function
+correctly for all users.
 
-On top of that, if we follow a test driven approach to development using
-semantic roles to select elements, this helps us to think about the user
-experience design and how we can better structure our HTML. This also leads to a
-more maintainable codebase and makes the tests easier to read.
+On top of that, if we follow a test driven approach to development using roles
+to select elements helps us to think about user experience design and how we
+should better structure our HTML.
 
-Let's change the terms and conditions test to use `getByRole` locators.
+Let's change the terms and conditions test from before to use `getByRole`
+locators.
 
 ```js
 test("opens terms and conditions", async ({ page }) => {
@@ -104,26 +101,28 @@ test("opens terms and conditions", async ({ page }) => {
 });
 ```
 
-The div implementation of the button will now fail because it does not have the
-accessible button role. We could of course add the role attribute to make the
-tests pass but, of course, we'll instead update it to use a button element.
+This test will fail with the div implementation of the button as it does not
+have the accessible button role. We could naively add a role attribute to make
+the tests pass but we'd instead update it to use a button element.
 
-Role based queries makes us think more closely about accessibility and enable us
-to test for fundamental features like accessible names and state in our HTML.
-Having this in the tests arguably make them easier to read and more maintainable
-too.
+Role based queries like this make implementing accessibility more deliberate and
+enable us to test for it early in our feature development. Having this in the
+tests also makes them more descriptive and maintainable.
 
 ### How far does `getByRole` take us?
 
 While not every element will have a clear role to select, we can cover probably
-99% of cases using the [available roles][roles] combined with query options.
+99.9% of cases using the [available roles][roles] combined with query options.
 
-The options refine a query based on the state of the element with attributes
-like name, pressed, checked or selected. This also helps to show clear intent in
-the test while ensuring the feature meets accessibility requirements.
+Options refine a query based on the state of the element with attributes like
+name, pressed, checked and selected that have the added benefit of providing
+even more clear intent.
+
+An example here with a test that expands an accordion item within an FAQ
+section.
 
 ```js
-test("toggles FAQ item", async ({ page }) => {
+test("expands FAQ section", async ({ page }) => {
   await page.getByRole("button", { name: "Shipping costs" }).click();
   await expect(
     page.getByRole("region", {
@@ -135,8 +134,12 @@ test("toggles FAQ item", async ({ page }) => {
 ```
 
 We can write queries that distinguish elements with the same role and name by
-chaining locators. Select the closest landmark to the element first (like
-navigation regions, headers, sidebars) and from there query for the element.
+chaining locators to select within a region. To do this we might select a
+landmark close to the element first (like navigation regions, headers, sidebars)
+and query for the element within it.
+
+This test follows the home page link in the main navigation in a page with a
+link that has the same name around a logo.
 
 ```js
 test("navigates to home page from main navigation", async ({ page }) => {
@@ -145,6 +148,48 @@ test("navigates to home page from main navigation", async ({ page }) => {
     .getByRole("link", { name: "Home page" })
     .click();
   await expect(page).toHaveURL("/");
+});
+```
+
+Broad selectors like this won't break if the structure of the navigation
+changes. They also assure us that we have properly structured HTML and paint a
+clearer picture of the feature under test.
+
+Consider the same test with an ID, we have to rely solely on the test
+description and have no assurance that the navigation functions correctly.
+
+```js
+test("navigates to home page from main navigation", async ({ page }) => {
+  await page.getByTestId("nav-home-link").click();
+  await expect(page).toHaveURL("/");
+});
+```
+
+## Should we ever use test a test ID?
+
+Selector performance often comes up in a debate over the use of the test ID
+strategy and while the argument has merit, we need to consider the benefits
+gained from using semantic queries. `getByRole` is slower than `getByTestId` due
+to the algorithm used to select the element and perform checks to assert its
+accessibility.
+
+Narrowing focus of selectors using locator chaining as shown above and ensuring
+we address performance within the application itself will help. We _can_ also
+introduce a test ID at this point to further improve selector performance but
+this should not impact the semantics of the tests.
+
+As an example, here we narrow the focus of the terms and conditions test by
+chaining locators with a test ID.
+
+```js
+test("opens terms and conditions", async ({ page }) => {
+  await page
+    .getByTestId("terms-and-conditions")
+    .getByRole("button", { name: "View terms and conditions" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Terms and conditions" }),
+  ).toBeVisible();
 });
 ```
 
