@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stop using a test ID and assert usability instead</title>
+  <meta name="description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/stop-using-test-ids/">
+  <meta property="og:title" content="Stop using a test ID and assert usability instead">
+  <meta property="og:description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/stop-using-test-ids/">
+  <meta property="twitter:title" content="Stop using a test ID and assert usability instead">
+  <meta property="twitter:description" content="The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>.ctc-image {
+  &::part(button) {
+    opacity: 0;
+    background: rgb(0 0 0 / 80%);
+    transition: opacity 150ms;
+  }
+
+  &:hover::part(button) {
+    opacity: 1;
+  }
+}
+
+back-to-top {
+  --btt-button-background: var(--bg-highlight);
+  --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
+  --btt-button-color: var(--color-text-primary);
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 1rem;
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+
+  a {
+    color: var(--color-link-primary);
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-link-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-primary);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--bg-highlight);
+  margin: 0 0 1rem;
+  padding: 1rem 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: right;
+  padding: 1rem 0 0.5rem;
+}
+
+.post-date {
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
+  font-size: 0.875rem;
+}
+
+.post-content {
+  p {
+    margin: 0 0 1rem;
+
+    code {
+      font-size: 0.875rem;
+    }
+  }
+
+  h2,
+  h3,
+  h4 {
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 2rem;
+    overflow: auto;
+    padding: 0.5rem;
+  }
+
+  img {
+    background: var(--bg-highlight);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 1rem;
+  }
+}
+
+.post-description {
+  font-size: 1.125rem;
+}
+
+.post-footer {
+  background: var(--bg-highlight);
+  border-top: solid 1px var(--border-primary);
+  padding: 1rem 0;
+}
+
+.licence {
+  line-height: 1.75;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: 2rem;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: light-dark(var(--color-secondary-darker),
+      var(--color-secondary-light));
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: 2rem 0 0;
+  }
+
+  .post-date,
+  .share-btn {
+    font-size: 1rem;
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-primary-lighter: #fefae0;
+  --color-primary-light: #ffe8d6;
+  --color-primary: #ddbea9;
+  --color-primary-dark: #cb997e;
+  --color-primary-darker: #b98b73;
+  --color-secondary-light: #b7b7a4;
+  --color-secondary: #a5a58d;
+  --color-secondary-dark: #6b705c;
+  --color-secondary-darker: #3f4238;
+
+  --color-text-primary: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-light)
+  );
+  --color-text-inverted: light-dark(
+    var(--color-primary-light),
+    var(--color-secondary-darker)
+  );
+
+  --color-link-primary: var(--color-text-primary);
+  --color-link-underline: light-dark(
+    var(--color-secondary),
+    var(--color-primary)
+  );
+  --color-link-underline-hover: light-dark(
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  --color-link-visited: light-dark(
+    var(--color-secondary-dark),
+    var(--color-secondary-light)
+  );
+
+  --color-surface-primary: light-dark(
+    var(--color-primary-lighter),
+    var(--color-secondary-darker)
+  );
+  --color-surface-inverted: light-dark(
+    var(--color-secondary-darker),
+    var(--color-primary-lighter)
+  );
+
+  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
+  --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    text-decoration-color: var(--color-primary);
+  }
+
+  &:active {
+    position: relative;
+    top: 0.125rem;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: var(--color-link-underline-hover);
+  }
+}</style>
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>Stop using a test ID and assert usability instead</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title">Stop using a test ID and assert usability instead</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-03-18">18 March 2025</time></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/@parsonic/share-button@1.2.1/min.js" defer=""></script>
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead%20https://philparsons.co.uk//blog/stop-using-test-ids/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/stop-using-test-ids/&title=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/stop-using-test-ids/&text=Stop%20using%20a%20test%20ID%20and%20assert%20usability%20instead&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">The pattern of applying a test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.</p>
+    <h2>Where did the test ID come from?</h2>
+<p>Mature testing tools like Selenium WebDriver supply a somewhat limited set of
+methods for selecting elements and asserting state. This limitation led to the
+rise of the test ID pattern used by developers to apply an attribute to elements
+for the sole purpose of selecting them in tests. If I recall correctly, the
+birth of this pattern came from the logic of decoupling tests from the
+application state and sure, this makes a lot of sense. Using the selectors based
+on class name or, shudders, XPath expressions result in brittle tests that often
+fail after refactoring code or developing new features. The problem then? This
+separation comes at a cost, the industry recognised this and the tooling adapted
+accordingly.</p>
+<p>Modern testing tools like <a href="https://playwright.dev/">Playwright</a> and <a href="https://testing-library.com/">Testing
+Library</a> provide an API based much more closely on usability
+with language that does a great job of describing how a user interacts with an
+application. Using these tools we can avoid the test id pattern, embrace user
+experience in our tests and iterate quickly with a test driven approach to
+feature development.</p>
+<p>The code examples in this article show use of Playwright but translate to
+Testing Library which has a similar API for writing tests.</p>
+<h2>False positives from test ids</h2>
+<p>A test ID has little to no relation to the element it appears on and this can
+mislead us into accepting changes that have passing tests but break the
+underlying implementation or negatively impact user experience.</p>
+<p>Take this test for a button that opens a terms and conditions dialog.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-button"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"view-terms-dialog"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>While the test ID names do allude to the role of the elements the test does not
+check or enforce it. This allows for a poor implementation in the HTML that
+doesn't cause the tests to fail.</p>
+<p>If the button gets implemented as a div, keyboard users can't access it but the
+tests still pass. This particular one I've seen more times than I can remember!</p>
+<copy-to-clipboard><pre class="language-jsx"><code class="language-jsx"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+  <span class="token attr-name">data-testid</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>view-terms-button<span class="token punctuation">"</span></span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>btn btn-outlined<span class="token punctuation">"</span></span>
+  <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>handleShowDialog<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+  View terms and conditions
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<h2>Test ID maintenance costs</h2>
+<p>Test IDs introduce clutter in the HTML markup that serves no purpose in the live
+application, unless you YOLO it and test in production. Strategies to <a href="https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties">remove
+test ids during builds</a> exist and while this seems like a bad
+idea, if you don't do it someone will probably write some production code at
+some point using a test ID in a weird and wonderful way.</p>
+<p>Test ID naming can also becomes a problem at scale. It requires a naming system
+to ensure uniqueness while logically grouping related IDs within a feature. This
+will likely lead to a lack of clear intent in the tests that become gradually
+harder to maintain.</p>
+<h2>Clear intention results in maintainable tests</h2>
+<p>Okay, so how do modern testing tools solve these problems? Let's look first at
+the Swiss Army Knife of the element locators, <code>getByRole</code>.</p>
+<p>This selector queries for elements by their semantic role (like button, link,
+menu etc). Selecting elements this way mirrors how real users and assistive
+technologies interact with the page and helps ensure that our features function
+correctly for all users.</p>
+<p>On top of that, if we follow a test driven approach to development using roles
+to select elements helps us to think about user experience design and how we
+should better structure our HTML.</p>
+<p>Let's change the terms and conditions test from before to use <code>getByRole</code>
+locators.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"View terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+    page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"dialog"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>This test will fail with the div implementation of the button as it does not
+have the accessible button role. We could naively add a role attribute to make
+the tests pass but we'd instead update it to use a button element.</p>
+<p>Role based queries like this make implementing accessibility more deliberate and
+enable us to test for it early in our feature development. Having this in the
+tests also makes them more descriptive and maintainable.</p>
+<h3>How far does <code>getByRole</code> take us?</h3>
+<p>While not every element will have a clear role to select, we can cover probably
+99.9% of cases using the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">available roles</a> combined with query options.</p>
+<p>Options refine a query based on the state of the element with attributes like
+name, pressed, checked and selected that have the added benefit of providing
+even more clear intent.</p>
+<p>An example here with a test that expands an accordion item within an FAQ
+section.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"expands FAQ section"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Shipping costs"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+    page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"region"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Shipping costs"</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">expanded</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>We can write queries that distinguish elements with the same role and name by
+chaining locators to select within a region. To do this we might select a
+landmark close to the element first (like navigation regions, headers, sidebars)
+and query for the element within it.</p>
+<p>This test follows the home page link in the main navigation in a page with a
+link that has the same name around a logo.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"navigates to home page from main navigation"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page
+    <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"navigation"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Main navigation"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"link"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Home page"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>Broad selectors like this won't break if the structure of the navigation
+changes. They also assure us that we have properly structured HTML and paint a
+clearer picture of the feature under test.</p>
+<p>Consider the same test with an ID, we have to rely solely on the test
+description and have no assurance that the navigation functions correctly.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"navigates to home page from main navigation"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"nav-home-link"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveURL</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Should we ever use test a test ID?</h2>
+<p>Selector performance often comes up in a debate over the use of the test ID
+strategy and while the argument has merit, we need to consider the benefits
+gained from using semantic queries. <code>getByRole</code> is slower than <code>getByTestId</code> due
+to the algorithm used to select the element and perform checks to assert its
+accessibility.</p>
+<p>Narrowing focus of selectors using locator chaining as shown above and ensuring
+we address performance within the application itself will help. We <em>can</em> also
+introduce a test ID at this point to further improve selector performance but
+this should not impact the semantics of the tests.</p>
+<p>As an example, here we narrow the focus of the terms and conditions test by
+chaining locators with a test ID.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"opens terms and conditions"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> page <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> page
+    <span class="token punctuation">.</span><span class="token function">getByTestId</span><span class="token punctuation">(</span><span class="token string">"terms-and-conditions"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"View terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+    page<span class="token punctuation">.</span><span class="token function">getByRole</span><span class="token punctuation">(</span><span class="token string">"dialog"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"Terms and conditions"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeVisible</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/copy-to-clipboard@1.0.2/min.js" defer=""></script>
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/back-to-top@0.2.1/min.js" defer=""></script>
+
+</body>
+
+</html>
