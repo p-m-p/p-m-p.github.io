@@ -32,10 +32,12 @@ figcaption {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+  min-height: 4rem;
   padding: 1rem;
 
   a {
     color: var(--color-link-primary);
+    display: inline-flex;
     text-decoration: none;
     transition:
       transform 200ms,
