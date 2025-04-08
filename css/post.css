@@ -32,8 +32,7 @@ figcaption {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
-  min-height: 4rem;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
 
   a {
     color: var(--color-link-primary);
@@ -215,6 +214,11 @@ figcaption {
   font-size: 0.875rem;
   font-weight: 500;
   gap: 0.5rem;
+}
+
+.theme-switcher {
+  min-height: 2.5rem;
+  min-width: 4.375rem;
 }
 
 @media (width >=600px) {
