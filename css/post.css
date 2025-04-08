@@ -30,6 +30,7 @@ figcaption {
 .banner {
   align-items: center;
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
   padding: 1rem;
 
@@ -63,7 +64,9 @@ figcaption {
 .nav {
   align-items: center;
   display: flex;
+  flex: 1;
   gap: 1rem;
+  justify-content: flex-end;
 
   a {
     line-height: 1;
