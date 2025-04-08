@@ -52,6 +52,7 @@ figcaption {
 .banner {
   align-items: center;
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
   padding: 1rem;
 
@@ -85,7 +86,9 @@ figcaption {
 .nav {
   align-items: center;
   display: flex;
+  flex: 1;
   gap: 1rem;
+  justify-content: flex-end;
 
   a {
     line-height: 1;
@@ -453,40 +456,39 @@ pre[class*="language-"] {
   --color-secondary-dark: #6b705c;
   --color-secondary-darker: #3f4238;
 
-  --color-text-primary: light-dark(
-    var(--color-secondary-darker),
-    var(--color-primary-light)
-  );
-  --color-text-inverted: light-dark(
-    var(--color-primary-light),
-    var(--color-secondary-darker)
-  );
+  --color-text-primary: light-dark(var(--color-secondary-darker),
+      var(--color-primary-light));
+  --color-text-inverted: light-dark(var(--color-primary-light),
+      var(--color-secondary-darker));
 
   --color-link-primary: var(--color-text-primary);
-  --color-link-underline: light-dark(
-    var(--color-secondary),
-    var(--color-primary)
-  );
-  --color-link-underline-hover: light-dark(
-    var(--color-primary),
-    var(--color-primary-dark)
-  );
-  --color-link-visited: light-dark(
-    var(--color-secondary-dark),
-    var(--color-secondary-light)
-  );
+  --color-link-underline: light-dark(var(--color-secondary),
+      var(--color-primary));
+  --color-link-underline-hover: light-dark(var(--color-primary),
+      var(--color-primary-dark));
+  --color-link-visited: light-dark(var(--color-secondary-dark),
+      var(--color-secondary-light));
 
-  --color-surface-primary: light-dark(
-    var(--color-primary-lighter),
-    var(--color-secondary-darker)
-  );
-  --color-surface-inverted: light-dark(
-    var(--color-secondary-darker),
-    var(--color-primary-lighter)
-  );
+  --color-surface-primary: light-dark(var(--color-primary-lighter),
+      var(--color-secondary-darker));
+  --color-surface-inverted: light-dark(var(--color-secondary-darker),
+      var(--color-primary-lighter));
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
+
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--bg-highlight);
+  --ts-button-bar-lozenge: var(--color-surface-primary);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
 }
 
 *,
@@ -561,6 +563,11 @@ a {
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
     </a>
   </nav>
+
+  <div class="theme-switcher">
+    <script src="https://cdn.jsdelivr.net/npm/@parsonic/theme-switch@0.1.0/min.js" defer=""></script>
+    <theme-switch data-strategy="class"></theme-switch>
+  </div>
 </div>
 
 <article class="post">
