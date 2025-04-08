@@ -248,6 +248,38 @@ figcaption {
   min-width: 4.375rem;
 }
 
+@media (pointer: coarse) {
+  .theme-switcher {
+    min-width: 2.5rem;
+  }
+
+  theme-switch {
+    --ts-lozenge-background: transparent;
+
+    &::part(button) {
+      opacity: 1;
+    }
+
+    &::part(button dark) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &[data-theme="dark"] {
+      &::part(button dark) {
+        visibility: hidden;
+      }
+    }
+
+    &[data-theme="light"] {
+      &::part(button light) {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
 @media (width >=600px) {
   .post-header {
     padding: 2rem 0 0;
@@ -576,7 +608,7 @@ a {
   </nav>
 
   <div class="theme-switcher">
-    <script src="https://cdn.jsdelivr.net/npm/@parsonic/theme-switch@0.1.0/min.js" defer=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/@parsonic/theme-switch@0.1.1/min.js" defer=""></script>
     <theme-switch data-strategy="class"></theme-switch>
   </div>
 </div>
