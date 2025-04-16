@@ -10,6 +10,10 @@
   }
 }
 
+copy-to-clipboard {
+  --ctc-button-color: var(--color-primary-light);
+}
+
 back-to-top {
   --btt-button-background: var(--bg-highlight);
   --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
