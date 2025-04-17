@@ -230,6 +230,13 @@ figcaption {
   min-width: 4.375rem;
 }
 
+theme-switch {
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--bg-highlight);
+  --ts-button-bar-lozenge: var(--color-surface-primary);
+}
+
 @media (pointer: coarse) {
   .theme-switcher {
     min-width: 2.5rem;

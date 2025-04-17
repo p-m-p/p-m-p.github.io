@@ -31,11 +31,6 @@
 
   --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
   --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
-
-  --ts-button-color: var(--color-text-primary);
-  --ts-button-size: 1.25rem;
-  --ts-button-bar-background: var(--bg-highlight);
-  --ts-button-bar-lozenge: var(--color-surface-primary);
 }
 
 .dark {
