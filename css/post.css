@@ -11,8 +11,8 @@
 }
 
 copy-to-clipboard {
-  --ctc-button-color: var(--color-text-primary);
-  --ctc-button-background: var(--color-bg-action);
+  --ctc-button-color: var(--color-white);
+  --ctc-button-background: var(--color-neutral-700);
 }
 
 back-to-top {
