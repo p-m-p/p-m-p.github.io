@@ -34,6 +34,7 @@
 
 copy-to-clipboard {
   --ctc-button-color: var(--color-text-primary);
+  --ctc-button-background: var(--color-bg-action);
 }
 
 back-to-top {
@@ -237,7 +238,7 @@ figcaption {
 
 .share-btn {
   align-items: center;
-  background: light-dark(var(--color-neutral-100), var(--color-neutral-700));
+  background: var(--color-bg-action);
   border: none;
   border-radius: 999px;
   color: var(--color-text-primary);
@@ -253,7 +254,7 @@ figcaption {
     color 200ms;
 
   &:hover {
-    background: light-dark(var(--color-primary-100), var(--color-primary-600));
+    background: var(--color-bg-action-hover);
   }
 }
 
@@ -266,8 +267,7 @@ theme-switch {
   --ts-button-color: var(--color-text-primary);
   --ts-button-size: 1.25rem;
   --ts-button-bar-background: var(--color-bg-secondary);
-  --ts-lozenge-background: light-dark(var(--color-neutral-100),
-      var(--color-neutral-700));
+  --ts-lozenge-background: var(--color-bg-action);
 }
 
 @media (pointer: coarse) {
@@ -544,6 +544,10 @@ pre[class*="language-"] {
   --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
   --color-bg-secondary: light-dark(var(--color-neutral-50),
       var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
 
   --color-link: var(--color-text-primary);
   --color-link-hover: light-dark(var(--color-primary-600),
