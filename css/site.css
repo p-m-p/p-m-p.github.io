@@ -37,6 +37,10 @@
   --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
   --color-bg-secondary: light-dark(var(--color-neutral-50),
       var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
 
   --color-link: var(--color-text-primary);
   --color-link-hover: light-dark(var(--color-primary-600),
