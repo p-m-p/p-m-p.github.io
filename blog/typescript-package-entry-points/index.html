@@ -33,11 +33,11 @@
 }
 
 copy-to-clipboard {
-  --ctc-button-color: var(--color-primary-light);
+  --ctc-button-color: var(--color-text-primary);
 }
 
 back-to-top {
-  --btt-button-background: var(--bg-highlight);
+  --btt-button-background: var(--color-bg-secondary);
   --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
   --btt-button-color: var(--color-text-primary);
 }
@@ -61,7 +61,7 @@ figcaption {
   padding: 0.5rem 1rem;
 
   a {
-    color: var(--color-link-primary);
+    color: var(--color-text-primary);
     display: inline-flex;
     text-decoration: none;
     transition:
@@ -69,11 +69,11 @@ figcaption {
       color 200ms;
 
     &:visited {
-      color: var(--color-link-primary);
+      color: var(--color-text-primary);
     }
 
     &:hover {
-      color: var(--color-link-primary);
+      color: var(--color-link-hover);
     }
   }
 }
@@ -110,7 +110,7 @@ figcaption {
 }
 
 .post-header {
-  background: var(--bg-highlight);
+  background: var(--color-bg-secondary);
   margin: 0 0 1rem;
   padding: 1rem 0 0;
 }
@@ -118,7 +118,7 @@ figcaption {
 .post-title {
   font-size: 3rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .post-meta {
@@ -130,8 +130,7 @@ figcaption {
 }
 
 .post-date {
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -176,7 +175,7 @@ figcaption {
   }
 
   img {
-    background: var(--bg-highlight);
+    background: var(--color-bg-secondary);
     height: auto;
     margin: 0 auto;
     max-width: 100%;
@@ -185,12 +184,14 @@ figcaption {
 }
 
 .post-description {
+  color: var(--color-text-secondary);
   font-size: 1.125rem;
+  line-height: 1.4;
 }
 
 .post-footer {
-  background: var(--bg-highlight);
-  border-top: solid 1px var(--border-primary);
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
   padding: 1rem 0;
 }
 
@@ -238,8 +239,7 @@ figcaption {
   align-items: center;
   background: transparent;
   border: none;
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: var(--color-text-secondary);
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
@@ -255,8 +255,8 @@ figcaption {
 theme-switch {
   --ts-button-color: var(--color-text-primary);
   --ts-button-size: 1.25rem;
-  --ts-button-bar-background: var(--bg-highlight);
-  --ts-button-bar-lozenge: var(--color-surface-primary);
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-button-bar-lozenge: var(--color-bg-primary);
 }
 
 @media (pointer: coarse) {
@@ -294,6 +294,7 @@ theme-switch {
 @media (width >=600px) {
   .post-header {
     padding: 2rem 0 0;
+    margin: 0 0 2rem;
   }
 
   .post-date,
@@ -372,13 +373,13 @@ pre[class*="language-"] {
   hyphens: none;
 }
 
-:not(pre) > code[class*="language-"],
+:not(pre)>code[class*="language-"],
 pre[class*="language-"] {
-  background: light-dark(rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
+  background: var(--codeblock-bg);
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
+:not(pre)>code[class*="language-"] {
   padding: 0.1em;
   border-radius: 0.3em;
   white-space: normal;
@@ -455,13 +456,14 @@ pre[class*="language-"] {
 }
 
 @media screen and (-ms-high-contrast: active) {
+
   code[class*="language-"],
   pre[class*="language-"] {
     color: windowText;
     background: window;
   }
 
-  :not(pre) > code[class*="language-"],
+  :not(pre)>code[class*="language-"],
   pre[class*="language-"] {
     background: window;
   }
@@ -500,36 +502,60 @@ pre[class*="language-"] {
 :root {
   color-scheme: light dark;
 
-  --color-primary-lighter: #fefae0;
-  --color-primary-light: #ffe8d6;
-  --color-primary: #ddbea9;
-  --color-primary-dark: #cb997e;
-  --color-primary-darker: #b98b73;
-  --color-secondary-light: #b7b7a4;
-  --color-secondary: #a5a58d;
-  --color-secondary-dark: #6b705c;
-  --color-secondary-darker: #3f4238;
+  --color-stone: lch(50% 1.5 75);
+  --color-peach: lch(55% 48 38);
 
-  --color-text-primary: light-dark(var(--color-secondary-darker),
-      var(--color-primary-light));
-  --color-text-inverted: light-dark(var(--color-primary-light),
-      var(--color-secondary-darker));
+  --color-white: lch(99% 4 75);
+  --color-black: lch(2% 4 75);
 
-  --color-link-primary: var(--color-text-primary);
-  --color-link-underline: light-dark(var(--color-secondary),
-      var(--color-primary));
-  --color-link-underline-hover: light-dark(var(--color-primary),
-      var(--color-primary-dark));
-  --color-link-visited: light-dark(var(--color-secondary-dark),
-      var(--color-secondary-light));
+  --color-primary-50: lch(from var(--color-peach) 95% c h);
+  --color-primary-100: lch(from var(--color-peach) 90% c h);
+  --color-primary-200: lch(from var(--color-peach) 80% c h);
+  --color-primary-300: lch(from var(--color-peach) 70% c h);
+  --color-primary-400: lch(from var(--color-peach) 60% c h);
+  --color-primary-500: lch(from var(--color-peach) l c h);
+  --color-primary-600: lch(from var(--color-peach) 40% c h);
+  --color-primary-700: lch(from var(--color-peach) 30% c h);
+  --color-primary-800: lch(from var(--color-peach) 20% c h);
+  --color-primary-900: lch(from var(--color-peach) 10% c h);
+  --color-primary-950: lch(from var(--color-peach) 5% c h);
 
-  --color-surface-primary: light-dark(var(--color-primary-lighter),
-      var(--color-secondary-darker));
-  --color-surface-inverted: light-dark(var(--color-secondary-darker),
-      var(--color-primary-lighter));
+  --color-neutral-50: lch(from var(--color-stone) 95% c h);
+  --color-neutral-100: lch(from var(--color-stone) 90% c h);
+  --color-neutral-200: lch(from var(--color-stone) 80% c h);
+  --color-neutral-300: lch(from var(--color-stone) 70% c h);
+  --color-neutral-400: lch(from var(--color-stone) 60% c h);
+  --color-neutral-500: lch(from var(--color-stone) l c h);
+  --color-neutral-600: lch(from var(--color-stone) 40% c h);
+  --color-neutral-700: lch(from var(--color-stone) 30% c h);
+  --color-neutral-800: lch(from var(--color-stone) 20% c h);
+  --color-neutral-900: lch(from var(--color-stone) 10% c h);
+  --color-neutral-950: lch(from var(--color-stone) 5% c h);
 
-  --bg-highlight: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 20%));
-  --border-primary: light-dark(rgb(0 0 0 / 14%), rgb(255 255 255 / 10%));
+  --color-border-primary: light-dark(var(--color-neutral-200),
+      var(--color-neutral-700));
+
+  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
+  --color-bg-secondary: light-dark(var(--color-neutral-50),
+      var(--color-neutral-900));
+
+  --color-link: var(--color-text-primary);
+  --color-link-hover: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-underline: var(--color-primary-400);
+  --color-link-hover-underline: light-dark(var(--color-primary-600),
+      var(--color-primary-300));
+  --color-link-visited: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-visited-underline: var(--color-primary-400);
+  --color-link-focus: var(--color-link-hover);
+  --color-link-focus-underline: var(--color-link-hover);
+
+  --color-text-primary: light-dark(var(--color-black), var(--color-white));
+  --color-text-secondary: light-dark(var(--color-neutral-600),
+      var(--color-neutral-200));
+
+  --codeblock-bg: var(--color-neutral-900);
 }
 
 .dark {
@@ -548,7 +574,7 @@ pre[class*="language-"] {
 }
 
 body {
-  background-color: var(--color-surface-primary);
+  background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
@@ -561,7 +587,7 @@ body {
 }
 
 a {
-  color: var(--color-link-primary);
+  color: var(--color-link);
   font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
@@ -572,12 +598,13 @@ a {
 
   &:visited {
     color: var(--color-link-visited);
-    text-decoration-color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited-underline);
     font-weight: 400;
   }
 
   &:focus-visible {
-    text-decoration-color: var(--color-primary);
+    color: var(--color-link-focus);
+    text-decoration-color: var(--color-link-focus-underline);
   }
 
   &:active {
@@ -588,7 +615,8 @@ a {
 
 @media (hover: hover) {
   a:hover {
-    text-decoration-color: var(--color-link-underline-hover);
+    color: var(--color-link-hover);
+    text-decoration-color: var(--color-link-hover-underline);
   }
 }</style>
   <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
@@ -812,7 +840,7 @@ internals that may be subject to change in the future.</p>
 
   
 
-<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.1/min.js" defer=""></script>
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.3/min.js" defer=""></script>
 
 </body>
 
