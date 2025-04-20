@@ -237,8 +237,8 @@ figcaption {
 }
 
 .theme-switcher {
-  min-height: 2.5rem;
-  min-width: 4.375rem;
+  height: 2.5rem;
+  width: 5rem;
 }
 
 theme-switch {
@@ -250,30 +250,35 @@ theme-switch {
 
 @media (pointer: coarse) {
   .theme-switcher {
-    min-width: 2.5rem;
+    overflow: hidden;
+    width: 2.5rem;
   }
 
   theme-switch {
     --ts-lozenge-background: transparent;
 
+    &::part(button-bar) {
+      background: var(--color-bg-action);
+    }
+
     &::part(button) {
       opacity: 1;
     }
 
-    &::part(button dark) {
+    &::part(button dark-button) {
       position: absolute;
       top: 0;
       left: 0;
     }
 
     &[data-theme="dark"] {
-      &::part(button dark) {
+      &::part(button dark-button) {
         visibility: hidden;
       }
     }
 
     &[data-theme="light"] {
-      &::part(button light) {
+      &::part(button light-button) {
         visibility: hidden;
       }
     }
