@@ -11,11 +11,11 @@
 }
 
 copy-to-clipboard {
-  --ctc-button-color: var(--color-primary-light);
+  --ctc-button-color: var(--color-text-primary);
 }
 
 back-to-top {
-  --btt-button-background: var(--bg-highlight);
+  --btt-button-background: var(--color-bg-secondary);
   --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
   --btt-button-color: var(--color-text-primary);
 }
@@ -39,7 +39,7 @@ figcaption {
   padding: 0.5rem 1rem;
 
   a {
-    color: var(--color-link-primary);
+    color: var(--color-text-primary);
     display: inline-flex;
     text-decoration: none;
     transition:
@@ -47,11 +47,11 @@ figcaption {
       color 200ms;
 
     &:visited {
-      color: var(--color-link-primary);
+      color: var(--color-text-primary);
     }
 
     &:hover {
-      color: var(--color-link-primary);
+      color: var(--color-link-hover);
     }
   }
 }
@@ -88,7 +88,7 @@ figcaption {
 }
 
 .post-header {
-  background: var(--bg-highlight);
+  background: var(--color-bg-secondary);
   margin: 0 0 1rem;
   padding: 1rem 0 0;
 }
@@ -96,7 +96,7 @@ figcaption {
 .post-title {
   font-size: 3rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .post-meta {
@@ -108,8 +108,7 @@ figcaption {
 }
 
 .post-date {
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -154,7 +153,7 @@ figcaption {
   }
 
   img {
-    background: var(--bg-highlight);
+    background: var(--color-bg-secondary);
     height: auto;
     margin: 0 auto;
     max-width: 100%;
@@ -163,12 +162,14 @@ figcaption {
 }
 
 .post-description {
+  color: var(--color-text-secondary);
   font-size: 1.125rem;
+  line-height: 1.4;
 }
 
 .post-footer {
-  background: var(--bg-highlight);
-  border-top: solid 1px var(--border-primary);
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
   padding: 1rem 0;
 }
 
@@ -216,8 +217,7 @@ figcaption {
   align-items: center;
   background: transparent;
   border: none;
-  color: light-dark(var(--color-secondary-darker),
-      var(--color-secondary-light));
+  color: var(--color-text-secondary);
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
@@ -233,8 +233,8 @@ figcaption {
 theme-switch {
   --ts-button-color: var(--color-text-primary);
   --ts-button-size: 1.25rem;
-  --ts-button-bar-background: var(--bg-highlight);
-  --ts-button-bar-lozenge: var(--color-surface-primary);
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-button-bar-lozenge: var(--color-bg-primary);
 }
 
 @media (pointer: coarse) {
@@ -272,6 +272,7 @@ theme-switch {
 @media (width >=600px) {
   .post-header {
     padding: 2rem 0 0;
+    margin: 0 0 2rem;
   }
 
   .post-date,
