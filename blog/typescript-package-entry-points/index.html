@@ -21,25 +21,27 @@
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
   <style>.ctc-image {
-  &::part(button) {
-    opacity: 0;
-    background: rgb(0 0 0 / 80%);
-    transition: opacity 150ms;
-  }
+  @media (hover: hover) {
+    &::part(button) {
+      opacity: 0;
+      transition: opacity 150ms;
+    }
 
-  &:hover::part(button) {
-    opacity: 1;
+    &:hover::part(button) {
+      opacity: 1;
+    }
   }
 }
 
 copy-to-clipboard {
+  /* Keep these raw color values here until there is a light theme for code blocks */
   --ctc-button-color: var(--color-white);
   --ctc-button-background: var(--color-neutral-700);
 }
 
 back-to-top {
-  --btt-button-background: var(--color-bg-secondary);
-  --btt-button-background-hover: light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 80%));
+  --btt-button-background: var(--color-bg-action);
+  --btt-button-background-hover: var(--color-bg-action-hover);
   --btt-button-color: var(--color-text-primary);
 }
 
@@ -51,15 +53,15 @@ figcaption {
 .container {
   margin: 0 auto;
   max-width: 1024px;
-  padding: 0 1rem;
+  padding: 0 var(--spacing-md);
 }
 
 .banner {
   align-items: center;
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: var(--spacing-xs) var(--spacing-md);
 
   a {
     color: var(--color-text-primary);
@@ -93,7 +95,7 @@ figcaption {
   align-items: center;
   display: flex;
   flex: 1;
-  gap: 1rem;
+  gap: var(--spacing-md);
   justify-content: flex-end;
 
   a {
@@ -112,8 +114,8 @@ figcaption {
 
 .post-header {
   background: var(--color-bg-secondary);
-  margin: 0 0 1rem;
-  padding: 1rem 0 0;
+  margin: 0 0 var(--spacing-md);
+  padding: var(--spacing-md) 0 0;
 }
 
 .post-title {
@@ -125,9 +127,9 @@ figcaption {
 .post-meta {
   align-items: baseline;
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   justify-content: right;
-  padding: 1rem 0 0.5rem;
+  padding: var(--spacing-md) 0 var(--spacing-xs);
 }
 
 .post-date {
@@ -138,7 +140,7 @@ figcaption {
 .post-content {
   p {
     color: var(--color-text-secondary);
-    margin: 0 0 1rem;
+    margin: 0 0 var(--spacing-md);
     text-wrap: pretty;
 
     code {
@@ -150,7 +152,7 @@ figcaption {
   h3,
   h4 {
     font-weight: 600;
-    margin: 2rem 0 1rem;
+    margin: var(--spacing-3xl) 0 var(--spacing-md);
     text-wrap: pretty;
   }
 
@@ -171,9 +173,9 @@ figcaption {
 
   pre {
     font-size: 0.875rem;
-    margin: 0 0 2rem;
+    margin: 0 0 var(--spacing-3xl);
     overflow: auto;
-    padding: 0.5rem;
+    padding: var(--spacing-xs);
   }
 
   img {
@@ -181,7 +183,7 @@ figcaption {
     height: auto;
     margin: 0 auto;
     max-width: 100%;
-    padding: 1rem;
+    padding: var(--spacing-md);
   }
 }
 
@@ -194,7 +196,7 @@ figcaption {
 .post-footer {
   background: var(--color-bg-secondary);
   border-top: solid 1px var(--color-border-primary);
-  padding: 1rem 0;
+  padding: var(--spacing-md) 0;
 }
 
 #share-fallback {
@@ -203,7 +205,7 @@ figcaption {
   border-radius: 1rem;
   left: 50%;
   min-width: 280px;
-  padding: 2rem;
+  padding: var(--spacing-3xl);
   top: 50%;
   transform: translate(-50%, -50%);
 
@@ -214,13 +216,13 @@ figcaption {
 
 .share-fallback-title {
   font-size: 1.25rem;
-  margin: 0 0 0.5rem;
+  margin: 0 0 var(--spacing-xs);
 }
 
 .share-fallback-links {
   display: flex;
   flex-flow: column;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -243,9 +245,9 @@ figcaption {
   display: inline-flex;
   font-weight: 500;
   font-size: 0.875rem;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
   line-height: 1;
-  padding: 0.25rem 0.75rem;
+  padding: var(--spacing-2xs) var(--spacing-sm);
   transition:
     background 200ms,
     color 200ms;
@@ -308,8 +310,8 @@ theme-switch {
 
 @media (width >=600px) {
   .post-header {
-    padding: 2rem 0 0;
-    margin: 0 0 2rem;
+    padding: var(--spacing-3xl) 0 0;
+    margin: 0 0 var(--spacing-3xl);
   }
 }
 
@@ -324,7 +326,7 @@ theme-switch {
     }
 
     pre {
-      padding: 1rem;
+      padding: var(--spacing-md);
     }
 
     h2 {
@@ -542,6 +544,21 @@ pre[class*="language-"] {
   --color-neutral-900: lch(from var(--color-stone) 10% c h);
   --color-neutral-950: lch(from var(--color-stone) 5% c h);
 
+  --size-0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
   --color-border-primary: light-dark(var(--color-neutral-200),
       var(--color-neutral-700));
 
@@ -569,7 +586,17 @@ pre[class*="language-"] {
   --color-text-secondary: light-dark(var(--color-neutral-600),
       var(--color-neutral-200));
 
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
   --codeblock-bg: var(--color-neutral-900);
+
 }
 
 .dark {
