@@ -137,6 +137,7 @@ figcaption {
 
 .post-content {
   p {
+    color: var(--color-text-secondary);
     margin: 0 0 1rem;
     text-wrap: pretty;
 
@@ -185,19 +186,15 @@ figcaption {
 }
 
 .post-description {
-  color: var(--color-text-secondary);
   font-size: 1.125rem;
   line-height: 1.4;
+  font-style: italic;
 }
 
 .post-footer {
   background: var(--color-bg-secondary);
   border-top: solid 1px var(--color-border-primary);
   padding: 1rem 0;
-}
-
-.licence {
-  line-height: 1.75;
 }
 
 #share-fallback {
@@ -252,10 +249,6 @@ figcaption {
   transition:
     background 200ms,
     color 200ms;
-
-  &:hover {
-    background: var(--color-bg-action-hover);
-  }
 }
 
 .theme-switcher {
@@ -604,6 +597,7 @@ body {
 a {
   color: var(--color-link);
   font-weight: 500;
+  position: relative;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
   text-decoration-color: var(--color-link-underline);
@@ -623,7 +617,6 @@ a {
   }
 
   &:active {
-    position: relative;
     top: 0.125rem;
   }
 }
