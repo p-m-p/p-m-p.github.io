@@ -31,6 +31,21 @@
   --color-neutral-900: lch(from var(--color-stone) 10% c h);
   --color-neutral-950: lch(from var(--color-stone) 5% c h);
 
+  --size-0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
   --color-border-primary: light-dark(var(--color-neutral-200),
       var(--color-neutral-700));
 
@@ -58,7 +73,17 @@
   --color-text-secondary: light-dark(var(--color-neutral-600),
       var(--color-neutral-200));
 
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
   --codeblock-bg: var(--color-neutral-900);
+
 }
 
 .dark {
