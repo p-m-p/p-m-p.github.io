@@ -249,6 +249,12 @@ figcaption {
   transition:
     background 200ms,
     color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
 }
 
 .theme-switcher {
@@ -619,12 +625,12 @@ a {
   &:active {
     top: 0.125rem;
   }
-}
 
-@media (hover: hover) {
-  a:hover {
-    color: var(--color-link-hover);
-    text-decoration-color: var(--color-link-hover-underline);
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
   }
 }</style>
   <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
