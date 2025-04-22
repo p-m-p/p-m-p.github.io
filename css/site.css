@@ -114,11 +114,11 @@ a {
   &:active {
     top: 0.125rem;
   }
-}
 
-@media (hover: hover) {
-  a:hover {
-    color: var(--color-link-hover);
-    text-decoration-color: var(--color-link-hover-underline);
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
   }
 }

@@ -227,6 +227,12 @@ figcaption {
   transition:
     background 200ms,
     color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
 }
 
 .theme-switcher {
