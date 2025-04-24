@@ -48,17 +48,17 @@ In a TDD workflow we start by writing tests for the core functionality.
 import { lazyInit } from "./lazyInit";
 
 describe("lazyInit", () => {
-  it("initialises module on first use", async () => {
+  it("initialises module on first use", () => {
     const mod = { foo: "bar" };
-    const init = vi.fn().mockResolvedValue(mod);
+    const init = vi.fn().mockReturnValue(mod);
     const lazy = lazyInit(init);
 
     expect(init).not.toHaveBeenCalled();
-    expect(await lazy()).toBe(mod);
+    expect(lazy()).toBe(mod);
     expect(init).toHaveBeenCalled();
   });
 
-  it("returns initialised module on subsequent uses", async () => {
+  it("returns initialised module on subsequent uses", () => {
     const init = vi.fn(() => ({
       greet() {
         return "Hello, World!";
@@ -66,8 +66,8 @@ describe("lazyInit", () => {
     }));
     const lazy = lazyInit(init);
 
-    const firstCall = await lazy();
-    const secondCall = await lazy();
+    const firstCall = lazy();
+    const secondCall = lazy();
 
     expect(firstCall).toBe(secondCall);
     expect(init).toHaveBeenCalledTimes(1);
@@ -90,67 +90,72 @@ Using Claude 3.5 Sonnet we can generate the code with a prompt like below.
 ```text
 Create a lazy initialisation function called lazyInit with the following specification:
 
-1. Takes a single argument of a function that returns a value
+1. Takes a single argument of a function named initFn that returns a value
 2. Returns a new function that, when called, returns the value from calling the provided function
 3. The provided function should only be called once, on the first call
-4. Has a test suite using Vitest
+4. Has a test suite using Vitest and imperative test descriptions
 ```
 
-It may take a few iterations at this stage to get the prompt right but once we
-have it we find ourselves at the refactor stage, same as with TDD but quicker.
+It may take a few iterations to get the correct result but once we have it we
+find ourselves at the refactor stage, same as with TDD but quicker.
 
-What did Claude generate for us? The function looks pretty good, it uses a
-separate variable to store the value and a Boolean to track the initialisation
-state where I would probably check for the definition of value knowing that the
-function should always return something. Also, factory seems like a poor name
-for the init function.
+What did Claude generate for us? Even for this simple function it took a few
+refinements to add things like the shared parameter and return type.
 
 ```typescript
-export function lazyInit<T>(factory: () => T): () => T {
-  let value: T;
-  let initialized = false;
+export type LazyInitFn<T> = () => T;
+
+export function lazyInit<T>(initFn: LazyInitFn<T>): LazyInitFn<T> {
+  let value: T | undefined;
 
   return () => {
-    if (!initialized) {
-      value = factory();
-      initialized = true;
+    if (value === undefined) {
+      value = initFn();
     }
     return value;
   };
 }
 ```
 
-It generated valid tests, not too different to what I wrote by hand! The factory
-name appears here too and I'd prefer imperative test descriptions but we can
-refine the prompt or refactor the code to rename it easy enough.
+It generated valid tests in the end, not too different to what I wrote by hand.
+Some refinement here removed unnecessary testing for undefined and null values
+and another for maintaining the context of a returned object type.
 
 ```typescript
 import { describe, it, expect, vi } from "vitest";
-import { lazyInit } from "./lazyInit";
+import { lazyInit, type LazyInitFn } from "./lazyInit";
 
-describe("lazyInit", () => {
-  it("should call factory only on first invocation", () => {
-    const mockFactory = vi.fn(() => 42);
-    const getValue = lazyInit(mockFactory);
+describe("lazyInit(initFn)", () => {
+  it("initializes the value when first called", () => {
+    const mockInitFn: LazyInitFn<number> = vi.fn(() => 42);
+    const getValue: LazyInitFn<number> = lazyInit(mockInitFn);
 
-    expect(mockFactory).not.toHaveBeenCalled();
+    expect(mockInitFn).not.toHaveBeenCalled();
 
-    const result1 = getValue();
-    expect(mockFactory).toHaveBeenCalledTimes(1);
-    expect(result1).toBe(42);
+    const result = getValue();
 
-    const result2 = getValue();
-    expect(mockFactory).toHaveBeenCalledTimes(1);
-    expect(result2).toBe(42);
+    expect(result).toBe(42);
+    expect(mockInitFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return same instance on subsequent calls", () => {
-    const getValue = lazyInit(() => ({ value: Math.random() }));
+  it("returns the cached value on subsequent calls", () => {
+    const mockInitFn: LazyInitFn<number> = vi.fn(() => 42);
+    const getValue: LazyInitFn<number> = lazyInit(mockInitFn);
 
     const result1 = getValue();
     const result2 = getValue();
+    const result3 = getValue();
 
-    expect(result1).toBe(result2);
+    expect(mockInitFn).toHaveBeenCalledTimes(1);
+    expect(result1).toBe(42);
+    expect(result2).toBe(42);
+    expect(result3).toBe(42);
   });
 });
 ```
+
+The generated code requires a bit of refactoring to remove things like
+unnecessary type annotations, arguably more than if I had I written it myself,
+but we saved a significant amount of time in not having to write the code from
+scratch. The refactoring step can happen with via chat with the LLM to refine
+the generated code or we can manually make some edits.
