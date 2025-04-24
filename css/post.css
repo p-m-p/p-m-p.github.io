@@ -116,8 +116,9 @@ figcaption {
 }
 
 .post-content {
+  color: var(--color-text-secondary);
+
   p {
-    color: var(--color-text-secondary);
     margin: 0 0 var(--spacing-md);
     text-wrap: pretty;
 
@@ -129,6 +130,7 @@ figcaption {
   h2,
   h3,
   h4 {
+    color: var(--color-text-primary);
     font-weight: 600;
     margin: var(--spacing-3xl) 0 var(--spacing-md);
     text-wrap: pretty;
