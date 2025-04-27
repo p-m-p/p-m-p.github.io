@@ -1,161 +1,213 @@
 ---
 title: Does TDD have relevance in a AI assisted developer workflow?
 description:
-  AI assisted development, like Test-Driven Development (TDD), requires
-  developers to think carefully about requirements before writing code. Instead
-  of writing test cases first, developers craft prompts to generate both
-  implementation and tests simultaneously. This shift in approach maintains the
-  benefits of upfront design while potentially accelerating the development
-  process.
 date: 2025-04-23
 draft: true
 ---
 
-## A proven benefit of Test-Driven Development
+## A shared benefit of TDD and AI assisted development
 
-The Test-Driven Development (TDD) approach flips traditional software
-development and instead of writing code first, we write tests that define the
-expected behavior before the code needed to pass those tests. In the Red → Green
-→ Refactor approach to TDD we write a failing test (Red), implements the
-quickest solution to pass the test (Green), and then refactors to improve
-structure and readability (Refactor).
+With a traditional software development process like Test-Driven Development
+(TDD), instead of writing code first, we write tests that define the expected
+behavior. In the [Red → Green → Refactor][red-green-refactor] approach we:
 
-By writing tests first, we have the opportunity to think more deeply about the
-design and structure of our code and this leads to cleaner and more maintainable
-code.
+1. Red: write tests that fail
+2. Green: implements the quickest solution to make the test pass
+3. Refactor: improve aspects like structure, code reuse and readability
 
-## AI assisted development, for the vibes
+Writing tests first presents an opportunity to think more strategically about
+system design, creates living documentation of requirements and provides a
+safety net when making future changes.
 
-When generating code with AI the development process turns around in a similar
-way to TDD. Rather than dive straight into code we have to stop and think about
-how to define the problem so that we can write a prompt that will yield the
-correct result.
+When we generate code with AI we front-load the development process with design
+in a similar way to TDD. Rather than dive straight into code we have to define
+the problem with enough context and implementation detail in a prompt. We still
+want tests for the same reasons as TDD but where in the workflow should we add
+them?
 
-This then begs the question, should we still write the tests first or should we
-generate them later once we have refined our prompt and the generated code?
-Let's take a look at an example.
+## The TDD vs AI assisted development workflow
 
-### Creating a lazy initialisation utility
+Let's compare the process of adding a new function, using both techniques, with
+the following high level specification.
 
-To keep this simple we'll create a utility function in TypeScript that will
-lazily initialize a module. This function takes a module initialisation function
-and only calls it on first use with repeat calls returning the already
-initialised module.
+> Create a lazy initialisation function for modules that will only initialise
+> the module on first call and return the initialised module on repeat calls.
+> The function should return a new function that returns the initialised module
+> when called.
 
-In a TDD workflow we start by writing tests for the core functionality.
+### Manually writing the code with TDD
+
+With TDD we analyze the specification before creating a minimal code structure
+and outlining tests that define and assert the core functionality, the Red
+stage.
 
 ```ts
 import { lazyInit } from "./lazyInit";
 
 describe("lazyInit", () => {
-  it("initialises module on first use", () => {
-    const mod = { foo: "bar" };
+  it("initialises module on first call", () => {
+    const mod = {};
     const init = vi.fn().mockReturnValue(mod);
-    const lazy = lazyInit(init);
+    const lazyMod = lazyInit(init);
 
     expect(init).not.toHaveBeenCalled();
-    expect(lazy()).toBe(mod);
-    expect(init).toHaveBeenCalled();
+    expect(lazyMod()).toBe(mod);
+    expect(init).toHaveBeenCalledTimes(1);
   });
 
-  it("returns initialised module on subsequent uses", () => {
-    const init = vi.fn(() => ({
+  it("returns initialised module on repeat calls", () => {
+    const init = vi.fn().mockReturnValue({
       greet() {
-        return "Hello, World!";
+        return "hello";
       },
-    }));
-    const lazy = lazyInit(init);
+    });
+    const lazyMod = lazyInit(init);
+    const first = lazyMod();
+    const second = lazyMod();
 
-    const firstCall = lazy();
-    const secondCall = lazy();
-
-    expect(firstCall).toBe(secondCall);
+    expect(first).toBe(second);
     expect(init).toHaveBeenCalledTimes(1);
   });
 });
 ```
 
-The tests fail, we write the code to pass the tests and then we refactor to tidy
-things up. Writing the tests first helped to think through the design of the
-solution, give full coverage and will catch any regressions in future changes.
+At this stage the tests fail so we write just enough code to make them pass and
+move from Red to Green.
 
-If, rather than hand code the implementation, we generate the code with AI we
-will go through a process of design to create a prompt, refine it and then
-refactor the result. Like the Red → Green → Refactor approach of TDD but rather
-than outlining functionality in tests we have to define it in the prompt and ask
-for the test coverage at the same time.
-
-Using Claude 3.5 Sonnet we can generate the code with a prompt like below.
-
-```text
-Create a lazy initialisation function called lazyInit with the following specification:
-
-1. Takes a single argument of a function named initFn that returns a value
-2. Returns a new function that, when called, returns the value from calling the provided function
-3. The provided function should only be called once, on the first call
-4. Has a test suite using Vitest and imperative test descriptions
-```
-
-It may take a few iterations to get the correct result but once we have it we
-find ourselves at the refactor stage, same as with TDD but quicker.
-
-What did Claude generate for us? Even for this simple function it took a few
-refinements to add things like the shared parameter and return type.
-
-```typescript
-export type LazyInitFn<T> = () => T;
-
-export function lazyInit<T>(initFn: LazyInitFn<T>): LazyInitFn<T> {
-  let value: T | undefined;
+```ts
+export function lazyInit(fn: () => any) {
+  let mod;
 
   return () => {
-    if (value === undefined) {
-      value = initFn();
+    if (mod === undefined) {
+      mod = fn();
     }
-    return value;
+
+    return mod;
   };
 }
 ```
 
-It generated valid tests in the end, not too different to what I wrote by hand.
-Some refinement here removed unnecessary testing for undefined and null values
-and another for maintaining the context of a returned object type.
+From the green stage we can refactor the code to improve things like structure,
+code reuse and readability.
+
+### Generating the code with AI
+
+To generate the function and tests with AI we'll follow a similar process but
+focus first on the prompt. Using [Claude][claude] over chat we'll provide it
+with the high level specification, outline the implementation details and ask
+for the tests.
+
+```text
+Create a lazy initialisation function for modules that will only initialise
+the module on first call and return the initialised module on repeat calls.
+The function should return a new function that returns the initialised module
+when called.
+
+Here's the function specification:
+- The code is written in TypeScript
+- The function is called lazyInit and takes a single function argument
+- The argument is called fn and returns the initialised module when called
+
+Add a test suite with Vitest that tests:
+- The module is initialised on first call
+- The initialised module is returned on repeat calls
+```
+
+Claude does a decent job with this prompt and generates code that covers the
+specification.
 
 ```typescript
-import { describe, it, expect, vi } from "vitest";
-import { lazyInit, type LazyInitFn } from "./lazyInit";
+export function lazyInit<T>(fn: () => T): () => T {
+  let instance: T | undefined;
 
-describe("lazyInit(initFn)", () => {
-  it("initializes the value when first called", () => {
-    const mockInitFn: LazyInitFn<number> = vi.fn(() => 42);
-    const getValue: LazyInitFn<number> = lazyInit(mockInitFn);
+  return () => {
+    if (!instance) {
+      instance = fn();
+    }
+    return instance;
+  };
+}
+```
 
-    expect(mockInitFn).not.toHaveBeenCalled();
+It generates valid tests, not too different to what I wrote by hand. They could
+do with a bit of refinement to assert the function returns the same module and
+not a structurally equal one but we'll accept them.
 
-    const result = getValue();
+```typescript
+import { describe, test, expect, vi } from "vitest";
+import { lazyInit } from "./lazyInit";
 
-    expect(result).toBe(42);
-    expect(mockInitFn).toHaveBeenCalledTimes(1);
+describe("lazyInit", () => {
+  test("initialize module on first call", () => {
+    const mockInit = vi.fn(() => ({ data: "test" }));
+    const getModule = lazyInit(mockInit);
+
+    const result = getModule();
+
+    expect(mockInit).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({ data: "test" });
   });
 
-  it("returns the cached value on subsequent calls", () => {
-    const mockInitFn: LazyInitFn<number> = vi.fn(() => 42);
-    const getValue: LazyInitFn<number> = lazyInit(mockInitFn);
+  test("return cached module on subsequent calls", () => {
+    const mockInit = vi.fn(() => ({ data: "test" }));
+    const getModule = lazyInit(mockInit);
 
-    const result1 = getValue();
-    const result2 = getValue();
-    const result3 = getValue();
+    getModule(); // First call
+    const secondResult = getModule(); // Second call
+    const thirdResult = getModule(); // Third call
 
-    expect(mockInitFn).toHaveBeenCalledTimes(1);
-    expect(result1).toBe(42);
-    expect(result2).toBe(42);
-    expect(result3).toBe(42);
+    expect(mockInit).toHaveBeenCalledTimes(1);
+    expect(secondResult).toEqual({ data: "test" });
+    expect(thirdResult).toEqual({ data: "test" });
   });
 });
 ```
 
-The generated code requires a bit of refactoring to remove things like
-unnecessary type annotations, arguably more than if I had I written it myself,
-but we saved a significant amount of time in not having to write the code from
-scratch. The refactoring step can happen with via chat with the LLM to refine
-the generated code or we can manually make some edits.
+As with TDD we have reached the green stage with tests that pass and can now
+refactor the code either manually or over chat with Claude.
+
+With AI code generation we document our thought process and code design in
+initial the prompt, let's call this Prompt-Driven Development (PDD)\*. Due to
+the speed of development with AI the need to write tests first becomes less
+relevant but the iterative process of making changes in small, well defined
+increments remains as important as ever.
+
+Let's look at the shared qualities of TDD and PDD:
+
+### Upfront design
+
+Upfront design involves planning the architecture and structure of your code
+before implementation. This helps in identifying potential challenges early and
+ensures that the codebase is scalable and maintainable.
+
+### Safety net of tests
+
+Writing tests ensures that your code behaves as expected. A comprehensive test
+suite acts as a safety net, catching bugs and regressions as you make changes to
+the codebase.
+
+### A living documentation of requirements
+
+Tests serve as living documentation by clearly defining the expected behavior of
+your code. They provide a reference for understanding requirements and verifying
+that they are met.
+
+### Break change down into small, well-defined iterations
+
+Breaking changes into smaller, manageable iterations makes the development
+process more predictable and reduces the risk of introducing errors. It also
+allows for incremental progress and easier debugging.
+
+### Refactor to improve structure, code reuse, and readability
+
+Refactoring involves improving the internal structure of your code without
+changing its external behavior. This enhances code readability, promotes reuse,
+and makes the codebase easier to maintain.
+
+\*I'd like to take credit for the term but this [article on PDD](pdd] by Andrew
+Miller discusses it with a different focus but great insight.
+
+[red-green-refactor]: https://www.jamesshore.com/v2/blog/2005/red-green-refactor
+[claude]: https://www.anthropic.com/claude
+[pdd]: https://andrewships.substack.com/p/prompt-driven-development
