@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Does TDD have relevance in an AI assisted developer workflow?</title>
+  <meta name="description" content="Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/the-relevance-of-tdd-in-an-ai-workflow/">
+  <meta property="og:title" content="Does TDD have relevance in an AI assisted developer workflow?">
+  <meta property="og:description" content="Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/the-relevance-of-tdd-in-an-ai-workflow/">
+  <meta property="twitter:title" content="Does TDD have relevance in an AI assisted developer workflow?">
+  <meta property="twitter:description" content="Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>.ctc-image {
+  @media (hover: hover) {
+    &::part(button) {
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+
+    &:hover::part(button) {
+      opacity: 1;
+    }
+  }
+}
+
+copy-to-clipboard {
+  /* Keep these raw color values here until there is a light theme for code blocks */
+  --ctc-button-color: var(--color-white);
+  --ctc-button-background: var(--color-neutral-700);
+}
+
+back-to-top {
+  --btt-button-background: var(--color-bg-action);
+  --btt-button-background-hover: var(--color-bg-action-hover);
+  --btt-button-color: var(--color-text-primary);
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 var(--spacing-md);
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-md);
+
+  a {
+    color: var(--color-text-primary);
+    display: inline-flex;
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--color-bg-secondary);
+  margin: 0 0 var(--spacing-md);
+  padding: var(--spacing-md) 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: right;
+  padding: var(--spacing-md) 0 var(--spacing-xs);
+}
+
+.post-date {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.post-content {
+  color: var(--color-text-secondary);
+
+  blockquote {
+    border-left: solid 4px var(--color-border-primary);
+    font-style: italic;
+    padding: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  p,
+  ol,
+  ul {
+    margin: 0 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  ol,
+  ul {
+    padding: 0 0 0 var(--spacing-xl);
+  }
+
+  li {
+    margin: 0 0 var(--spacing-xs);
+  }
+
+  p code {
+    font-size: 0.875rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin: var(--spacing-3xl) 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 var(--spacing-3xl);
+    overflow: auto;
+    padding: var(--spacing-xs);
+  }
+
+  img {
+    background: var(--color-bg-secondary);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: var(--spacing-md);
+  }
+}
+
+.post-description {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.post-footer {
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
+  padding: var(--spacing-md) 0;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: var(--spacing-3xl);
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: var(--spacing-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: var(--color-bg-action);
+  border: none;
+  border-radius: 999px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 500;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+  line-height: 1;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  transition:
+    background 200ms,
+    color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
+}
+
+.theme-switcher {
+  height: 2.5rem;
+  width: 5rem;
+}
+
+theme-switch {
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-lozenge-background: var(--color-bg-action);
+}
+
+@media (pointer: coarse) {
+  .theme-switcher {
+    overflow: hidden;
+    width: 2.5rem;
+  }
+
+  theme-switch {
+    --ts-lozenge-background: transparent;
+
+    &::part(button-bar) {
+      background: var(--color-bg-action);
+    }
+
+    &::part(button) {
+      opacity: 1;
+    }
+
+    &::part(button dark-button) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &[data-theme="dark"] {
+      &::part(button dark-button) {
+        visibility: hidden;
+      }
+    }
+
+    &[data-theme="light"] {
+      &::part(button light-button) {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: var(--spacing-3xl) 0 0;
+    margin: 0 0 var(--spacing-3xl);
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: var(--spacing-md);
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+  background: var(--codeblock-bg);
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-stone: lch(50% 1.5 75);
+  --color-peach: lch(55% 48 38);
+
+  --color-white: lch(99% 4 75);
+  --color-black: lch(2% 4 75);
+
+  --color-primary-50: lch(from var(--color-peach) 95% c h);
+  --color-primary-100: lch(from var(--color-peach) 90% c h);
+  --color-primary-200: lch(from var(--color-peach) 80% c h);
+  --color-primary-300: lch(from var(--color-peach) 70% c h);
+  --color-primary-400: lch(from var(--color-peach) 60% c h);
+  --color-primary-500: lch(from var(--color-peach) l c h);
+  --color-primary-600: lch(from var(--color-peach) 40% c h);
+  --color-primary-700: lch(from var(--color-peach) 30% c h);
+  --color-primary-800: lch(from var(--color-peach) 20% c h);
+  --color-primary-900: lch(from var(--color-peach) 10% c h);
+  --color-primary-950: lch(from var(--color-peach) 5% c h);
+
+  --color-neutral-50: lch(from var(--color-stone) 95% c h);
+  --color-neutral-100: lch(from var(--color-stone) 90% c h);
+  --color-neutral-200: lch(from var(--color-stone) 80% c h);
+  --color-neutral-300: lch(from var(--color-stone) 70% c h);
+  --color-neutral-400: lch(from var(--color-stone) 60% c h);
+  --color-neutral-500: lch(from var(--color-stone) l c h);
+  --color-neutral-600: lch(from var(--color-stone) 40% c h);
+  --color-neutral-700: lch(from var(--color-stone) 30% c h);
+  --color-neutral-800: lch(from var(--color-stone) 20% c h);
+  --color-neutral-900: lch(from var(--color-stone) 10% c h);
+  --color-neutral-950: lch(from var(--color-stone) 5% c h);
+
+  --size-0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
+  --color-border-primary: light-dark(var(--color-neutral-200),
+      var(--color-neutral-700));
+
+  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
+  --color-bg-secondary: light-dark(var(--color-neutral-50),
+      var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
+
+  --color-link: var(--color-text-primary);
+  --color-link-hover: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-underline: var(--color-primary-400);
+  --color-link-hover-underline: light-dark(var(--color-primary-600),
+      var(--color-primary-300));
+  --color-link-visited: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-visited-underline: var(--color-primary-400);
+  --color-link-focus: var(--color-link-hover);
+  --color-link-focus-underline: var(--color-link-hover);
+
+  --color-text-primary: light-dark(var(--color-black), var(--color-white));
+  --color-text-secondary: light-dark(var(--color-neutral-600),
+      var(--color-neutral-200));
+
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
+  --codeblock-bg: var(--color-neutral-900);
+
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+  font-weight: 500;
+  position: relative;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited-underline);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    color: var(--color-link-focus);
+    text-decoration-color: var(--color-link-focus-underline);
+  }
+
+  &:active {
+    top: 0.125rem;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
+  }
+}</style>
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>Does TDD have relevance in an AI assisted developer workflow?</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+
+  <div class="theme-switcher">
+    <theme-switch data-strategy="class"></theme-switch>
+  </div>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title">Does TDD have relevance in an AI assisted developer workflow?</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-04-27">27 April 2025</time></div>
+
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Does%20TDD%20have%20relevance%20in%20an%20AI%20assisted%20developer%20workflow%3F%20https://philparsons.co.uk//blog/the-relevance-of-tdd-in-an-ai-workflow/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/the-relevance-of-tdd-in-an-ai-workflow/&title=Does%20TDD%20have%20relevance%20in%20an%20AI%20assisted%20developer%20workflow%3F">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/the-relevance-of-tdd-in-an-ai-workflow/&text=Does%20TDD%20have%20relevance%20in%20an%20AI%20assisted%20developer%20workflow%3F&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.</p>
+    <h2>A shared benefit of TDD and AI assisted development</h2>
+<p>With a traditional software development process like Test-Driven Development
+(TDD), instead of writing code first, we write tests that define the expected
+behavior. A common approach for TDD named <a href="https://www.jamesshore.com/v2/blog/2005/red-green-refactor">Red → Green →
+Refactor</a> breaks the development process into an iterative
+cycle of three distinct phases:</p>
+<ol>
+<li><strong>Red</strong>: think through the problem and create tests that cover the desired
+output</li>
+<li><strong>Green</strong>: implements the quickest solution to make these test pass</li>
+<li><strong>Refactor</strong>: update to improve aspects like structure, code reuse and
+readability</li>
+</ol>
+<p>People often associate TDD with just writing the tests first but the real value
+comes from breaking down and delivering requirements in small increments. When
+generating code with AI we front-load the development process with design in a
+similar way. Rather than dive straight into code we define the problem with
+enough context and implementation detail in a prompt.</p>
+<p>With this in mind, we'll want AI to generate tests for each iteration but in a
+more <a href="https://andrewships.substack.com/p/prompt-driven-development">Prompt-Driven Development</a> workflow (PDD).</p>
+<h2>The TDD vs AI assisted development workflow</h2>
+<p>Let's compare the process of adding a new function, using both TDD and PDD, from
+the following technical specification.</p>
+<blockquote>
+<p>Create a lazy initialisation function for modules that will only initialise
+the module on first call and return the initialised module on repeat calls.
+The function should return a new function that returns the initialised module
+when called.</p>
+</blockquote>
+<h3>Manually writing code and tests following TDD</h3>
+<p>With TDD we analyze the specification before creating the minimal code structure
+so that we can outline tests that define and assert the core functionality we
+intend to add in this iteration, the Red stage.</p>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> lazyInit <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./lazyInit"</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"lazyInit"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"initialises module on first call"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> mod <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> init <span class="token operator">=</span> vi<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mockReturnValue</span><span class="token punctuation">(</span>mod<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> lazyMod <span class="token operator">=</span> <span class="token function">lazyInit</span><span class="token punctuation">(</span>init<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span>init<span class="token punctuation">)</span><span class="token punctuation">.</span>not<span class="token punctuation">.</span><span class="token function">toHaveBeenCalled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">lazyMod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>mod<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>init<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalledTimes</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"returns initialised module on repeat calls"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> init <span class="token operator">=</span> vi<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mockReturnValue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> lazyMod <span class="token operator">=</span> <span class="token function">lazyInit</span><span class="token punctuation">(</span>init<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> first <span class="token operator">=</span> <span class="token function">lazyMod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> second <span class="token operator">=</span> <span class="token function">lazyMod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span>first<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>second<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>init<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalledTimes</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>At this stage the tests fail so we write just enough code to make them pass and
+move from Red to Green.</p>
+<copy-to-clipboard><pre class="language-ts"><code class="language-ts"><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">lazyInit</span><span class="token punctuation">(</span><span class="token function-variable function">fn</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> mod<span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mod <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      mod <span class="token operator">=</span> <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> mod<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>From the green stage we can refactor the code to improve things like structure,
+code reuse and readability. The example uses TypeScript so we'd define some
+proper generic types for the module initialisation parameter and returned
+function here.</p>
+<h3>Generating the code and tests with AI</h3>
+<p>To generate the function and tests with AI we follow a similar process but focus
+first on the prompt rather than add any code or tests. Using an AI chat
+interface, <a href="https://www.anthropic.com/claude">Claude</a> here, we provide the high level specification and
+outline the implementation details including the tests.</p>
+<copy-to-clipboard><pre class="language-text"><code class="language-text">Create a lazy initialisation function for modules that will only initialise
+the module on first call and return the initialised module on repeat calls.
+The function should return a new function that returns the initialised module
+when called.
+
+Here's the function specification:
+- The code is written in TypeScript
+- The function is called lazyInit and takes a single function argument
+- The argument is called fn and returns the initialised module when called
+
+Add a test suite with Vitest that tests:
+- The module is initialised on first call
+- The initialised module is returned on repeat calls</code></pre></copy-to-clipboard>
+<p>AI does a decent job with this prompt and generates code that covers the
+specification, not too different from what I wrote by hand.</p>
+<copy-to-clipboard><pre class="language-typescript"><code class="language-typescript"><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token generic-function"><span class="token function">lazyInit</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token function-variable function">fn</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">T</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">T</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> instance<span class="token operator">:</span> <span class="token constant">T</span> <span class="token operator">|</span> <span class="token keyword">undefined</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>instance<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      instance <span class="token operator">=</span> <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> instance<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>The tests run and pass so we can't really relate to the Red aspect of the
+initial phase but we did benefit in the same way when writing the prompt. The
+generated test code could do with a bit of refinement but could have provided
+some context here to match existing standards.</p>
+<copy-to-clipboard><pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> describe<span class="token punctuation">,</span> test<span class="token punctuation">,</span> expect<span class="token punctuation">,</span> vi <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"vitest"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> lazyInit <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./lazyInit"</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"lazyInit"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"initialize module on first call"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> mockInit <span class="token operator">=</span> vi<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> getModule <span class="token operator">=</span> <span class="token function">lazyInit</span><span class="token punctuation">(</span>mockInit<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span>mockInit<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalledTimes</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"return cached module on subsequent calls"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> mockInit <span class="token operator">=</span> vi<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> getModule <span class="token operator">=</span> <span class="token function">lazyInit</span><span class="token punctuation">(</span>mockInit<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// First call</span>
+    <span class="token keyword">const</span> secondResult <span class="token operator">=</span> <span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Second call</span>
+    <span class="token keyword">const</span> thirdResult <span class="token operator">=</span> <span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Third call</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span>mockInit<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalledTimes</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>secondResult<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>thirdResult<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h3>Refactoring the code in either workflow</h3>
+<p>In both of the code examples we reached the green stage with tests that pass so
+can now start the refactoring process. It doesn't matter if we refactor with
+manual edits or code generation but we shouldn't need to touch the tests in
+either workflow unless for anything other than correction.</p>
+<h2>The principles remain relevant</h2>
+<p>With AI code generation we document our thought process and design in the
+prompt. Due to the speed of development with AI the need to write tests first
+becomes less relevant but the iterative process of making changes in small, well
+defined increments remains as relevant as ever!</p>
+<p>I'll end with a list of the shared qualities of TDD and PDD. Of course,
+generated with AI and refactored by me 🧑🏻‍💻.</p>
+<ul>
+<li><strong>Upfront design</strong>: Upfront design involves planning the architecture and
+structure of your code before implementation. This helps to identify
+challenges early and ensures that the codebase remains scalable and
+maintainable.</li>
+<li><strong>Safety net of tests</strong>: Having tests ensures that the code behaves as
+expected and acts as a safety net, catching bugs and regressions as you make
+changes to the codebase.</li>
+<li><strong>A living documentation of requirements</strong>: Tests serve as living
+documentation by defining the expected behavior of the code and a reference
+for understanding feature requirements.</li>
+<li><strong>Break change down into small, well-defined iterations</strong>: Breaking changes
+into smaller, manageable iterations makes the development process more
+predictable and reduces the risk of introducing errors. It also allows for
+incremental progress and easier debugging.</li>
+<li><strong>Refactor to improve structure, code reuse, and readability</strong>: Refactoring
+involves improving the internal structure of your code without changing its
+external behavior. This enhances code readability, promotes reuse, and makes
+the codebase easier to maintain.</li>
+</ul>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.3/min.js" defer=""></script>
+
+</body>
+
+</html>
