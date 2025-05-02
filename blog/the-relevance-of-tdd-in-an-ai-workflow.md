@@ -3,9 +3,8 @@ title: Does TDD have relevance in an AI assisted developer workflow?
 description:
   Can the principles of Test-Driven Development (TDD) be applied to AI code
   generation? Let's look at the concept of Prompt-Driven Development (PDD),
-  where we guide AI by applying the principles of TDD in prompt specifications.
-date: 2025-04-23
-draft: true
+  where we guide AI by applying the principles of TDD.
+date: 2025-04-27
 ---
 
 ## A shared benefit of TDD and AI assisted development
@@ -29,7 +28,7 @@ similar way. Rather than dive straight into code we define the problem with
 enough context and implementation detail in a prompt.
 
 With this in mind, we'll want AI to generate tests for each iteration but in a
-more Prompt-Driven Development workflow (PDD).
+more [Prompt-Driven Development][pdd] workflow (PDD).
 
 ## The TDD vs AI assisted development workflow
 
@@ -176,20 +175,19 @@ describe("lazyInit", () => {
 ### Refactoring the code in either workflow
 
 In both of the code examples we reached the green stage with tests that pass so
-can now start the refactoring process. We can mix and match manual edits, code
-completion or full generation of code with AI here to our hearts content but we
-shouldn't need to touch the tests in either workflow unless for anything other
-than correction.
+can now start the refactoring process. It doesn't matter if we refactor with
+manual edits or code generation but we shouldn't need to touch the tests in
+either workflow unless for anything other than correction.
 
-## Conclusion
+## The principles remain relevant
 
 With AI code generation we document our thought process and design in the
-prompt, let's call this Prompt-Driven Development (PDD)\*. Due to the speed of
-development with AI the need to write tests first becomes less relevant but the
-iterative process of making changes in small, well defined increments remains as
-important as ever.
+prompt. Due to the speed of development with AI the need to write tests first
+becomes less relevant but the iterative process of making changes in small, well
+defined increments remains as relevant as ever!
 
-A summary of the shared qualities of TDD and PDD:
+I'll end with a list of the shared qualities of TDD and PDD. Of course,
+generated with AI and refactored by me 🧑🏻‍💻.
 
 - **Upfront design**: Upfront design involves planning the architecture and
   structure of your code before implementation. This helps to identify
@@ -209,9 +207,6 @@ A summary of the shared qualities of TDD and PDD:
   involves improving the internal structure of your code without changing its
   external behavior. This enhances code readability, promotes reuse, and makes
   the codebase easier to maintain.
-
-\*I'd like to take credit for the term but this [article on PDD](pdd] by Andrew
-Miller discusses it with a different focus but great insight.
 
 [red-green-refactor]: https://www.jamesshore.com/v2/blog/2005/red-green-refactor
 [claude]: https://www.anthropic.com/claude
