@@ -118,13 +118,35 @@ figcaption {
 .post-content {
   color: var(--color-text-secondary);
 
-  p {
+  blockquote {
+    border-left: solid 4px var(--color-border-primary);
+    font-style: italic;
+    padding: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  p,
+  ol,
+  ul {
     margin: 0 0 var(--spacing-md);
     text-wrap: pretty;
+  }
 
-    code {
-      font-size: 0.875rem;
-    }
+  ol,
+  ul {
+    padding: 0 0 0 var(--spacing-xl);
+  }
+
+  li {
+    margin: 0 0 var(--spacing-xs);
+  }
+
+  p code {
+    font-size: 0.875rem;
   }
 
   h2,

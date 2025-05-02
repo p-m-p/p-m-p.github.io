@@ -1,5 +1,5 @@
 ---
-title: Does TDD have relevance in a AI assisted developer workflow?
+title: Does TDD have relevance in an AI assisted developer workflow?
 description:
 date: 2025-04-23
 draft: true
@@ -11,9 +11,9 @@ With a traditional software development process like Test-Driven Development
 (TDD), instead of writing code first, we write tests that define the expected
 behavior. In the [Red → Green → Refactor][red-green-refactor] approach we:
 
-1. Red: write tests that fail
-2. Green: implements the quickest solution to make the test pass
-3. Refactor: improve aspects like structure, code reuse and readability
+1. **Red**: write tests that fail
+2. **Green**: implements the quickest solution to make the test pass
+3. **Refactor**: improve aspects like structure, code reuse and readability
 
 Writing tests first presents an opportunity to think more strategically about
 system design, creates living documentation of requirements and provides a
@@ -167,43 +167,32 @@ describe("lazyInit", () => {
 As with TDD we have reached the green stage with tests that pass and can now
 refactor the code either manually or over chat with Claude.
 
-With AI code generation we document our thought process and code design in
-initial the prompt, let's call this Prompt-Driven Development (PDD)\*. Due to
-the speed of development with AI the need to write tests first becomes less
-relevant but the iterative process of making changes in small, well defined
-increments remains as important as ever.
+With AI code generation we document our thought process and design in the
+prompt, let's call this Prompt-Driven Development (PDD)\*. Due to the speed of
+development with AI the need to write tests first becomes less relevant but the
+iterative process of making changes in small, well defined increments remains as
+important as ever.
 
-Let's look at the shared qualities of TDD and PDD:
+A summary of the shared qualities of TDD and PDD:
 
-### Upfront design
-
-Upfront design involves planning the architecture and structure of your code
-before implementation. This helps in identifying potential challenges early and
-ensures that the codebase is scalable and maintainable.
-
-### Safety net of tests
-
-Writing tests ensures that your code behaves as expected. A comprehensive test
-suite acts as a safety net, catching bugs and regressions as you make changes to
-the codebase.
-
-### A living documentation of requirements
-
-Tests serve as living documentation by clearly defining the expected behavior of
-your code. They provide a reference for understanding requirements and verifying
-that they are met.
-
-### Break change down into small, well-defined iterations
-
-Breaking changes into smaller, manageable iterations makes the development
-process more predictable and reduces the risk of introducing errors. It also
-allows for incremental progress and easier debugging.
-
-### Refactor to improve structure, code reuse, and readability
-
-Refactoring involves improving the internal structure of your code without
-changing its external behavior. This enhances code readability, promotes reuse,
-and makes the codebase easier to maintain.
+- **Upfront design**: Upfront design involves planning the architecture and
+  structure of your code before implementation. This helps to identify
+  challenges early and ensures that the codebase remains scalable and
+  maintainable.
+- **Safety net of tests**: Having tests ensures that the code behaves as
+  expected and acts as a safety net, catching bugs and regressions as you make
+  changes to the codebase.
+- **A living documentation of requirements**: Tests serve as living
+  documentation by defining the expected behavior of the code and a reference
+  for understanding feature requirements.
+- **Break change down into small, well-defined iterations**: Breaking changes
+  into smaller, manageable iterations makes the development process more
+  predictable and reduces the risk of introducing errors. It also allows for
+  incremental progress and easier debugging.
+- **Refactor to improve structure, code reuse, and readability**: Refactoring
+  involves improving the internal structure of your code without changing its
+  external behavior. This enhances code readability, promotes reuse, and makes
+  the codebase easier to maintain.
 
 \*I'd like to take credit for the term but this [article on PDD](pdd] by Andrew
 Miller discusses it with a different focus but great insight.
