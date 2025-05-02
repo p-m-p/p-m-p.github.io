@@ -1,6 +1,10 @@
 ---
 title: Does TDD have relevance in an AI assisted developer workflow?
 description:
+  Can the structured approach of Test-Driven Development (TDD) be applied to AI
+  code generation? Let's look at the concept of Prompt-Driven Development (PDD),
+  where we guide AI by applying the design principles of TDD to prompt
+  specifications.
 date: 2025-04-23
 draft: true
 ---
