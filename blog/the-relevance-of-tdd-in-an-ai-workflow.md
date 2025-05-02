@@ -1,10 +1,9 @@
 ---
 title: Does TDD have relevance in an AI assisted developer workflow?
 description:
-  Can the structured approach of Test-Driven Development (TDD) be applied to AI
-  code generation? Let's look at the concept of Prompt-Driven Development (PDD),
-  where we guide AI by applying the design principles of TDD to prompt
-  specifications.
+  Can the principles of Test-Driven Development (TDD) be applied to AI code
+  generation? Let's look at the concept of Prompt-Driven Development (PDD),
+  where we guide AI by applying the principles of TDD in prompt specifications.
 date: 2025-04-23
 draft: true
 ---
@@ -13,37 +12,40 @@ draft: true
 
 With a traditional software development process like Test-Driven Development
 (TDD), instead of writing code first, we write tests that define the expected
-behavior. In the [Red → Green → Refactor][red-green-refactor] approach we:
+behavior. A common approach for TDD named [Red → Green →
+Refactor][red-green-refactor] breaks the development process into an iterative
+cycle of three distinct phases:
 
-1. **Red**: write tests that fail
-2. **Green**: implements the quickest solution to make the test pass
-3. **Refactor**: improve aspects like structure, code reuse and readability
+1. **Red**: think through the problem and create tests that cover the desired
+   output
+2. **Green**: implements the quickest solution to make these test pass
+3. **Refactor**: update to improve aspects like structure, code reuse and
+   readability
 
-Writing tests first presents an opportunity to think more strategically about
-system design, creates living documentation of requirements and provides a
-safety net when making future changes.
+People often associate TDD with just writing the tests first but the real value
+comes from breaking down and delivering requirements in small increments. When
+generating code with AI we front-load the development process with design in a
+similar way. Rather than dive straight into code we define the problem with
+enough context and implementation detail in a prompt.
 
-When we generate code with AI we front-load the development process with design
-in a similar way to TDD. Rather than dive straight into code we have to define
-the problem with enough context and implementation detail in a prompt. We still
-want tests for the same reasons as TDD but where in the workflow should we add
-them?
+With this in mind, we'll want AI to generate tests for each iteration but in a
+more Prompt-Driven Development workflow (PDD).
 
 ## The TDD vs AI assisted development workflow
 
-Let's compare the process of adding a new function, using both techniques, with
-the following high level specification.
+Let's compare the process of adding a new function, using both TDD and PDD, from
+the following technical specification.
 
 > Create a lazy initialisation function for modules that will only initialise
 > the module on first call and return the initialised module on repeat calls.
 > The function should return a new function that returns the initialised module
 > when called.
 
-### Manually writing the code with TDD
+### Manually writing code and tests following TDD
 
-With TDD we analyze the specification before creating a minimal code structure
-and outlining tests that define and assert the core functionality, the Red
-stage.
+With TDD we analyze the specification before creating the minimal code structure
+so that we can outline tests that define and assert the core functionality we
+intend to add in this iteration, the Red stage.
 
 ```ts
 import { lazyInit } from "./lazyInit";
@@ -93,14 +95,16 @@ export function lazyInit(fn: () => any) {
 ```
 
 From the green stage we can refactor the code to improve things like structure,
-code reuse and readability.
+code reuse and readability. The example uses TypeScript so we'd define some
+proper generic types for the module initialisation parameter and returned
+function here.
 
-### Generating the code with AI
+### Generating the code and tests with AI
 
-To generate the function and tests with AI we'll follow a similar process but
-focus first on the prompt. Using [Claude][claude] over chat we'll provide it
-with the high level specification, outline the implementation details and ask
-for the tests.
+To generate the function and tests with AI we follow a similar process but focus
+first on the prompt rather than add any code or tests. Using an AI chat
+interface, [Claude][claude] here, we provide the high level specification and
+outline the implementation details including the tests.
 
 ```text
 Create a lazy initialisation function for modules that will only initialise
@@ -118,8 +122,8 @@ Add a test suite with Vitest that tests:
 - The initialised module is returned on repeat calls
 ```
 
-Claude does a decent job with this prompt and generates code that covers the
-specification.
+AI does a decent job with this prompt and generates code that covers the
+specification, not too different from what I wrote by hand.
 
 ```typescript
 export function lazyInit<T>(fn: () => T): () => T {
@@ -134,9 +138,10 @@ export function lazyInit<T>(fn: () => T): () => T {
 }
 ```
 
-It generates valid tests, not too different to what I wrote by hand. They could
-do with a bit of refinement to assert the function returns the same module and
-not a structurally equal one but we'll accept them.
+The tests run and pass so we can't really relate to the Red aspect of the
+initial phase but we did benefit in the same way when writing the prompt. The
+generated test code could do with a bit of refinement but could have provided
+some context here to match existing standards.
 
 ```typescript
 import { describe, test, expect, vi } from "vitest";
@@ -168,8 +173,15 @@ describe("lazyInit", () => {
 });
 ```
 
-As with TDD we have reached the green stage with tests that pass and can now
-refactor the code either manually or over chat with Claude.
+### Refactoring the code in either workflow
+
+In both of the code examples we reached the green stage with tests that pass so
+can now start the refactoring process. We can mix and match manual edits, code
+completion or full generation of code with AI here to our hearts content but we
+shouldn't need to touch the tests in either workflow unless for anything other
+than correction.
+
+## Conclusion
 
 With AI code generation we document our thought process and design in the
 prompt, let's call this Prompt-Driven Development (PDD)\*. Due to the speed of
