@@ -5,6 +5,7 @@ description:
   generation? Let's look at the concept of Prompt-Driven Development (PDD),
   where we guide AI by applying the principles of TDD.
 date: 2025-04-27
+social_card: the-relevance-of-tdd-in-an-ai-workflow.jpg
 ---
 
 ## A shared benefit of TDD and AI assisted development
