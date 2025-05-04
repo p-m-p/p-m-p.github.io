@@ -189,6 +189,11 @@ figcaption {
   }
 }
 
+figure {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
 .post-description {
   font-size: 1.125rem;
   line-height: 1.4;

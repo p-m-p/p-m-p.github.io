@@ -30,7 +30,7 @@ enough context and implementation detail in a prompt.
 With this in mind, we'll want AI to generate tests for each iteration but in a
 more [Prompt-Driven Development][pdd] workflow (PDD).
 
-## The TDD vs AI assisted development workflow
+## A Comparison of TDD and PDD
 
 Let's compare the process of adding a new function, using both TDD and PDD, from
 the following technical specification.
@@ -40,7 +40,7 @@ the following technical specification.
 > The function should return a new function that returns the initialised module
 > when called.
 
-### Manually writing code and tests following TDD
+### Writing tests and code with TDD
 
 With TDD we analyze the specification before creating the minimal code structure
 so that we can outline tests that define and assert the core functionality we
@@ -98,7 +98,7 @@ code reuse and readability. The example uses TypeScript so we'd define some
 proper generic types for the module initialisation parameter and returned
 function here.
 
-### Generating the code and tests with AI
+### Generating tests and code with PDD
 
 To generate the function and tests with AI we follow a similar process but focus
 first on the prompt rather than add any code or tests. Using an AI chat
@@ -172,41 +172,55 @@ describe("lazyInit", () => {
 });
 ```
 
-### Refactoring the code in either workflow
+### Refactoring in both workflows
 
 In both of the code examples we reached the green stage with tests that pass so
 can now start the refactoring process. It doesn't matter if we refactor with
 manual edits or code generation but we shouldn't need to touch the tests in
 either workflow unless for anything other than correction.
 
-## The principles remain relevant
+## Prompt → Generate → Refactor
 
 With AI code generation we document our thought process and design in the
 prompt. Due to the speed of development with AI the need to write tests first
 becomes less relevant but the iterative process of making changes in small, well
-defined increments remains as relevant as ever!
+defined increments remains as relevant as ever. Both TDD and PDD share key
+principles:
 
-I'll end with a list of the shared qualities of TDD and PDD. Of course,
-generated with AI and refactored by me 🧑🏻‍💻.
+- **Upfront Design**: Planning the architecture and structure before
+  implementation helps identify challenges early and ensures scalability.
+- **Safety Net of Tests**: Tests ensure expected behavior and catch bugs or
+  regressions during changes.
+- **Living Documentation**: Tests serve as a reference for feature requirements
+  and expected behavior.
+- **Incremental Development**: Breaking changes into small, manageable steps
+  reduces errors and simplifies debugging.
+- **Refactoring for Improvement**: Enhancing code structure, readability, and
+  re-usability ensures maintainability without altering behavior.
 
-- **Upfront design**: Upfront design involves planning the architecture and
-  structure of your code before implementation. This helps to identify
-  challenges early and ensures that the codebase remains scalable and
-  maintainable.
-- **Safety net of tests**: Having tests ensures that the code behaves as
-  expected and acts as a safety net, catching bugs and regressions as you make
-  changes to the codebase.
-- **A living documentation of requirements**: Tests serve as living
-  documentation by defining the expected behavior of the code and a reference
-  for understanding feature requirements.
-- **Break change down into small, well-defined iterations**: Breaking changes
-  into smaller, manageable iterations makes the development process more
-  predictable and reduces the risk of introducing errors. It also allows for
-  incremental progress and easier debugging.
-- **Refactor to improve structure, code reuse, and readability**: Refactoring
-  involves improving the internal structure of your code without changing its
-  external behavior. This enhances code readability, promotes reuse, and makes
-  the codebase easier to maintain.
+Like TDD, we can define the PDD process as a cycle of three stages:
+
+<copy-to-clipboard data-url="/img/blog/the-relevance-of-tdd-in-an-ai-workflow/pdd.png" class="ctc-image">
+  <figure>
+    <img src="/img/blog/the-relevance-of-tdd-in-an-ai-workflow/pdd.png" alt="Diagram that shows the three stages of the Prompt-Driven Development process">
+    <figcaption>
+      Prompt, generate, refactor stages of the Prompt-Driven Development process
+    </figcaption>
+  </figure>
+</copy-to-clipboard>
+
+- **Prompt**: think through the problem and create a prompt that covers the
+  desired output
+- **Generate**: review the generated code, with an emphasis on test correctness,
+  from the prompt and apply it to the implementation
+- **Refactor**: update to improve aspects like structure, code reuse and
+  readability
+
+We can embrace change in the tools with which we create code but the core
+principles of how we understand problems and create innovative solutions to
+solve them remains the same. To create safe, scalable and maintainable systems
+we need to own the process and not fall victim to hype surrounding the
+capabilities of our tools.
 
 [red-green-refactor]: https://www.jamesshore.com/v2/blog/2005/red-green-refactor
 [claude]: https://www.anthropic.com/claude
