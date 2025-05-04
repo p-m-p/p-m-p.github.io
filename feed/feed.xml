@@ -35,7 +35,7 @@ similar way. Rather than dive straight into code we define the problem with
 enough context and implementation detail in a prompt.&lt;/p&gt;
 &lt;p&gt;With this in mind, we&#39;ll want AI to generate tests for each iteration but in a
 more &lt;a href=&quot;https://andrewships.substack.com/p/prompt-driven-development&quot;&gt;Prompt-Driven Development&lt;/a&gt; workflow (PDD).&lt;/p&gt;
-&lt;h2&gt;The TDD vs AI assisted development workflow&lt;/h2&gt;
+&lt;h2&gt;A Comparison of TDD and PDD&lt;/h2&gt;
 &lt;p&gt;Let&#39;s compare the process of adding a new function, using both TDD and PDD, from
 the following technical specification.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -44,7 +44,7 @@ the module on first call and return the initialised module on repeat calls.
 The function should return a new function that returns the initialised module
 when called.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3&gt;Manually writing code and tests following TDD&lt;/h3&gt;
+&lt;h3&gt;Writing tests and code with TDD&lt;/h3&gt;
 &lt;p&gt;With TDD we analyze the specification before creating the minimal code structure
 so that we can outline tests that define and assert the core functionality we
 intend to add in this iteration, the Red stage.&lt;/p&gt;
@@ -92,7 +92,7 @@ move from Red to Green.&lt;/p&gt;
 code reuse and readability. The example uses TypeScript so we&#39;d define some
 proper generic types for the module initialisation parameter and returned
 function here.&lt;/p&gt;
-&lt;h3&gt;Generating the code and tests with AI&lt;/h3&gt;
+&lt;h3&gt;Generating tests and code with PDD&lt;/h3&gt;
 &lt;p&gt;To generate the function and tests with AI we follow a similar process but focus
 first on the prompt rather than add any code or tests. Using an AI chat
 interface, &lt;a href=&quot;https://www.anthropic.com/claude&quot;&gt;Claude&lt;/a&gt; here, we provide the high level specification and
@@ -153,38 +153,51 @@ some context here to match existing standards.&lt;/p&gt;
     &lt;span class=&quot;token function&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;thirdResult&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toEqual&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; data&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;test&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;h3&gt;Refactoring the code in either workflow&lt;/h3&gt;
+&lt;h3&gt;Refactoring in both workflows&lt;/h3&gt;
 &lt;p&gt;In both of the code examples we reached the green stage with tests that pass so
 can now start the refactoring process. It doesn&#39;t matter if we refactor with
 manual edits or code generation but we shouldn&#39;t need to touch the tests in
 either workflow unless for anything other than correction.&lt;/p&gt;
-&lt;h2&gt;The principles remain relevant&lt;/h2&gt;
+&lt;h2&gt;Prompt → Generate → Refactor&lt;/h2&gt;
 &lt;p&gt;With AI code generation we document our thought process and design in the
 prompt. Due to the speed of development with AI the need to write tests first
 becomes less relevant but the iterative process of making changes in small, well
-defined increments remains as relevant as ever!&lt;/p&gt;
-&lt;p&gt;I&#39;ll end with a list of the shared qualities of TDD and PDD. Of course,
-generated with AI and refactored by me 🧑🏻‍💻.&lt;/p&gt;
+defined increments remains as relevant as ever. Both TDD and PDD share key
+principles:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Upfront design&lt;/strong&gt;: Upfront design involves planning the architecture and
-structure of your code before implementation. This helps to identify
-challenges early and ensures that the codebase remains scalable and
-maintainable.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Safety net of tests&lt;/strong&gt;: Having tests ensures that the code behaves as
-expected and acts as a safety net, catching bugs and regressions as you make
-changes to the codebase.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;A living documentation of requirements&lt;/strong&gt;: Tests serve as living
-documentation by defining the expected behavior of the code and a reference
-for understanding feature requirements.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Break change down into small, well-defined iterations&lt;/strong&gt;: Breaking changes
-into smaller, manageable iterations makes the development process more
-predictable and reduces the risk of introducing errors. It also allows for
-incremental progress and easier debugging.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Refactor to improve structure, code reuse, and readability&lt;/strong&gt;: Refactoring
-involves improving the internal structure of your code without changing its
-external behavior. This enhances code readability, promotes reuse, and makes
-the codebase easier to maintain.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Upfront Design&lt;/strong&gt;: Planning the architecture and structure before
+implementation helps identify challenges early and ensures scalability.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Safety Net of Tests&lt;/strong&gt;: Tests ensure expected behavior and catch bugs or
+regressions during changes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Living Documentation&lt;/strong&gt;: Tests serve as a reference for feature requirements
+and expected behavior.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Incremental Development&lt;/strong&gt;: Breaking changes into small, manageable steps
+reduces errors and simplifies debugging.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Refactoring for Improvement&lt;/strong&gt;: Enhancing code structure, readability, and
+re-usability ensures maintainability without altering behavior.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;Like TDD, we can define the PDD process as a cycle of three stages:&lt;/p&gt;
+&lt;copy-to-clipboard data-url=&quot;/img/blog/the-relevance-of-tdd-in-an-ai-workflow/pdd.png&quot; class=&quot;ctc-image&quot;&gt;
+  &lt;figure&gt;
+    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.webp 737w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.jpeg&quot; alt=&quot;Diagram that shows the three stages of the Prompt-Driven Development process&quot; width=&quot;737&quot; height=&quot;600&quot;&gt;&lt;/picture&gt;
+    &lt;figcaption&gt;
+      Prompt, generate, refactor stages of the Prompt-Driven Development process
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/copy-to-clipboard&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Prompt&lt;/strong&gt;: think through the problem and create a prompt that covers the
+desired output&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Generate&lt;/strong&gt;: review the generated code, with an emphasis on test correctness,
+from the prompt and apply it to the implementation&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Refactor&lt;/strong&gt;: update to improve aspects like structure, code reuse and
+readability&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can embrace change in the tools with which we create code but the core
+principles of how we understand problems and create innovative solutions to
+solve them remains the same. To create safe, scalable and maintainable systems
+we need to own the process and not fall victim to hype surrounding the
+capabilities of our tools.&lt;/p&gt;
 </content>
   </entry>
   <entry>

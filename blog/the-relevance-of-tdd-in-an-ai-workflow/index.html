@@ -211,6 +211,11 @@ figcaption {
   }
 }
 
+figure {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
 .post-description {
   font-size: 1.125rem;
   line-height: 1.4;
@@ -770,7 +775,7 @@ similar way. Rather than dive straight into code we define the problem with
 enough context and implementation detail in a prompt.</p>
 <p>With this in mind, we'll want AI to generate tests for each iteration but in a
 more <a href="https://andrewships.substack.com/p/prompt-driven-development">Prompt-Driven Development</a> workflow (PDD).</p>
-<h2>The TDD vs AI assisted development workflow</h2>
+<h2>A Comparison of TDD and PDD</h2>
 <p>Let's compare the process of adding a new function, using both TDD and PDD, from
 the following technical specification.</p>
 <blockquote>
@@ -779,7 +784,7 @@ the module on first call and return the initialised module on repeat calls.
 The function should return a new function that returns the initialised module
 when called.</p>
 </blockquote>
-<h3>Manually writing code and tests following TDD</h3>
+<h3>Writing tests and code with TDD</h3>
 <p>With TDD we analyze the specification before creating the minimal code structure
 so that we can outline tests that define and assert the core functionality we
 intend to add in this iteration, the Red stage.</p>
@@ -827,7 +832,7 @@ move from Red to Green.</p>
 code reuse and readability. The example uses TypeScript so we'd define some
 proper generic types for the module initialisation parameter and returned
 function here.</p>
-<h3>Generating the code and tests with AI</h3>
+<h3>Generating tests and code with PDD</h3>
 <p>To generate the function and tests with AI we follow a similar process but focus
 first on the prompt rather than add any code or tests. Using an AI chat
 interface, <a href="https://www.anthropic.com/claude">Claude</a> here, we provide the high level specification and
@@ -888,38 +893,51 @@ some context here to match existing standards.</p>
     <span class="token function">expect</span><span class="token punctuation">(</span>thirdResult<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token operator">:</span> <span class="token string">"test"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<h3>Refactoring the code in either workflow</h3>
+<h3>Refactoring in both workflows</h3>
 <p>In both of the code examples we reached the green stage with tests that pass so
 can now start the refactoring process. It doesn't matter if we refactor with
 manual edits or code generation but we shouldn't need to touch the tests in
 either workflow unless for anything other than correction.</p>
-<h2>The principles remain relevant</h2>
+<h2>Prompt → Generate → Refactor</h2>
 <p>With AI code generation we document our thought process and design in the
 prompt. Due to the speed of development with AI the need to write tests first
 becomes less relevant but the iterative process of making changes in small, well
-defined increments remains as relevant as ever!</p>
-<p>I'll end with a list of the shared qualities of TDD and PDD. Of course,
-generated with AI and refactored by me 🧑🏻‍💻.</p>
+defined increments remains as relevant as ever. Both TDD and PDD share key
+principles:</p>
 <ul>
-<li><strong>Upfront design</strong>: Upfront design involves planning the architecture and
-structure of your code before implementation. This helps to identify
-challenges early and ensures that the codebase remains scalable and
-maintainable.</li>
-<li><strong>Safety net of tests</strong>: Having tests ensures that the code behaves as
-expected and acts as a safety net, catching bugs and regressions as you make
-changes to the codebase.</li>
-<li><strong>A living documentation of requirements</strong>: Tests serve as living
-documentation by defining the expected behavior of the code and a reference
-for understanding feature requirements.</li>
-<li><strong>Break change down into small, well-defined iterations</strong>: Breaking changes
-into smaller, manageable iterations makes the development process more
-predictable and reduces the risk of introducing errors. It also allows for
-incremental progress and easier debugging.</li>
-<li><strong>Refactor to improve structure, code reuse, and readability</strong>: Refactoring
-involves improving the internal structure of your code without changing its
-external behavior. This enhances code readability, promotes reuse, and makes
-the codebase easier to maintain.</li>
+<li><strong>Upfront Design</strong>: Planning the architecture and structure before
+implementation helps identify challenges early and ensures scalability.</li>
+<li><strong>Safety Net of Tests</strong>: Tests ensure expected behavior and catch bugs or
+regressions during changes.</li>
+<li><strong>Living Documentation</strong>: Tests serve as a reference for feature requirements
+and expected behavior.</li>
+<li><strong>Incremental Development</strong>: Breaking changes into small, manageable steps
+reduces errors and simplifies debugging.</li>
+<li><strong>Refactoring for Improvement</strong>: Enhancing code structure, readability, and
+re-usability ensures maintainability without altering behavior.</li>
 </ul>
+<p>Like TDD, we can define the PDD process as a cycle of three stages:</p>
+<copy-to-clipboard data-url="/img/blog/the-relevance-of-tdd-in-an-ai-workflow/pdd.png" class="ctc-image">
+  <figure>
+    <picture><source type="image/webp" srcset="/img/bYcHTdL7uq-737.webp 737w"><img loading="lazy" decoding="async" src="/img/bYcHTdL7uq-737.jpeg" alt="Diagram that shows the three stages of the Prompt-Driven Development process" width="737" height="600"></picture>
+    <figcaption>
+      Prompt, generate, refactor stages of the Prompt-Driven Development process
+    </figcaption>
+  </figure>
+</copy-to-clipboard>
+<ul>
+<li><strong>Prompt</strong>: think through the problem and create a prompt that covers the
+desired output</li>
+<li><strong>Generate</strong>: review the generated code, with an emphasis on test correctness,
+from the prompt and apply it to the implementation</li>
+<li><strong>Refactor</strong>: update to improve aspects like structure, code reuse and
+readability</li>
+</ul>
+<p>We can embrace change in the tools with which we create code but the core
+principles of how we understand problems and create innovative solutions to
+solve them remains the same. To create safe, scalable and maintainable systems
+we need to own the process and not fall victim to hype surrounding the
+capabilities of our tools.</p>
 
   </main>
 
