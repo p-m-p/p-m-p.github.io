@@ -28,13 +28,11 @@ output&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Refactor&lt;/strong&gt;: update to improve aspects like structure, code reuse and
 readability&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;People often associate TDD with just writing the tests first but the real value
-comes from breaking down and delivering requirements in small increments. When
-generating code with AI we front-load the development process with design in a
-similar way. Rather than dive straight into code we define the problem with
-enough context and implementation detail in a prompt.&lt;/p&gt;
-&lt;p&gt;With this in mind, we&#39;ll want AI to generate tests for each iteration but in a
-more &lt;a href=&quot;https://andrewships.substack.com/p/prompt-driven-development&quot;&gt;Prompt-Driven Development&lt;/a&gt; workflow (PDD).&lt;/p&gt;
+&lt;p&gt;People often associate TDD with writing tests before implementation but the real
+value comes from breaking down and delivering requirements in small increments.
+When generating code with AI we front-load the development process in a similar
+way by providing enough context and implementation detail in a prompt, a
+&lt;a href=&quot;https://andrewships.substack.com/p/prompt-driven-development&quot;&gt;Prompt-Driven Development&lt;/a&gt; workflow (PDD).&lt;/p&gt;
 &lt;h2&gt;A Comparison of TDD and PDD&lt;/h2&gt;
 &lt;p&gt;Let&#39;s compare the process of adding a new function, using both TDD and PDD, from
 the following technical specification.&lt;/p&gt;
