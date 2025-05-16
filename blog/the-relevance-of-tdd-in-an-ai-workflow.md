@@ -22,14 +22,11 @@ cycle of three distinct phases:
 3. **Refactor**: update to improve aspects like structure, code reuse and
    readability
 
-People often associate TDD with just writing the tests first but the real value
-comes from breaking down and delivering requirements in small increments. When
-generating code with AI we front-load the development process with design in a
-similar way. Rather than dive straight into code we define the problem with
-enough context and implementation detail in a prompt.
-
-With this in mind, we'll want AI to generate tests for each iteration but in a
-more [Prompt-Driven Development][pdd] workflow (PDD).
+People often associate TDD with writing tests before implementation but the real
+value comes from breaking down and delivering requirements in small increments.
+When generating code with AI we front-load the development process in a similar
+way by providing enough context and implementation detail in a prompt, a
+[Prompt-Driven Development][pdd] workflow (PDD).
 
 ## A Comparison of TDD and PDD
 
