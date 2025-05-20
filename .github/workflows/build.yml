@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
+  id-token: read
+  package: write
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
