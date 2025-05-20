@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
   id-token: read
-  package: write
+  pages: write
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
