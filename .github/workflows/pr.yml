@@ -1,0 +1,19 @@
+name: PR
+on:
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install
+      - run: pnpm run build
