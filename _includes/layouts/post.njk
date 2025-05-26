@@ -26,7 +26,7 @@ layout: layouts/base.njk
 <article class="post">
   <header class="post-header">
     <div class="container">
-      <h1 class="post-title">{{ title }}</h1>
+      <h1 class="post-title" style="view-transition-name: {{ title | slugify }}">{{ title }}</h1>
 
       <div class="post-meta">
         <div class="post-date"><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></div>

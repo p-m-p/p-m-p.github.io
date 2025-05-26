@@ -21,7 +21,7 @@ layout: layouts/base.njk
       <ol class="recent-posts-list">
         {% for recentPost in collections.posts | reverse %}
         <li class="recent-post">
-          <h3 class="recent-post-title"><a href="{{ recentPost.url }}">{{ recentPost.data.title }}</a></h3>
+          <h3 class="recent-post-title" style="view-transition-name: {{ recentPost.data.title | slugify }}"><a href="{{ recentPost.url }}">{{ recentPost.data.title }}</a></h3>
           <p class="recent-post-description">{{ recentPost.data.description }}</p>
           <div class="recent-post-date"><time datetime="{{ recentPost.date | htmlDateString }}">{{ recentPost.date | readableDate }}</time></div>
         </li>

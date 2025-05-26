@@ -147,3 +147,7 @@ a {
     }
   }
 }
+
+@view-transition {
+  navigation: auto;
+}
