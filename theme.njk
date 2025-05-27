@@ -1,0 +1,91 @@
+---
+title: Theme reference
+draft: true
+---
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or metadata.title }}</title>
+  <meta name="description" content="{{ description or metadata.description }}">
+
+  {%- css %}{% include "./css/site.css" %}{% endcss %}
+  <style>{% getBundle "css" %}</style>
+
+  <style>
+    .palette {
+      display: flex;
+    }
+
+    .swatch {
+      width: 100px;
+      height: 100px;
+    }
+
+    .palette-neutral {
+      .swatch-50 { background-color: var(--color-neutral-50); }
+      .swatch-100 { background-color: var(--color-neutral-100); }
+      .swatch-200 { background-color: var(--color-neutral-200); }
+      .swatch-300 { background-color: var(--color-neutral-300); }
+      .swatch-400 { background-color: var(--color-neutral-400); }
+      .swatch-500 { background-color: var(--color-neutral-500); }
+      .swatch-600 { background-color: var(--color-neutral-600); }
+      .swatch-700 { background-color: var(--color-neutral-700); }
+      .swatch-800 { background-color: var(--color-neutral-800); }
+      .swatch-900 { background-color: var(--color-neutral-900); }
+      .swatch-950 { background-color: var(--color-neutral-950); }
+    }
+
+    .palette-primary {
+      .swatch-50 { background-color: var(--color-primary-50); }
+      .swatch-100 { background-color: var(--color-primary-100); }
+      .swatch-200 { background-color: var(--color-primary-200); }
+      .swatch-300 { background-color: var(--color-primary-300); }
+      .swatch-400 { background-color: var(--color-primary-400); }
+      .swatch-500 { background-color: var(--color-primary-500); }
+      .swatch-600 { background-color: var(--color-primary-600); }
+      .swatch-700 { background-color: var(--color-primary-700); }
+      .swatch-800 { background-color: var(--color-primary-800); }
+      .swatch-900 { background-color: var(--color-primary-900); }
+      .swatch-950 { background-color: var(--color-primary-950); }
+    }
+  </style>
+
+  <title>{{ title }}</title>
+</head>
+
+<body>
+
+<div class="palette palette-neutral">
+  <div class="swatch swatch-50"></div>
+  <div class="swatch swatch-100"></div>
+  <div class="swatch swatch-200"></div>
+  <div class="swatch swatch-300"></div>
+  <div class="swatch swatch-400"></div>
+  <div class="swatch swatch-500"></div>
+  <div class="swatch swatch-600"></div>
+  <div class="swatch swatch-700"></div>
+  <div class="swatch swatch-800"></div>
+  <div class="swatch swatch-900"></div>
+  <div class="swatch swatch-950"></div>
+</div>
+
+<div class="palette palette-primary">
+  <div class="swatch swatch-50"></div>
+  <div class="swatch swatch-100"></div>
+  <div class="swatch swatch-200"></div>
+  <div class="swatch swatch-300"></div>
+  <div class="swatch swatch-400"></div>
+  <div class="swatch swatch-500"></div>
+  <div class="swatch swatch-600"></div>
+  <div class="swatch swatch-700"></div>
+  <div class="swatch swatch-800"></div>
+  <div class="swatch swatch-900"></div>
+  <div class="swatch swatch-950"></div>
+</div>
+
+</body>
+
+</html>
