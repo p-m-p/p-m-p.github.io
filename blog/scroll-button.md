@@ -98,15 +98,9 @@ targeted with the usual state selectors.
 
 ### Positioning the scroll buttons
 
-I have to admit that positioning the buttons initially confused me. The buttons
-sit inside the scroll area so attempting to position them with Flex Box or Grid
-at the start and end means they scroll out of view. Absolute positioning to a
-relative parent container works but causes a bit of a pain to get right.
-
-If the tabs sit above the fold (not down the page out of view) then positioning
-the buttons with position anchor has some nice features. Giving the tab list an
-anchor name allows us to anchor the buttons to the outside of the tab list and
-we can center align the buttons with the tabs using anchor-center.
+To position the scroll buttons to the left and right of the tab list, outside of
+the scrollable areas, we can use anchor positioning. We can also center align
+the buttons against the tab list with `anchor-center`.
 
 ```css
 .tablist {
@@ -114,7 +108,7 @@ we can center align the buttons with the tabs using anchor-center.
 
   &::scroll-button(*) {
     align-self: anchor-center;
-    position: absolute;
+    position: fixed;
     position-anchor: --tab-list;
   }
 
@@ -182,6 +176,7 @@ in less that 20 lines of CSS!
 }
 
 .tablist {
+  anchor-name: --tab-list;
   display: flex;
   gap: 0.125rem;
   overflow-x: auto;
@@ -189,20 +184,19 @@ in less that 20 lines of CSS!
   scroll-behavior: smooth;
 
   &::scroll-button(*) {
-    background: red;
-    color: white;
+    align-self: anchor-center;
     position: absolute;
-    top: 0;
+    position-anchor: --tab-list;
   }
 
   &::scroll-button(inline-start) {
     content: "<";
-    left: 0;
+    left: anchor(start);
   }
 
   &::scroll-button(inline-end) {
     content: ">";
-    right: 0;
+    right: anchor(end);
   }
 }
 
