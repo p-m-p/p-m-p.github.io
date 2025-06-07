@@ -27,9 +27,8 @@ container and show a horizontal scrollbar.
 <style>
   .tablist {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.125rem;
     overflow-x: auto;
-    width: 100%;
   }
 </style>
 
@@ -50,6 +49,12 @@ container and show a horizontal scrollbar.
 The `scrollbar-width` property allows us to remove the scrollbar by setting a
 value of `none`. What a godsend, no longer do we have to use JavaScript or CSS
 hacks to hide the scrollbar.
+
+```css
+.tablist {
+  scrollbar-width: none;
+}
+```
 
 Already this works pretty well for touch devices but horizontal scrolling with a
 mouse without a scrollbar is problematic.
@@ -94,13 +99,14 @@ targeted with the usual state selectors.
 ### Positioning the scroll buttons
 
 I have to admit that positioning the buttons initially confused me. The buttons
-sit inside the scroll area so attempting to position them at the start and end
-means they scroll out of view. Use of absolute positioning to a relative parent
-container works, but position anchor works super nicely here.
+sit inside the scroll area so attempting to position them with Flex Box or Grid
+at the start and end means they scroll out of view. Absolute positioning to a
+relative parent container works but causes a bit of a pain to get right.
 
-Giving the tab list an anchor name allows us to anchor the buttons to the
-outside of the tab list. We can even align them with the tab list using the
-anchor, mind blown.
+If the tabs sit above the fold (not down the page out of view) then positioning
+the buttons with position anchor has some nice features. Giving the tab list an
+anchor name allows us to anchor the buttons to the outside of the tab list and
+we can center align the buttons with the tabs using anchor-center.
 
 ```css
 .tablist {
@@ -121,6 +127,114 @@ anchor, mind blown.
   }
 }
 ```
+
+### Animating the scroll
+
+When we click the scroll buttons the container jumps to the next position
+instantly. To animate the scroll we can apply the `scroll-behavior` property on
+the tab list. Setting this to `smooth` adds a smooth transition to the next set
+of tabs.
+
+```css
+.tablist {
+  scroll-behavior: smooth;
+}
+```
+
+### Putting it all together
+
+When we put the main components together we have a working set scrollable tabs
+in less that 20 lines of CSS!
+
+```css
+.tablist {
+  anchor-name: --tab-list;
+  display: flex;
+  gap: 0.125rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::scroll-button(*) {
+    align-self: anchor-center;
+    position: absolute;
+    position-anchor: --tab-list;
+  }
+
+  &::scroll-button(inline-start) {
+    content: "<";
+    left: anchor(start);
+  }
+
+  &::scroll-button(inline-end) {
+    content: ">";
+    right: anchor(end);
+  }
+}
+```
+
+<style>
+.tablist-wrapper {
+  margin: 0 auto 3rem;
+  max-width: 600px;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.tablist {
+  display: flex;
+  gap: 0.125rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::scroll-button(*) {
+    background: red;
+    color: white;
+    position: absolute;
+    top: 0;
+  }
+
+  &::scroll-button(inline-start) {
+    content: "<";
+    left: 0;
+  }
+
+  &::scroll-button(inline-end) {
+    content: ">";
+    right: 0;
+  }
+}
+
+.tab {
+  white-space: nowrap;
+}
+</style>
+
+<div class="tablist-wrapper">
+  <div class="tablist" role="tablist">
+    <button class="tab" role="tab">Tab one</button>
+    <button class="tab" role="tab">Tab two</button>
+    <button class="tab" role="tab">Tab three</button>
+    <button class="tab" role="tab">Tab four</button>
+    <button class="tab" role="tab">Tab five</button>
+    <button class="tab" role="tab">Tab six</button>
+    <button class="tab" role="tab">Tab seven</button>
+    <button class="tab" role="tab">Tab eight</button>
+    <button class="tab" role="tab">Tab nine</button>
+    <button class="tab" role="tab">Tab ten</button>
+    <button class="tab" role="tab">Tab eleven</button>
+    <button class="tab" role="tab">Tab twelve</button>
+    <button class="tab" role="tab">Tab thirteen</button>
+    <button class="tab" role="tab">Tab fourteen</button>
+    <button class="tab" role="tab">Tab fifteen</button>
+    <button class="tab" role="tab">Tab sixteen</button>
+    <button class="tab" role="tab">Tab seventeen</button>
+    <button class="tab" role="tab">Tab eighteen</button>
+    <button class="tab" role="tab">Tab nineteen</button>
+    <button class="tab" role="tab">Tab twenty</button>
+  </div>
+</div>
 
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
 [google-io]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
