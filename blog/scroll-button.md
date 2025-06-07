@@ -191,44 +191,72 @@ in less that 20 lines of CSS!
 
   &::scroll-button(inline-start) {
     content: "<";
-    left: anchor(start);
+    left: calc(anchor(start) - 1.75rem);
   }
 
   &::scroll-button(inline-end) {
     content: ">";
-    right: anchor(end);
+    right: calc(anchor(end) - 1.75rem);
   }
 }
 
 .tab {
   white-space: nowrap;
+
+  &[aria-selected="true"] {
+    anchor-name: --selected-tab;
+  }
+}
+
+.indicator {
+  position: absolute;
+  position-anchor: --selected-tab;
+  left: anchor(start);
+  right: anchor(end);
+  bottom: calc(anchor(bottom) - 2px);
+  height: 2px;
+  background: lightblue;
+  transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
 }
 </style>
 
 <div class="tablist-wrapper">
   <div class="tablist" role="tablist">
-    <button class="tab" role="tab">Tab one</button>
-    <button class="tab" role="tab">Tab two</button>
-    <button class="tab" role="tab">Tab three</button>
-    <button class="tab" role="tab">Tab four</button>
-    <button class="tab" role="tab">Tab five</button>
-    <button class="tab" role="tab">Tab six</button>
-    <button class="tab" role="tab">Tab seven</button>
-    <button class="tab" role="tab">Tab eight</button>
-    <button class="tab" role="tab">Tab nine</button>
-    <button class="tab" role="tab">Tab ten</button>
-    <button class="tab" role="tab">Tab eleven</button>
-    <button class="tab" role="tab">Tab twelve</button>
-    <button class="tab" role="tab">Tab thirteen</button>
-    <button class="tab" role="tab">Tab fourteen</button>
-    <button class="tab" role="tab">Tab fifteen</button>
-    <button class="tab" role="tab">Tab sixteen</button>
-    <button class="tab" role="tab">Tab seventeen</button>
-    <button class="tab" role="tab">Tab eighteen</button>
-    <button class="tab" role="tab">Tab nineteen</button>
-    <button class="tab" role="tab">Tab twenty</button>
+    <button class="tab" role="tab" aria-selected="true">Tab one</button>
+    <button class="tab" role="tab" aria-selected="false">Tab two</button>
+    <button class="tab" role="tab" aria-selected="false">Tab three</button>
+    <button class="tab" role="tab" aria-selected="false">Tab four</button>
+    <button class="tab" role="tab" aria-selected="false">Tab five</button>
+    <button class="tab" role="tab" aria-selected="false">Tab six</button>
+    <button class="tab" role="tab" aria-selected="false">Tab seven</button>
+    <button class="tab" role="tab" aria-selected="false">Tab eight</button>
+    <button class="tab" role="tab" aria-selected="false">Tab nine</button>
+    <button class="tab" role="tab" aria-selected="false">Tab ten</button>
+    <button class="tab" role="tab" aria-selected="false">Tab eleven</button>
+    <button class="tab" role="tab" aria-selected="false">Tab twelve</button>
+    <button class="tab" role="tab" aria-selected="false">Tab thirteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab fourteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab fifteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab sixteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab seventeen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab eighteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab nineteen</button>
+    <button class="tab" role="tab" aria-selected="false">Tab twenty</button>
   </div>
+  <div class="indicator"></div>
 </div>
+
+<script async>
+const tabs = document.querySelectorAll('.tab');
+const tablist = document.querySelector('.tablist');
+
+tablist.addEventListener('click', (event) => {
+  if (event.target.classList.contains('tab')) {
+    tabs.forEach(tab => tab.setAttribute('aria-selected', 'false'));
+    event.target.setAttribute('aria-selected', 'true');
+  }
+});
+</script>
 
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
 [google-io]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
