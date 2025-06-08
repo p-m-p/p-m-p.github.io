@@ -61,28 +61,29 @@ without a scroll bar doesn't.
 
 ### Adding back and forward scroll buttons
 
-Adding buttons to scroll hidden tabs into view takes a fair amount of JavaScript
-to calculate how far to scroll, track the scroll position and enable and disable
-the buttons when reaching either end of the list. Animating the scroll
-complicates things even further.
+To date, adding buttons to scroll hidden tabs into view took a fair amount of
+JavaScript to track the scroll position and enable and disable the buttons when
+reaching either end of the list. Animating the scrolling complicated things even
+further.
 
 The scroll-button psuedo-elements handle this for us! To add the buttons we
-specify the selectors on the tab list and provide content for the buttons.
+specify the selectors on the tab list and provide content for the buttons with
+some alternative text.
 
 ```css
 .tablist {
   &::scroll-button(inline-start) {
-    content: "<";
+    content: "<" / "Previous";
   }
 
   &::scroll-button(inline-end) {
-    content: ">";
+    content: ">" / "Next";
   }
 }
 ```
 
-With a start selector we can apply common styles to the buttons and states
-targeted with the usual state selectors.
+We can apply common styles for all scroll buttons and target the usual button
+states using the all selector.
 
 ```css
 .tablist {
@@ -98,13 +99,13 @@ targeted with the usual state selectors.
 
 ### Positioning the scroll buttons
 
-To position the scroll buttons to the start and end of the tab list, outside of
-the scrollable area, we can use [anchor positioning][anchor-positioning].
+Positioning the scroll buttons to the start and end of the tab list we can use
+[anchor positioning][anchor-positioning]. With anchor positioning we align the
+buttons to the containing box of the tab list, outside of the content overflow.
 
-To do this we first need to set an anchor name on the tab list and wrap it in a
-relative positioned container element. This allows us to anchor the buttons at
-the start and end of the tab list with absolute positioning and center align the
-buttons with the tabs.
+To do this we need to wrap the tab list in a relative positioned container
+element. This allows us to anchor the buttons at the start and end with absolute
+positioning and also center align the buttons with the tabs.
 
 ```css
 .tablist-wrapper {
@@ -198,12 +199,13 @@ Material Tabs to show the currently selected tab without any JavaScript.
   border: none;
   border-bottom: 2px solid transparent;
   font-size: 0.875rem;
+  font-weight: 500;
   padding: 0.75rem 1rem;
   text-transform: uppercase;
   white-space: nowrap;
 
   &[aria-selected="true"] {
-    color: light-dark(rgb(25, 118, 210), rgb(144, 202, 249));
+    color: light-dark(rgb(18, 92, 165), rgb(144, 202, 249));
     anchor-name: --selected-tab;
   }
 }
