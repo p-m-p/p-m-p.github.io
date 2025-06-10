@@ -174,6 +174,7 @@ selected tab, without any JavaScript.
     background: var(--color-bg-secondary);
     border: none;
     border-bottom: 2px solid var(--color-bg-secondary);
+    cursor: pointer;
     font-size: 1rem;
     line-height: 1;
     padding: 0.75rem 0.5rem;
