@@ -143,7 +143,7 @@ value of `smooth` to add a smooth transition to the next set of tabs.
 }
 ```
 
-## Putting it together with a bit of JavaScript
+## Putting it together with a sprinkling of JavaScript
 
 When we put this all together we have a working set scrollable tabs in less than
 20 lines of CSS! With a little sprinkling of JavaScript to handle tab selection
@@ -317,7 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-You can view the full code on [CodePen][codepen]. Thanks!
+Example not working? Try the latest version of Google Chrome. You can view the
+full code for the example above on [CodePen][codepen].
 
 [overflow-module]: https://drafts.csswg.org/css-overflow-5/
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
