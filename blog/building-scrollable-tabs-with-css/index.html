@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building scrollable tabs with experimental CSS features</title>
+  <meta name="description" content="New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/building-scrollable-tabs-with-css/">
+  <meta property="og:title" content="Building scrollable tabs with experimental CSS features">
+  <meta property="og:description" content="New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/building-scrollable-tabs-with-css/">
+  <meta property="twitter:title" content="Building scrollable tabs with experimental CSS features">
+  <meta property="twitter:description" content="New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>.ctc-image {
+  @media (hover: hover) {
+    &::part(button) {
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+
+    &:hover::part(button) {
+      opacity: 1;
+    }
+  }
+}
+
+copy-to-clipboard {
+  /* Keep these raw color values here until there is a light theme for code blocks */
+  --ctc-button-color: var(--color-white);
+  --ctc-button-background: var(--color-neutral-700);
+}
+
+back-to-top {
+  --btt-button-background: var(--color-bg-action);
+  --btt-button-background-hover: var(--color-bg-action-hover);
+  --btt-button-color: var(--color-text-primary);
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 var(--spacing-md);
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-md);
+
+  a {
+    color: var(--color-text-primary);
+    display: inline-flex;
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--color-bg-secondary);
+  margin: 0 0 var(--spacing-md);
+  padding: var(--spacing-md) 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: right;
+  padding: var(--spacing-md) 0 var(--spacing-xs);
+}
+
+.post-date {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.post-content {
+  color: var(--color-text-secondary);
+
+  blockquote {
+    border-left: solid 4px var(--color-border-primary);
+    font-style: italic;
+    padding: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  p,
+  ol,
+  ul {
+    margin: 0 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  ol,
+  ul {
+    padding: 0 0 0 var(--spacing-xl);
+  }
+
+  li {
+    margin: 0 0 var(--spacing-xs);
+  }
+
+  p code {
+    font-size: 0.875rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin: var(--spacing-3xl) 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 var(--spacing-3xl);
+    overflow: auto;
+    padding: var(--spacing-xs);
+  }
+
+  img {
+    background: var(--color-bg-secondary);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: var(--spacing-md);
+  }
+}
+
+figure {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
+.post-description {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.post-footer {
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
+  padding: var(--spacing-md) 0;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: var(--spacing-3xl);
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: var(--spacing-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: var(--color-bg-action);
+  border: none;
+  border-radius: 999px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 500;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+  line-height: 1;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  transition:
+    background 200ms,
+    color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
+}
+
+.theme-switcher {
+  height: 2.5rem;
+  width: 5rem;
+}
+
+theme-switch {
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-lozenge-background: var(--color-bg-action);
+}
+
+@media (pointer: coarse) {
+  .theme-switcher {
+    overflow: hidden;
+    width: 2.5rem;
+  }
+
+  theme-switch {
+    --ts-lozenge-background: transparent;
+
+    &::part(button-bar) {
+      background: var(--color-bg-action);
+    }
+
+    &::part(button) {
+      opacity: 1;
+    }
+
+    &::part(button dark-button) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &[data-theme="dark"] {
+      &::part(button dark-button) {
+        visibility: hidden;
+      }
+    }
+
+    &[data-theme="light"] {
+      &::part(button light-button) {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: var(--spacing-3xl) 0 0;
+    margin: 0 0 var(--spacing-3xl);
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: var(--spacing-md);
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+  background: var(--codeblock-bg);
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-stone: lch(50% 1.5 75);
+  --color-peach: lch(55% 48 38);
+
+  --color-white: lch(99% 4 75);
+  --color-black: lch(2% 4 75);
+
+  --color-primary-50: lch(from var(--color-peach) 95% c h);
+  --color-primary-100: lch(from var(--color-peach) 90% c h);
+  --color-primary-200: lch(from var(--color-peach) 80% c h);
+  --color-primary-300: lch(from var(--color-peach) 70% c h);
+  --color-primary-400: lch(from var(--color-peach) 60% c h);
+  --color-primary-500: lch(from var(--color-peach) l c h);
+  --color-primary-600: lch(from var(--color-peach) 40% c h);
+  --color-primary-700: lch(from var(--color-peach) 30% c h);
+  --color-primary-800: lch(from var(--color-peach) 20% c h);
+  --color-primary-900: lch(from var(--color-peach) 10% c h);
+  --color-primary-950: lch(from var(--color-peach) 5% c h);
+
+  --color-neutral-50: lch(from var(--color-stone) 95% c h);
+  --color-neutral-100: lch(from var(--color-stone) 90% c h);
+  --color-neutral-200: lch(from var(--color-stone) 80% c h);
+  --color-neutral-300: lch(from var(--color-stone) 70% c h);
+  --color-neutral-400: lch(from var(--color-stone) 60% c h);
+  --color-neutral-500: lch(from var(--color-stone) l c h);
+  --color-neutral-600: lch(from var(--color-stone) 40% c h);
+  --color-neutral-700: lch(from var(--color-stone) 30% c h);
+  --color-neutral-800: lch(from var(--color-stone) 20% c h);
+  --color-neutral-900: lch(from var(--color-stone) 10% c h);
+  --color-neutral-950: lch(from var(--color-stone) 5% c h);
+
+  --size-0: 0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
+  --color-border-primary: light-dark(var(--color-neutral-200),
+      var(--color-neutral-700));
+
+  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
+  --color-bg-secondary: light-dark(var(--color-neutral-50),
+      var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
+
+  --color-link: var(--color-text-primary);
+  --color-link-hover: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-underline: var(--color-primary-400);
+  --color-link-hover-underline: light-dark(var(--color-primary-600),
+      var(--color-primary-300));
+  --color-link-visited: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-visited-underline: var(--color-primary-400);
+  --color-link-focus: var(--color-link-hover);
+  --color-link-focus-underline: var(--color-link-hover);
+
+  --color-text-primary: light-dark(var(--color-black), var(--color-white));
+  --color-text-secondary: light-dark(var(--color-neutral-600),
+      var(--color-neutral-200));
+
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
+  --codeblock-bg: var(--color-neutral-900);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+  font-weight: 500;
+  position: relative;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited-underline);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    color: var(--color-link-focus);
+    text-decoration-color: var(--color-link-focus-underline);
+  }
+
+  &:active {
+    top: 0.125rem;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}</style>
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>Building scrollable tabs with experimental CSS features</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+
+  <div class="theme-switcher">
+    <theme-switch data-strategy="class"></theme-switch>
+  </div>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title" style="view-transition-name: building-scrollable-tabs-with-experimental-css-features">Building scrollable tabs with experimental CSS features</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-06-10">10 June 2025</time></div>
+
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Building%20scrollable%20tabs%20with%20experimental%20CSS%20features%20https://philparsons.co.uk//blog/building-scrollable-tabs-with-css/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/building-scrollable-tabs-with-css/&title=Building%20scrollable%20tabs%20with%20experimental%20CSS%20features">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/building-scrollable-tabs-with-css/&text=Building%20scrollable%20tabs%20with%20experimental%20CSS%20features&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications</p>
+    <h2>Carousel? Nah, scrollable tabs!</h2>
+<p>Recent examples of new experimental scroll features in the CSS <a href="https://drafts.csswg.org/css-overflow-5/">overflow
+module</a> use the Carousel pattern as a demonstration. <a href="https://developer.chrome.com/blog/carousels-with-css">This
+post</a> by Adam Argyle provides an in-depth explanation of the
+features with a gallery of inspiring examples. Similar carousels also featured
+in some talks at the latest <a href="https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;t=20">Google IO event</a> which got me thinking
+about other places to use these features.</p>
+<p>The tabs UI pattern often features in application designs and does not have a
+native implementation in HTML. In the past, gracefully dealing with a list of
+tabs that exceed the width of the parent container required a good amount of
+JavaScript to achieve. With the new CSS features, we don't yet have a native
+solution but we can at least ditch a load of JavaScript.</p>
+<h2>The Scrollable tabs pattern</h2>
+<p>Using the <a href="https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;t=20">Scrollable Tabs</a> Material Design component as an
+example, we'll attempt to replicate the functionality with as little JavaScript
+as possible and explore some new and experimental CSS features that make it
+possible.</p>
+<h2>Removing the horizontal scroll bar</h2>
+<p>To start we will create the basic tabs structure using flex box to align the
+tabs and a horizontal overflow. When the list of tab buttons exceeds the
+available space in the tab list container they overflow and show a horizontal
+scroll bar that needs removing.</p>
+<p>Setting the <code>scrollbar-width</code> property to <code>none</code> removes the scroll bar! What a
+result, no longer do we have to use JavaScript or CSS hacks to hide the scroll
+bar.</p>
+<copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.tablist</span> <span class="token punctuation">{</span>
+    <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+    <span class="token property">gap</span><span class="token punctuation">:</span> 0.125rem<span class="token punctuation">;</span>
+    <span class="token property">overflow-x</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+    <span class="token property">scrollbar-width</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tablist<span class="token punctuation">"</span></span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tablist<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab one<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab two<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab three<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab four<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab five<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab six<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab seven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab eight<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab nine<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab ten<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
+<h2>Adding buttons to control scrolling</h2>
+<p>Removing the scroll bar works okay on touch devices but for other devices like a
+mouse we need to add the forward and back buttons.</p>
+<p>The <code>scroll-button</code> psuedo-elements handle this for us. To add the buttons we
+specify the inline start and end buttons on the tab list. Providing the content
+property for the buttons, with some alternative text, enables them.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist::scroll-button(inline-start)</span> <span class="token punctuation">{</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">"&lt;"</span> / <span class="token string">"Previous"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">.tablist::scroll-button(inline-end)</span> <span class="token punctuation">{</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">">"</span> / <span class="token string">"Next"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>To add common styles for all scroll buttons use a universal <code>*</code> selector and
+style button states in the usual way.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist::scroll-button(*)</span> <span class="token punctuation">{</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rbg</span><span class="token punctuation">(</span>0 0 0 / 75%<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">.tablist::scroll-button(*):hover</span> <span class="token punctuation">{</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rbg</span><span class="token punctuation">(</span>0 0 0 / 95%<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Positioning the scroll buttons with anchor positioning</h2>
+<p>To position the scroll buttons to the start and end of the tab list we can use
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">anchor positioning</a>. With anchor positioning we align the
+buttons to the containing box of the tab list, outside of the content overflow.</p>
+<p>To do this we need to wrap the tab list in a relative positioned container
+element. This allows us to anchor the buttons at the start and end with absolute
+positioning and also center align the buttons with the tabs.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist-wrapper</span> <span class="token punctuation">{</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">.tablist</span> <span class="token punctuation">{</span>
+  <span class="token property">anchor-name</span><span class="token punctuation">:</span> --tab-list<span class="token punctuation">;</span>
+
+  <span class="token selector">&amp;::scroll-button(*)</span> <span class="token punctuation">{</span>
+    <span class="token property">align-self</span><span class="token punctuation">:</span> anchor-center<span class="token punctuation">;</span>
+    <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+    <span class="token property">position-anchor</span><span class="token punctuation">:</span> --tab-list<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">&amp;::scroll-button(inline-start)</span> <span class="token punctuation">{</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> <span class="token function">anchor</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">&amp;::scroll-button(inline-end)</span> <span class="token punctuation">{</span>
+    <span class="token property">right</span><span class="token punctuation">:</span> <span class="token function">anchor</span><span class="token punctuation">(</span>end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Animating the scroll behaviour</h2>
+<p>When we click the scroll buttons the tab list jumps to the next position
+instantly. To animate the scroll we set the <code>scroll-behavior</code> property with a
+value of <code>smooth</code> to add a smooth transition to the next set of tabs.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist</span> <span class="token punctuation">{</span>
+  <span class="token property">scroll-behavior</span><span class="token punctuation">:</span> smooth<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Putting it together with a sprinkling of JavaScript</h2>
+<p>When we put this all together we have a working set scrollable tabs in less than
+20 lines of CSS! With a little sprinkling of JavaScript to handle tab selection
+and keyboard navigation for accessibility and with a little bit more anchor
+positioning an animated indicator like in the Material Tabs shows the currently
+selected tab, without any JavaScript.</p>
+<style>
+.tablist-wrapper {
+  margin: 3rem auto;
+  max-width: 600px;
+  overflow: hidden;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.tablist {
+  anchor-name: --tab-list;
+  background: var(--color-bg-secondary);
+  display: flex;
+  gap: 0.125rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::scroll-button(*) {
+    align-self: anchor-center;
+    background: var(--color-bg-secondary);
+    border: none;
+    border-bottom: 2px solid var(--color-bg-secondary);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.75rem 0.5rem;
+    position: absolute;
+    position-anchor: --tab-list;
+    width: 2rem;
+    z-index: 2;
+  }
+
+  &::scroll-button(inline-start) {
+    content: "<" / "Previous";
+    left: calc(anchor(start) - 2rem);
+  }
+
+  &::scroll-button(inline-end) {
+    content: ">" / "Next";
+    right: calc(anchor(end) - 2rem);
+  }
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &[aria-selected="true"] {
+    color: light-dark(rgb(18, 92, 165), rgb(144, 202, 249));
+    anchor-name: --selected-tab;
+  }
+}
+
+.indicator {
+  position: absolute;
+  position-anchor: --selected-tab;
+  left: anchor(start);
+  right: anchor(end);
+  bottom: anchor(bottom);
+  height: 2px;
+  background: light-dark(rgb(25, 118, 210), rgb(144, 202, 249));
+  transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
+  z-index: 1;
+}
+</style>
+<div class="tablist-wrapper">
+  <div class="tablist" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" tab-index="0">Tab one</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab two</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab three</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab four</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab five</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab six</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab seven</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab eight</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab nine</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab ten</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab eleven</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab twelve</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab thirteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab fourteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab fifteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab sixteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab seventeen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab eighteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab nineteen</button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1">Tab twenty</button>
+  </div>
+  <div class="indicator"></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tabList = document.querySelector('.tablist');
+  const tabs = document.querySelectorAll('.tab');
+
+  tabList.addEventListener('click', (e) => {
+    const targetTab = e.target.closest('[role="tab"]');
+    if (!targetTab) return; // Ignore clicks outside tabs
+
+    // Activate the clicked tab
+    activateTab(targetTab);
+  });
+
+  // Add keyboard navigation
+  tabList.addEventListener('keydown', (e) => {
+    const targetTab = e.target;
+    const previousTab = targetTab.previousElementSibling;
+    const nextTab = targetTab.nextElementSibling;
+    const firstTab = tabs[0];
+    const lastTab = tabs[tabs.length - 1];
+
+    // Only handle key events if a tab triggered them
+    if (targetTab.getAttribute('role') !== 'tab') return;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault();
+        if (previousTab && previousTab.getAttribute('role') === 'tab') {
+          activateTab(previousTab);
+        } else {
+          activateTab(lastTab); // Cycle to end
+        }
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        if (nextTab && nextTab.getAttribute('role') === 'tab') {
+          activateTab(nextTab);
+        } else {
+          activateTab(firstTab); // Cycle to beginning
+        }
+        break;
+      case 'Home':
+        e.preventDefault();
+        activateTab(firstTab);
+        break;
+      case 'End':
+        e.preventDefault();
+        activateTab(lastTab);
+        break;
+    }
+  });
+
+  function activateTab(tab) {
+    // Deactivate all tabs
+    tabs.forEach(t => {
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+    });
+
+    // Activate the current tab
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
+    tab.focus();
+  }
+});
+</script>
+<p>Example not working? Try the latest version of Google Chrome. You can view the
+full code for the example above on <a href="https://codepen.io/">CodePen</a>.</p>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.3/min.js" defer=""></script>
+
+</body>
+
+</html>
