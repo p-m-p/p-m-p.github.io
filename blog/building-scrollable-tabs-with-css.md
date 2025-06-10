@@ -5,7 +5,7 @@ description:
   build common UI patterns with minimal JavaScript. This post explores how to
   build scrollable tabs using features from the overflow module and anchor
   positioning draft specifications
-draft: true
+date: 2025-06-10
 ---
 
 ## Carousel? Nah, scrollable tabs!
