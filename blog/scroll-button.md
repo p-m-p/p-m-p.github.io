@@ -1,27 +1,45 @@
 ---
-title: Applying new CSS scroll features to design system components
+title: Building scrollable tabs with experimental CSS features
 description:
+  New overflow and positioning features coming to CSS are making it easier to
+  build common UI patterns with minimal JavaScript. This post explores how to
+  build scrollable tabs using features from the overflow module and anchor
+  positioning draft specifications
 draft: true
 ---
 
-A lot of the examples for the new scrolling features coming to CSS have used the
-Carousel pattern as a demonstration. [This post][carousel-article] by Adam
-Argyle has a great explanation of the features and has a gallery of inspiring
-examples. The carousel also featured in some talks at the latest [Google IO
-event][google-io] and got me thinking about other areas to use these features.
+## Carousel? Nah, scrollable tabs!
 
-## Scrollable tabs
+Recent examples of new experimental scroll features in the CSS [overflow
+module][overflow-module] use the Carousel pattern as a demonstration. [This
+post][carousel-article] by Adam Argyle provides an in-depth explanation of the
+features with a gallery of inspiring examples. Similar carousels also featured
+in some talks at the latest [Google IO event][google-io] which got me thinking
+about other places to use these features.
 
-The [Scrollable Tabs][scrollable-tabs] component allows the number of tabs in a
-tabbed page section to exceed the width of the parent container. To build this
-feature may seem trivial at first look but requires a good amount of JavaScript
-to achieve without these new CSS features.
+The tabs UI pattern often features in application designs and does not have a
+native implementation in HTML. In the past, gracefully dealing with a list of
+tabs that exceed the width of the parent container required a good amount of
+JavaScript to achieve. With the new CSS features, we don't yet have a native
+solution but we can at least ditch a load of JavaScript.
 
-### Removing the scroll bar
+## The Scrollable tabs pattern
 
-To start we will create the tabs structure and apply a basic scrolling overflow
-with CSS. When the list of tabs exceeds the available space they overflow the
-container and show a horizontal scroll bar.
+Using the [Scrollable Tabs][scrollable-tabs] Material Design component as an
+example, we'll attempt to replicate the functionality with as little JavaScript
+as possible and explore some new and experimental CSS features that make it
+possible.
+
+## Removing the horizontal scroll bar
+
+To start we will create the basic tabs structure using flex box to align the
+tabs and a horizontal overflow. When the list of tab buttons exceeds the
+available space in the tab list container they overflow and show a horizontal
+scroll bar that needs removing.
+
+Setting the `scrollbar-width` property to `none` removes the scroll bar! What a
+result, no longer do we have to use JavaScript or CSS hacks to hide the scroll
+bar.
 
 ```html
 <style>
@@ -29,6 +47,7 @@ container and show a horizontal scroll bar.
     display: flex;
     gap: 0.125rem;
     overflow-x: auto;
+    scrollbar-width: none;
   }
 </style>
 
@@ -46,60 +65,41 @@ container and show a horizontal scroll bar.
 </div>
 ```
 
-The `scrollbar-width` property allows us to remove the scroll bar by setting a
-value of `none`. What a godsend, no longer do we have to use JavaScript or CSS
-hacks to hide the scroll bar.
+## Adding buttons to control scrolling
+
+Removing the scroll bar works okay on touch devices but for other devices like a
+mouse we need to add the forward and back buttons.
+
+The `scroll-button` psuedo-elements handle this for us. To add the buttons we
+specify the inline start and end buttons on the tab list. Providing the content
+property for the buttons, with some alternative text, enables them.
 
 ```css
-.tablist {
-  scrollbar-width: none;
+.tablist::scroll-button(inline-start) {
+  content: "<" / "Previous";
+}
+
+.tablist::scroll-button(inline-end) {
+  content: ">" / "Next";
 }
 ```
 
-Already this works okay for touch devices but horizontal scrolling with a mouse
-without a scroll bar doesn't.
-
-### Adding back and forward scroll buttons
-
-To date, adding buttons to scroll hidden tabs into view took a fair amount of
-JavaScript to track the scroll position and enable and disable the buttons when
-reaching either end of the list. Animating the scrolling complicated things even
-further.
-
-The scroll-button psuedo-elements handle this for us! To add the buttons we
-specify the selectors on the tab list and provide content for the buttons with
-some alternative text.
+To add common styles for all scroll buttons use a universal `*` selector and
+style button states in the usual way.
 
 ```css
-.tablist {
-  &::scroll-button(inline-start) {
-    content: "<" / "Previous";
-  }
+.tablist::scroll-button(*) {
+  color: rbg(0 0 0 / 75%);
+}
 
-  &::scroll-button(inline-end) {
-    content: ">" / "Next";
-  }
+.tablist::scroll-button(*):hover {
+  color: rbg(0 0 0 / 95%);
 }
 ```
 
-We can apply common styles for all scroll buttons and target the usual button
-states using the all selector.
+## Positioning the scroll buttons with anchor positioning
 
-```css
-.tablist {
-  &::scroll-button(*) {
-    color: rbg(0 0 0 / 75%);
-  }
-
-  &::scroll-button(*):hover {
-    color: rbg(0 0 0 / 95%);
-  }
-}
-```
-
-### Positioning the scroll buttons
-
-Positioning the scroll buttons to the start and end of the tab list we can use
+To position the scroll buttons to the start and end of the tab list we can use
 [anchor positioning][anchor-positioning]. With anchor positioning we align the
 buttons to the containing box of the tab list, outside of the content overflow.
 
@@ -131,11 +131,11 @@ positioning and also center align the buttons with the tabs.
 }
 ```
 
-### Animating the scroll
+## Animating the scroll behaviour
 
 When we click the scroll buttons the tab list jumps to the next position
-instantly. To animate the scroll we apply the `scroll-behavior` property of
-`smooth` to add a smooth transition to the next set of tabs.
+instantly. To animate the scroll we set the `scroll-behavior` property with a
+value of `smooth` to add a smooth transition to the next set of tabs.
 
 ```css
 .tablist {
@@ -143,17 +143,17 @@ instantly. To animate the scroll we apply the `scroll-behavior` property of
 }
 ```
 
-### Putting it all together
+## Putting it together with a bit of JavaScript
 
-When we put the main components together we have a working set scrollable tabs
-in less that 20 lines of CSS! A little sprinkling of JavaScript to handle tab
-selection and keyboard navigation for accessibility makes it usable. With a
-little bit more anchor positioning we can even add the animated indicator the
-Material Tabs to show the currently selected tab without any JavaScript.
+When we put this all together we have a working set scrollable tabs in less than
+20 lines of CSS! With a little sprinkling of JavaScript to handle tab selection
+and keyboard navigation for accessibility and with a little bit more anchor
+positioning an animated indicator like in the Material Tabs shows the currently
+selected tab, without any JavaScript.
 
 <style>
 .tablist-wrapper {
-  margin: 0 auto 3rem;
+  margin: 3rem auto;
   max-width: 600px;
   overflow: hidden;
   padding: 0 2rem;
@@ -198,6 +198,7 @@ Material Tabs to show the currently selected tab without any JavaScript.
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
+  cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.75rem 1rem;
@@ -316,8 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+You can view the full code on [CodePen][codepen]. Thanks!
+
+[overflow-module]: https://drafts.csswg.org/css-overflow-5/
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
 [google-io]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
 [scrollable-tabs]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
 [anchor-positioning]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
+[codepen]: https://codepen.io/
