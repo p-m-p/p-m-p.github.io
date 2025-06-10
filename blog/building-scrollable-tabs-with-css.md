@@ -326,4 +326,4 @@ full code for the example above on [CodePen][codepen].
 [scrollable-tabs]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
 [anchor-positioning]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
-[codepen]: https://codepen.io/
+[codepen]: https://codepen.io/p-m-p/pen/ogXBvBO
