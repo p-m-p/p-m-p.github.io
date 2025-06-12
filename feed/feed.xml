@@ -29,9 +29,8 @@ JavaScript to achieve. With the new CSS features, we don&#39;t yet have a native
 solution but we can at least ditch a load of JavaScript.&lt;/p&gt;
 &lt;h2&gt;The Scrollable tabs pattern&lt;/h2&gt;
 &lt;p&gt;Using the &lt;a href=&quot;https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;amp;t=20&quot;&gt;Scrollable Tabs&lt;/a&gt; Material Design component as an
-example, we&#39;ll attempt to replicate the functionality with as little JavaScript
-as possible and explore some new and experimental CSS features that make it
-possible.&lt;/p&gt;
+example, we&#39;ll attempt to replicate the functionality with minimal JavaScript
+and explore some new and experimental CSS features that make it possible.&lt;/p&gt;
 &lt;h2&gt;Removing the horizontal scroll bar&lt;/h2&gt;
 &lt;p&gt;To start we will create the basic tabs structure using flex box to align the
 tabs and a horizontal overflow. When the list of tab buttons exceeds the
