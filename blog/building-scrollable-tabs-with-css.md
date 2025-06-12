@@ -31,9 +31,8 @@ solution but we can at least ditch a load of JavaScript.
 ## The Scrollable tabs pattern
 
 Using the [Scrollable Tabs][scrollable-tabs] Material Design component as an
-example, we'll attempt to replicate the functionality with as little JavaScript
-as possible and explore some new and experimental CSS features that make it
-possible.
+example, we'll attempt to replicate the functionality with minimal JavaScript
+and explore some new and experimental CSS features that make it possible.
 
 ## Removing the horizontal scroll bar
 
