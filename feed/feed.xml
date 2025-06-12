@@ -196,7 +196,33 @@ selected tab, without any JavaScript.&lt;/p&gt;
   transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
   z-index: 1;
 }
+
+.notice {
+    background: var(--color-bg-secondary);
+    display: flex;
+    gap: 1rem;
+    font-weight: 600;
+    margin: 2rem auto;
+    padding: 1rem;
+
+    &amp;:before {
+      content: &quot;⚠️&quot;;
+    display: block;
+        font-size: 1.5rem;
+    }
+
+}
+
+@supports selector(::scroll-button(*)) {
+  .notice {
+    display: none;
+  }
+}
 &lt;/style&gt;
+&lt;div class=&quot;notice&quot;&gt;
+    Looks like your browser doesn&#39;t support these CSS features and the example below may not work as expected.
+    Try viewing this page in the latest version of Chrome instead.
+&lt;/div&gt;
 &lt;div class=&quot;tablist-wrapper&quot;&gt;
   &lt;div class=&quot;tablist&quot; role=&quot;tablist&quot;&gt;
     &lt;button class=&quot;tab&quot; role=&quot;tab&quot; aria-selected=&quot;true&quot; tab-index=&quot;0&quot;&gt;Tab one&lt;/button&gt;
