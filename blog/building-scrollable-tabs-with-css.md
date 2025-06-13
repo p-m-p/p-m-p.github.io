@@ -211,6 +211,11 @@ more anchor positioning.
     color: light-dark(rgb(18, 92, 165), rgb(144, 202, 249));
     anchor-name: --selected-tab;
   }
+
+  &:focus-visible {
+    background: light-dark(rgb(0 0 0 / 5%), rgb(255 255 255 / 8%));
+    outline: 0;
+  }
 }
 
 .indicator {
