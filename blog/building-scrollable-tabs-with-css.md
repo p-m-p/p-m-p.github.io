@@ -354,7 +354,7 @@ You can view the full code for the example above on [CodePen][codepen].
 [overflow-module]: https://drafts.csswg.org/css-overflow-5/
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
 [google-io]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
-[scrollable-tabs]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
+[scrollable-tabs]: https://mui.com/material-ui/react-tabs/#scrollable-tabs
 [scrollbar-width]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-width
 [scroll-button]:
