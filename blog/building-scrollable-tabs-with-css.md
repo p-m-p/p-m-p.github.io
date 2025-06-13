@@ -19,31 +19,27 @@ Recent examples of new experimental scroll features in the CSS [overflow
 module][overflow-module] use the Carousel pattern as a demonstration. [This
 post][carousel-article] by Adam Argyle provides an in-depth explanation of the
 features with a gallery of inspiring examples. Similar carousels also featured
-in some talks at the latest [Google IO event][google-io] which got me thinking
-about other places to use these features.
+in some talks at the latest [Google IO event][google-io] and got me thinking
+about other areas where we can use these new tools.
 
-The tabs UI pattern often features in application designs and does not have a
-native implementation in HTML. In the past, gracefully dealing with a list of
-tabs that exceed the width of the parent container required a good amount of
-JavaScript to achieve. With the new CSS features, we don't yet have a native
-solution but we can at least ditch a load of JavaScript.
-
-## The Scrollable tabs pattern
+The tabs pattern is a staple in any design systems and appears in most
+applications. Without a native HTML implementation, gracefully dealing with a
+list of tabs that exceed the width of the parent container requires a good
+amount of JavaScript to achieve. With these new CSS features, we still don't
+have a native solution but we can at least ditch a good amount of JavaScript.
 
 Using the [Scrollable Tabs][scrollable-tabs] Material Design component as an
-example, we'll attempt to replicate the functionality with minimal JavaScript
+reference, we'll attempt to replicate the functionality with minimal JavaScript
 and explore some new and experimental CSS features that make it possible.
 
 ## Removing the horizontal scroll bar
 
-To start we will create the basic tabs structure using flex box to align the
-tabs and a horizontal overflow. When the list of tab buttons exceeds the
-available space in the tab list container they overflow and show a horizontal
-scroll bar that needs removing.
+To start, we will create a basic tabs structure using flex box to align them
+with a horizontal overflow. When the list of tab buttons exceeds the available
+space they overflow and show a horizontal scroll bar.
 
-Setting the `scrollbar-width` property to `none` removes the scroll bar! What a
-result, no longer do we have to use JavaScript or CSS hacks to hide the scroll
-bar.
+We don't want to show the scroll bar so set the
+[scrollbar-width][scrollbar-width] property to `none` to remove it.
 
 ```html
 <style>
@@ -71,12 +67,13 @@ bar.
 
 ## Adding buttons to control scrolling
 
-Removing the scroll bar works okay on touch devices but for other devices like a
-mouse we need to add the forward and back buttons.
+Removing the scroll bar works okay on touch devices but for users with a mouse
+we need to add next and previous buttons.
 
-The `scroll-button` psuedo-elements handle this for us. To add the buttons we
-specify the inline start and end buttons on the tab list. Providing the content
-property for the buttons, with some alternative text, enables them.
+The [scroll-button][scroll-button] psuedo-elements handle this for us. To add
+the buttons at the start and end of the tab list we specify the inline
+directions. Providing a content property for the buttons, with some alternative
+text, enables them.
 
 ```css
 .tablist::scroll-button(inline-start) {
@@ -88,7 +85,7 @@ property for the buttons, with some alternative text, enables them.
 }
 ```
 
-To add common styles for all scroll buttons use a universal `*` selector and
+To add common styles for all scroll buttons we use a universal `*` selector and
 style button states in the usual way.
 
 ```css
@@ -103,13 +100,13 @@ style button states in the usual way.
 
 ## Positioning the scroll buttons with anchor positioning
 
-To position the scroll buttons to the start and end of the tab list we can use
-[anchor positioning][anchor-positioning]. With anchor positioning we align the
-buttons to the containing box of the tab list, outside of the content overflow.
+To position the scroll buttons to the start and end of the tab list we use
+[anchor positioning][anchor-positioning]. This allows us to align the buttons to
+the containing box of the tab list, outside of the content overflow.
 
-To do this we need to wrap the tab list in a relative positioned container
-element. This allows us to anchor the buttons at the start and end with absolute
-positioning and also center align the buttons with the tabs.
+To achieve this we wrap the tab list in a relative positioned container element
+and anchor the buttons at the start and end with absolute positioning. The
+anchor also helps us to center align the buttons with the tabs.
 
 ```css
 .tablist-wrapper {
@@ -137,9 +134,9 @@ positioning and also center align the buttons with the tabs.
 
 ## Animating the scroll behaviour
 
-When we click the scroll buttons the tab list jumps to the next position
-instantly. To animate the scroll we set the `scroll-behavior` property with a
-value of `smooth` to add a smooth transition to the next set of tabs.
+Clicking the scroll buttons jumps the tab list to the next position instantly.
+To animate the scroll we set the [scroll-behavior][scroll-behavior] property
+with a value of `smooth` to add a smooth transition to the next set of tabs.
 
 ```css
 .tablist {
@@ -147,13 +144,13 @@ value of `smooth` to add a smooth transition to the next set of tabs.
 }
 ```
 
-## Putting it together with a sprinkling of JavaScript
+## Putting it together, with a sprinkling of JavaScript
 
-When we put this all together we have a working set scrollable tabs in less than
-20 lines of CSS! With a little sprinkling of JavaScript to handle tab selection
-and keyboard navigation for accessibility and with a little bit more anchor
-positioning an animated indicator like in the Material Tabs shows the currently
-selected tab, without any JavaScript.
+When we put this all together we have a working set of scrollable tabs in less
+than 20 lines of CSS! We need a small amount of JavaScript to handle tab
+selection for the demo and to enable keyboard navigation. We create the animated
+indicator, like what we see in Material Design, with pure CSS using a little bit
+more anchor positioning.
 
 <style>
 .tablist-wrapper {
@@ -229,19 +226,18 @@ selected tab, without any JavaScript.
 }
 
 .notice {
-    background: var(--color-bg-secondary);
-    display: flex;
-    gap: 1rem;
-    font-weight: 600;
-    margin: 2rem auto;
-    padding: 1rem;
+  background: var(--color-bg-secondary);
+  display: flex;
+  gap: 1rem;
+  font-weight: 600;
+  margin: 2rem auto;
+  padding: 1rem;
 
-    &:before {
-      content: "⚠️";
+  &:before {
+    content: "⚠️";
     display: block;
-        font-size: 1.5rem;
-    }
-
+    font-size: 1.5rem;
+  }
 }
 
 @supports selector(::scroll-button(*)) {
@@ -348,13 +344,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-Example not working? Try the latest version of Google Chrome. You can view the
-full code for the example above on [CodePen][codepen].
+You can view the full code for the example above on [CodePen][codepen].
 
 [overflow-module]: https://drafts.csswg.org/css-overflow-5/
 [carousel-article]: https://developer.chrome.com/blog/carousels-with-css
 [google-io]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
 [scrollable-tabs]: https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&t=20
+[scrollbar-width]:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-width
+[scroll-button]:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-button
+[scroll-behavior]:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior
 [anchor-positioning]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
 [codepen]: https://codepen.io/p-m-p/pen/ogXBvBO
