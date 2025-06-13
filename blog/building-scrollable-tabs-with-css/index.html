@@ -763,25 +763,22 @@ a {
 module</a> use the Carousel pattern as a demonstration. <a href="https://developer.chrome.com/blog/carousels-with-css">This
 post</a> by Adam Argyle provides an in-depth explanation of the
 features with a gallery of inspiring examples. Similar carousels also featured
-in some talks at the latest <a href="https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;t=20">Google IO event</a> which got me thinking
-about other places to use these features.</p>
-<p>The tabs UI pattern often features in application designs and does not have a
-native implementation in HTML. In the past, gracefully dealing with a list of
-tabs that exceed the width of the parent container required a good amount of
-JavaScript to achieve. With the new CSS features, we don't yet have a native
-solution but we can at least ditch a load of JavaScript.</p>
-<h2>The Scrollable tabs pattern</h2>
+in some talks at the latest <a href="https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;t=20">Google IO event</a> and got me thinking
+about other areas where we can use these new tools.</p>
+<p>The tabs pattern is a staple in any design systems and appears in most
+applications. Without a native HTML implementation, gracefully dealing with a
+list of tabs that exceed the width of the parent container requires a good
+amount of JavaScript to achieve. With these new CSS features, we still don't
+have a native solution but we can at least ditch a good amount of JavaScript.</p>
 <p>Using the <a href="https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;t=20">Scrollable Tabs</a> Material Design component as an
-example, we'll attempt to replicate the functionality with minimal JavaScript
+reference, we'll attempt to replicate the functionality with minimal JavaScript
 and explore some new and experimental CSS features that make it possible.</p>
 <h2>Removing the horizontal scroll bar</h2>
-<p>To start we will create the basic tabs structure using flex box to align the
-tabs and a horizontal overflow. When the list of tab buttons exceeds the
-available space in the tab list container they overflow and show a horizontal
-scroll bar that needs removing.</p>
-<p>Setting the <code>scrollbar-width</code> property to <code>none</code> removes the scroll bar! What a
-result, no longer do we have to use JavaScript or CSS hacks to hide the scroll
-bar.</p>
+<p>To start, we will create a basic tabs structure using flex box to align them
+with a horizontal overflow. When the list of tab buttons exceeds the available
+space they overflow and show a horizontal scroll bar.</p>
+<p>We don't want to show the scroll bar so set the
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-width">scrollbar-width</a> property to <code>none</code> to remove it.</p>
 <copy-to-clipboard><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
   <span class="token selector">.tablist</span> <span class="token punctuation">{</span>
     <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
@@ -804,11 +801,12 @@ bar.</p>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">role</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Tab ten<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre></copy-to-clipboard>
 <h2>Adding buttons to control scrolling</h2>
-<p>Removing the scroll bar works okay on touch devices but for other devices like a
-mouse we need to add the forward and back buttons.</p>
-<p>The <code>scroll-button</code> psuedo-elements handle this for us. To add the buttons we
-specify the inline start and end buttons on the tab list. Providing the content
-property for the buttons, with some alternative text, enables them.</p>
+<p>Removing the scroll bar works okay on touch devices but for users with a mouse
+we need to add next and previous buttons.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-button">scroll-button</a> psuedo-elements handle this for us. To add
+the buttons at the start and end of the tab list we specify the inline
+directions. Providing a content property for the buttons, with some alternative
+text, enables them.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist::scroll-button(inline-start)</span> <span class="token punctuation">{</span>
   <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">"&lt;"</span> / <span class="token string">"Previous"</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -816,7 +814,7 @@ property for the buttons, with some alternative text, enables them.</p>
 <span class="token selector">.tablist::scroll-button(inline-end)</span> <span class="token punctuation">{</span>
   <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">">"</span> / <span class="token string">"Next"</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>To add common styles for all scroll buttons use a universal <code>*</code> selector and
+<p>To add common styles for all scroll buttons we use a universal <code>*</code> selector and
 style button states in the usual way.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist::scroll-button(*)</span> <span class="token punctuation">{</span>
   <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rbg</span><span class="token punctuation">(</span>0 0 0 / 75%<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -826,12 +824,12 @@ style button states in the usual way.</p>
   <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rbg</span><span class="token punctuation">(</span>0 0 0 / 95%<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
 <h2>Positioning the scroll buttons with anchor positioning</h2>
-<p>To position the scroll buttons to the start and end of the tab list we can use
-<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">anchor positioning</a>. With anchor positioning we align the
-buttons to the containing box of the tab list, outside of the content overflow.</p>
-<p>To do this we need to wrap the tab list in a relative positioned container
-element. This allows us to anchor the buttons at the start and end with absolute
-positioning and also center align the buttons with the tabs.</p>
+<p>To position the scroll buttons to the start and end of the tab list we use
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">anchor positioning</a>. This allows us to align the buttons to
+the containing box of the tab list, outside of the content overflow.</p>
+<p>To achieve this we wrap the tab list in a relative positioned container element
+and anchor the buttons at the start and end with absolute positioning. The
+anchor also helps us to center align the buttons with the tabs.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist-wrapper</span> <span class="token punctuation">{</span>
   <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -854,18 +852,18 @@ positioning and also center align the buttons with the tabs.</p>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
 <h2>Animating the scroll behaviour</h2>
-<p>When we click the scroll buttons the tab list jumps to the next position
-instantly. To animate the scroll we set the <code>scroll-behavior</code> property with a
-value of <code>smooth</code> to add a smooth transition to the next set of tabs.</p>
+<p>Clicking the scroll buttons jumps the tab list to the next position instantly.
+To animate the scroll we set the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior">scroll-behavior</a> property
+with a value of <code>smooth</code> to add a smooth transition to the next set of tabs.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">.tablist</span> <span class="token punctuation">{</span>
   <span class="token property">scroll-behavior</span><span class="token punctuation">:</span> smooth<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<h2>Putting it together with a sprinkling of JavaScript</h2>
-<p>When we put this all together we have a working set scrollable tabs in less than
-20 lines of CSS! With a little sprinkling of JavaScript to handle tab selection
-and keyboard navigation for accessibility and with a little bit more anchor
-positioning an animated indicator like in the Material Tabs shows the currently
-selected tab, without any JavaScript.</p>
+<h2>Putting it together, with a sprinkling of JavaScript</h2>
+<p>When we put this all together we have a working set of scrollable tabs in less
+than 20 lines of CSS! We need a small amount of JavaScript to handle tab
+selection for the demo and to enable keyboard navigation. We create the animated
+indicator, like what we see in Material Design, with pure CSS using a little bit
+more anchor positioning.</p>
 <style>
 .tablist-wrapper {
   margin: 3rem auto;
@@ -940,19 +938,18 @@ selected tab, without any JavaScript.</p>
 }
 
 .notice {
-    background: var(--color-bg-secondary);
-    display: flex;
-    gap: 1rem;
-    font-weight: 600;
-    margin: 2rem auto;
-    padding: 1rem;
+  background: var(--color-bg-secondary);
+  display: flex;
+  gap: 1rem;
+  font-weight: 600;
+  margin: 2rem auto;
+  padding: 1rem;
 
-    &:before {
-      content: "⚠️";
+  &:before {
+    content: "⚠️";
     display: block;
-        font-size: 1.5rem;
-    }
-
+    font-size: 1.5rem;
+  }
 }
 
 @supports selector(::scroll-button(*)) {
@@ -1056,8 +1053,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
-<p>Example not working? Try the latest version of Google Chrome. You can view the
-full code for the example above on <a href="https://codepen.io/p-m-p/pen/ogXBvBO">CodePen</a>.</p>
+<p>You can view the full code for the example above on <a href="https://codepen.io/p-m-p/pen/ogXBvBO">CodePen</a>.</p>
 
   </main>
 
