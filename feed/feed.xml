@@ -27,7 +27,7 @@ applications. Without a native HTML implementation, gracefully dealing with a
 list of tabs that exceed the width of the parent container requires a good
 amount of JavaScript to achieve. With these new CSS features, we still don&#39;t
 have a native solution but we can at least ditch a good amount of JavaScript.&lt;/p&gt;
-&lt;p&gt;Using the &lt;a href=&quot;https://youtu.be/GSVe6zguiao?si=15-ZnNVwETe4gkra&amp;amp;t=20&quot;&gt;Scrollable Tabs&lt;/a&gt; Material Design component as an
+&lt;p&gt;Using the &lt;a href=&quot;https://mui.com/material-ui/react-tabs/#scrollable-tabs&quot;&gt;Scrollable Tabs&lt;/a&gt; Material Design component as an
 reference, we&#39;ll attempt to replicate the functionality with minimal JavaScript
 and explore some new and experimental CSS features that make it possible.&lt;/p&gt;
 &lt;h2&gt;Removing the horizontal scroll bar&lt;/h2&gt;
