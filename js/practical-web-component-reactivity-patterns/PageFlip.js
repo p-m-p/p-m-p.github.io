@@ -21,7 +21,7 @@ export class PageFlip extends HTMLElement {
 
   attributeChangedCallback(name, _, newValue) {
     if (name === "active-page") {
-      this.#setActivePage(parseInt(newValue, 10));
+      this.#setActivePage(Number.parseInt(newValue, 10));
     }
   }
 

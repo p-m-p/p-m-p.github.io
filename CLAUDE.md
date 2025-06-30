@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm run build` - Build the site for production (runs clean first)
 - `pnpm run clean` - Remove the `_site` directory
 - `pnpm run format` - Format code with Prettier
+- `pnpm run lint` - Lint JavaScript files with ESLint
+- `pnpm run lint:fix` - Lint and auto-fix JavaScript files
 
 ## Architecture
 
@@ -22,6 +24,7 @@ This is an Eleventy (11ty) static site generator blog built with:
 ### Key Files
 
 - `.eleventy.js` - Main Eleventy configuration with plugins and filters
+- `eslint.config.js` - ESLint flat config with import and unicorn plugins
 - `_data/eleventyDataSchema.js` - Zod validation for frontmatter data
 - `blog/blog.11tydata.js` - Directory data for blog posts (sets layout and tags)
 

@@ -3,7 +3,7 @@ import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { DateTime } from "luxon";
 
-export default function(eleventyConfig) {
+export default function eleventyConfig(eleventyConfig) {
   eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
     extensions: "html",
     formats: ["webp", "jpeg"],
