@@ -6,6 +6,8 @@
 <li><code>pnpm run build</code> - Build the site for production (runs clean first)</li>
 <li><code>pnpm run clean</code> - Remove the <code>_site</code> directory</li>
 <li><code>pnpm run format</code> - Format code with Prettier</li>
+<li><code>pnpm run lint</code> - Lint JavaScript files with ESLint</li>
+<li><code>pnpm run lint:fix</code> - Lint and auto-fix JavaScript files</li>
 </ul>
 <h2>Architecture</h2>
 <p>This is an Eleventy (11ty) static site generator blog built with:</p>
@@ -19,6 +21,7 @@
 <h3>Key Files</h3>
 <ul>
 <li><code>.eleventy.js</code> - Main Eleventy configuration with plugins and filters</li>
+<li><code>eslint.config.js</code> - ESLint flat config with import and unicorn plugins</li>
 <li><code>_data/eleventyDataSchema.js</code> - Zod validation for frontmatter data</li>
 <li><code>blog/blog.11tydata.js</code> - Directory data for blog posts (sets layout and tags)</li>
 </ul>
