@@ -1,0 +1,39 @@
+<h1>CLAUDE.md</h1>
+<p>This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.</p>
+<h2>Development Commands</h2>
+<ul>
+<li><code>pnpm run dev</code> - Start development server with live reload</li>
+<li><code>pnpm run build</code> - Build the site for production (runs clean first)</li>
+<li><code>pnpm run clean</code> - Remove the <code>_site</code> directory</li>
+<li><code>pnpm run format</code> - Format code with Prettier</li>
+</ul>
+<h2>Architecture</h2>
+<p>This is an Eleventy (11ty) static site generator blog built with:</p>
+<ul>
+<li><strong>Content</strong>: Markdown blog posts in <code>/blog/</code> directory</li>
+<li><strong>Templates</strong>: Nunjucks templates in <code>/_includes/layouts/</code></li>
+<li><strong>Data</strong>: Global data files in <code>/_data/</code> with Zod schema validation</li>
+<li><strong>Assets</strong>: CSS in <code>/css/</code>, JavaScript in <code>/js/</code>, images in <code>/img/</code></li>
+<li><strong>Output</strong>: Generated site in <code>/_site/</code> directory</li>
+</ul>
+<h3>Key Files</h3>
+<ul>
+<li><code>.eleventy.js</code> - Main Eleventy configuration with plugins and filters</li>
+<li><code>_data/eleventyDataSchema.js</code> - Zod validation for frontmatter data</li>
+<li><code>blog/blog.11tydata.js</code> - Directory data for blog posts (sets layout and tags)</li>
+</ul>
+<h3>Content Structure</h3>
+<ul>
+<li>Blog posts use <code>layouts/post.njk</code> layout and are tagged as &quot;posts&quot;</li>
+<li>Posts support <code>draft: true</code> frontmatter (excluded from builds)</li>
+<li>Image optimization is automatic via eleventy-img plugin</li>
+<li>Syntax highlighting with copy-to-clipboard functionality</li>
+</ul>
+<h3>Plugins Used</h3>
+<ul>
+<li><code>@11ty/eleventy-img</code> - Image optimization</li>
+<li><code>@11ty/eleventy-plugin-rss</code> - RSS/Atom feed generation</li>
+<li><code>@11ty/eleventy-plugin-syntaxhighlight</code> - Code syntax highlighting</li>
+</ul>
+<h2>Package Manager</h2>
+<p>This project uses <code>pnpm</code> as specified in the packageManager field.</p>
