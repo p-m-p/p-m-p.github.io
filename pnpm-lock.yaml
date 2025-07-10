@@ -22,7 +22,7 @@ importers:
         version: 5.0.1
       luxon:
         specifier: ^3.5.0
-        version: 3.6.1
+        version: 3.7.1
       zod:
         specifier: ^3.24.1
         version: 3.25.76
@@ -1180,8 +1180,8 @@ packages:
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
-  luxon@3.6.1:
-    resolution: {integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==}
+  luxon@3.7.1:
+    resolution: {integrity: sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==}
     engines: {node: '>=12'}
 
   markdown-it@14.1.0:
@@ -1795,7 +1795,7 @@ snapshots:
       js-yaml: 4.1.0
       kleur: 4.1.5
       liquidjs: 10.21.1
-      luxon: 3.6.1
+      luxon: 3.7.1
       markdown-it: 14.1.0
       minimist: 1.2.8
       moo: 0.5.2
@@ -2939,7 +2939,7 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
-  luxon@3.6.1: {}
+  luxon@3.7.1: {}
 
   markdown-it@14.1.0:
     dependencies:
