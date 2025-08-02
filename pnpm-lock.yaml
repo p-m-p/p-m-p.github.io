@@ -19,7 +19,7 @@ importers:
         version: 2.0.4
       '@11ty/eleventy-plugin-syntaxhighlight':
         specifier: ^5.0.0
-        version: 5.0.1
+        version: 5.0.2
       luxon:
         specifier: ^3.5.0
         version: 3.7.1
@@ -83,8 +83,8 @@ packages:
   '@11ty/eleventy-plugin-rss@2.0.4':
     resolution: {integrity: sha512-LF60sGVlxGTryQe3hTifuzrwF8R7XbrNsM2xfcDcNMSliLN4kmB+7zvoLRySRx0AQDjqhPTAeeeT0ra6/9zHUQ==}
 
-  '@11ty/eleventy-plugin-syntaxhighlight@5.0.1':
-    resolution: {integrity: sha512-xDPF3Ay38XlmWZe9ER0SLtMmNah7olUBlGORhUiCUkPh3jYGVCDTDayi4tbFI9Dxha8NwKlfBZ2FXM/s3aZzAg==}
+  '@11ty/eleventy-plugin-syntaxhighlight@5.0.2':
+    resolution: {integrity: sha512-T6xVVRDJuHlrFMHbUiZkHjj5o1IlLzZW+1IL9eUsyXFU7rY2ztcYhZew/64vmceFFpQwzuSfxQOXxTJYmKkQ+A==}
 
   '@11ty/eleventy-utils@2.0.0':
     resolution: {integrity: sha512-rKny6X7+ARuke0TaA6FwNv2PWJCNSdPQqbqDgaZgi+bPXwnPRTEi3CWzvr6vVgh/1XpO1G4FhRPreLhtcwHUyg==}
@@ -1755,7 +1755,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@11ty/eleventy-plugin-syntaxhighlight@5.0.1':
+  '@11ty/eleventy-plugin-syntaxhighlight@5.0.2':
     dependencies:
       prismjs: 1.30.0
 
