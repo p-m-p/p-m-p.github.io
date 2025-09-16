@@ -103,8 +103,11 @@ configuration needs to reflect the token layers. Primitive and Global tokens get
 bundled together in a root style sheet and components into individual files for
 use in Lit.
 
-First thing, filter out the component properties so that the root style sheet
-only contains the global styles.
+Filtering out the component properties so that the root style sheet only
+contains the global styles can be done using the file system path, an attribute
+on the token or perhaps using a category. In the configuration below the
+components are in a separate directory so the path is used to remove them from
+the variables file.
 
 ```js
 export default {
@@ -127,4 +130,59 @@ export default {
     },
   },
 };
+```
+
+Similar filters can be applied to generate the property files for the
+components. If the properties are generated as CSS they could be added as an
+adopted style sheet and referenced from the component styles but this doesn't
+provide a strong link between the token and the component.
+
+Take this example with the generated CSS for the button element.
+
+```css
+:host {
+  --button-background-color: var(--color-primary);
+}
+```
+
+Referencing the property from the element implementation works as expected but a
+change to the name or removal of the token in the future would not cause any
+failure at build time.
+
+```js
+export class Button extends LitElement {
+  static styles = css`
+    button {
+      background-color: var(--button-background-color);
+    }
+  `;
+}
+```
+
+By outputting the button properties as JavaScript a strong link between the
+component and the token can be created. With a custom format function in the
+Style Dictionary build the properties can be output as CSS but in JavaScript
+exports to use in the component.
+
+```js
+export const props = css`:host {
+  --button-background-color: var(--color-primary);
+}`
+
+export const backgroundColor = css`var(--button-background-color)`
+```
+
+In the component the props is added to the component styles and the background color is referenced in the implementation styles.
+
+```js
+import * as styles from './styles/button.js'
+
+export class Button extends LitElement {
+    static styles = [
+        styles.props,
+        css`button {
+            background-color: ${styles.backgroundColor};
+        }`
+    ];
+}
 ```
