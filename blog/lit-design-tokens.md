@@ -20,6 +20,7 @@ properties for Lit elements:
 
 1. Properties live in self contained component module and not in a root style
    sheet
+1. Styles should all live in CSS and not require JavaScript to override.
 1. Light and dark mode support using the `light-dark` CSS function
 1. Properties are usable in Lit `css` tagged template literals without the need
    for `unsafeCSS`
@@ -110,7 +111,7 @@ directory so the path removes them from the variables file.
 
 ```js
 export default {
-  source: ["primitives/**/*.json", "globals/**/*.json", `components/**/*.json`],
+  source: ["primitives/**/*.json", "globals/**/*.json", "components/**/*.json"],
   platforms: {
     css: {
       transformGroup: "css",
@@ -137,6 +138,38 @@ sheet and referenced from the component styles but this doesn't provide a strong
 link between the token and the component.
 
 Take this example with the generated CSS for the button element.
+
+```js
+export default {
+  source: ["primitives/**/*.json", "globals/**/*.json", "components/**/*.json"],
+  platforms: {
+    css: {
+      transformGroup: "css",
+      buildPath: `dist/`,
+      files: [
+        {
+          destination: "variables.css",
+          format: "css/variables",
+          options: {
+            outputReferences: true,
+          },
+          // Filter out the components using the file path
+          filter: (token) => !token.filePath.includes("components"),
+        },
+        {
+          destination: "button.css",
+          format: "css/variables",
+          options: {
+            outputReferences: true,
+          },
+          // Filter out the button component using the file path
+          filter: (token) => token.filePath.includes("button"),
+        },
+      ],
+    },
+  },
+};
+```
 
 ```css
 :host {
@@ -170,7 +203,7 @@ export const props = css`
   }
 `;
 
-export const backgroundColor = css`var(--button-background-color)`
+// export const backgroundColor = css`var(--button-background-color)`
 ```
 
 In the component, add the props to the component styles and reference the
@@ -190,3 +223,91 @@ export class Button extends LitElement {
   ];
 }
 ```
+
+Now any change to the token that is not also updated in the component
+implementation will break the build and provide fast feedback to developers.
+
+To override the component styles the variables need to be set on the element in
+the implemented app. Something like the below.
+
+```css
+ls-button {
+  --button-background-color: red;
+}
+```
+
+A better developer experience can be achieved by formatting the component tokens
+with an alias and default value. Here's the button background again using this
+approach.
+
+```js
+export const props = css`
+  :host {
+    --background-color: var(--button-background-color, --color-primary);
+  }
+`;
+
+// export const backgroundColor = css`var(--background-color)`
+```
+
+Now any overrides can be defined in application root.
+
+```css
+:root {
+  --button-background-color: red;
+}
+```
+
+## Implementing color schemes using the light-dark function
+
+To implement light and dark themes each affected token requires two different
+values. There's a few approaches on how to structure the tokens for this but no
+recommended approach is currently provided by the tokens specification or Style
+Dictionary.
+
+Design tools like Figma variables tend to have a full set of tokens for each
+mode that are exported to separate token files. Unless I've missed some feature
+in Style Dictionary, either the tokensneed to be processed before the build to
+prevent name clashes or after to combine the values.
+
+Take this token build for both light and dark tokens sets.
+
+```js
+for (const mode of ['light', 'dark']) {
+  // Get a list of all component token files
+  const components = (await glob('theme/components/')).map(path => path.replace('theme/components', ''))
+
+  const sd = new StyleDictionary{
+    source: ["primitives/**/*.json", "globals/**/*.json", `theme/${mode}/**/*.json`],
+    platforms: {
+      css: {
+        transformGroup: "css",
+        buildPath: `dist/${mode}`,
+        files: [
+          {
+            destination: "variables.css",
+            format: "css/variables",
+            options: {
+              outputReferences: true,
+            },
+            // Filter out the components using the file path
+            filter: (token) => !token.filePath.includes("components"),
+          },
+          ...components.map(component => ({
+            destination: `${component}.js`,
+            format: "javascript/litCSS",
+            options: {
+              outputReferences: true,
+            },
+            filter: (token) => token.filePath.includes(component),
+          }))
+        ],
+      },
+    },
+  };
+
+  await sd.buildAllPlatforms()
+}
+```
+
+The build from Style Dictionary outputs two directories of tokens, one for light and one for dark.
