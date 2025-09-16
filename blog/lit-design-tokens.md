@@ -79,8 +79,8 @@ The component layer consumes the primary color token for the button background.
 }
 ```
 
-When building the preceding tokens for the CSS platform with Style Dictionary
-using the variables format and output references, the output looks like this:
+Building the preceding tokens for the CSS platform with Style Dictionary using
+the CSS variable format and output references, the output looks like this:
 
 ```css
 :root {
@@ -92,6 +92,39 @@ using the variables format and output references, the output looks like this:
 
 ## Isolating component tokens
 
+Isolating the tokens means that they only get included into the bundle when
+using that component within an app. Tools exist to remove unused CSS during the
+bundling phase but having the styles for a component local only to that module
+or package helps to reduce bundling overhead and provides better separation of
+concerns.
+
 To isolate component tokens into their respective modules the Style Dictionary
 configuration needs to reflect the token layers. Primitive and Global tokens get
-bundled together in a root style sheet and components into individual files.
+bundled together in a root style sheet and components into individual files for
+use in Lit.
+
+First thing, filter out the component properties so that the root style sheet
+only contains the global styles.
+
+```js
+export default {
+  source: ["primitives/**/*.json", "globals/**/*.json", `components/**/*.json`],
+  platforms: {
+    css: {
+      transformGroup: "css",
+      buildPath: `dist/`,
+      files: [
+        {
+          destination: "variables.css",
+          format: "css/variables",
+          options: {
+            outputReferences: true,
+          },
+          // Filter out the components using the file path
+          filter: (token) => !token.filePath.includes("components"),
+        },
+      ],
+    },
+  },
+};
+```
