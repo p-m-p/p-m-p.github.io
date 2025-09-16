@@ -21,8 +21,8 @@ properties for Lit elements:
 1. Properties live in self contained component module and not in a root style
    sheet
 1. Light and dark mode support using the `light-dark` CSS function
-1. Properties are usable in Lit's `css` tagged template literals without the
-   need for `unsafeCSS`
+1. Properties are usable in Lit `css` tagged template literals without the need
+   for `unsafeCSS`
 1. Immediate feedback with failed builds for missing, misspelled or renamed
    tokens
 1. Integrates with TypeScript tooling and IDEs to provide autocompletion
@@ -30,12 +30,12 @@ properties for Lit elements:
 
 ## Token structure
 
-Tokens are structured into three layers:
+This structure organizes tokens into three layers:
 
 **Primitive** tokens include raw values like color tints, sizing and fonts.
 
 **Global** tokens alias primitives and provide more semantic meaning such as
-color types, spacing and typography, .
+color types, spacing and typography.
 
 **Components** tokens consume global tokens to define the styles for component
 variants.
@@ -103,11 +103,10 @@ configuration needs to reflect the token layers. Primitive and Global tokens get
 bundled together in a root style sheet and components into individual files for
 use in Lit.
 
-Filtering out the component properties so that the root style sheet only
-contains the global styles can be done using the file system path, an attribute
-on the token or perhaps using a category. In the configuration below the
-components are in a separate directory so the path is used to remove them from
-the variables file.
+You can filter out component properties so the root style sheet only contains
+global styles using the file system path, an attribute on the token or perhaps
+using a category. In the configuration below the components are in a separate
+directory so the path removes them from the variables file.
 
 ```js
 export default {
@@ -132,10 +131,10 @@ export default {
 };
 ```
 
-Similar filters can be applied to generate the property files for the
-components. If the properties are generated as CSS they could be added as an
-adopted style sheet and referenced from the component styles but this doesn't
-provide a strong link between the token and the component.
+You can apply similar filters to generate the property files for the components.
+If you generate the properties as CSS you could add them as an adopted style
+sheet and referenced from the component styles but this doesn't provide a strong
+link between the token and the component.
 
 Take this example with the generated CSS for the button element.
 
@@ -159,30 +158,35 @@ export class Button extends LitElement {
 }
 ```
 
-By outputting the button properties as JavaScript a strong link between the
-component and the token can be created. With a custom format function in the
-Style Dictionary build the properties can be output as CSS but in JavaScript
-exports to use in the component.
+By outputting the button properties as JavaScript this creates a strong link
+between the component and the token. With a custom format function in the Style
+Dictionary build you can output the properties as CSS but in JavaScript exports
+to use in the component.
 
 ```js
-export const props = css`:host {
-  --button-background-color: var(--color-primary);
-}`
+export const props = css`
+  :host {
+    --button-background-color: var(--color-primary);
+  }
+`;
 
 export const backgroundColor = css`var(--button-background-color)`
 ```
 
-In the component the props is added to the component styles and the background color is referenced in the implementation styles.
+In the component, add the props to the component styles and reference the
+background color in the implementation styles.
 
 ```js
-import * as styles from './styles/button.js'
+import * as styles from "./styles/button.js";
 
 export class Button extends LitElement {
-    static styles = [
-        styles.props,
-        css`button {
-            background-color: ${styles.backgroundColor};
-        }`
-    ];
+  static styles = [
+    styles.props,
+    css`
+      button {
+        background-color: ${styles.backgroundColor};
+      }
+    `,
+  ];
 }
 ```
