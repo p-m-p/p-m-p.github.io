@@ -3,7 +3,10 @@
     "allow": [
       "Bash(pnpm add:*)",
       "Bash(pnpm run lint:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(vale:*)"
     ],
     "deny": []
   }
