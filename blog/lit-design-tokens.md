@@ -352,14 +352,14 @@ combined files at the root of the dist directory as package exports.
 
 ## Documenting component properties
 
-Using the custom elements manifest format and analyzer package the component
-documentation can be generated from the source code. For the CSS custom
-properties to appear in the manifest they need to be added in the JSDoc comments
+Using the custom elements manifest format and analyzer package, you can generate the component
+documentation from the source code. For the CSS custom
+properties to appear in the manifest, add them in the JS Doc comments
 for each component.
 
 Rather than maintain these manually the manifest build can look up the component
 in the generated tokens file and add them to the manifest. To simplify this
-lookup we can add a JavaScript platform build that contains all of the tokens
+lookup, add a JavaScript platform build that contains the tokens
 for the components.
 
 ```js
@@ -389,8 +389,8 @@ const sd = new StyleDictionary(config);
 await sd.buildAllPlatforms();
 ```
 
-With a simple plugin for the custom element manifest analyzer the CSS properties
-for the components can be applied from full set of tokens in the
+With a simple plugin for the custom element manifest analyzer, you can apply the CSS properties
+for the components from the full set of tokens in the
 packageLinkPhase.
 
 ```json
