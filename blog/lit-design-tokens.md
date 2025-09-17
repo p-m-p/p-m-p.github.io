@@ -20,8 +20,8 @@ properties for Lit elements:
 
 1. Properties live in self contained component module and not in a root style
    sheet
-1. Styles should all live in CSS and not require JavaScript to override.
-1. Light and dark mode support using the `light-dark` CSS function
+1. Styles should all be in CSS and not require JavaScript changes to override.
+1. Light and dark mode support via the `light-dark` CSS function
 1. Properties are usable in Lit `css` tagged template literals without the need
    for `unsafeCSS`
 1. Immediate feedback with failed builds for missing, misspelled or renamed
@@ -224,11 +224,11 @@ export class Button extends LitElement {
 }
 ```
 
-Now any change to the token that is not also updated in the component
-implementation will break the build and provide fast feedback to developers.
+Now any change to the token that's not also updated in the component
+implementation breaks the build and provides fast feedback to developers.
 
-To override the component styles the variables need to be set on the element in
-the implemented app. Something like the below.
+To override the component styles, set the variables on the element in the
+implemented app. Something like the below.
 
 ```css
 ls-button {
@@ -236,7 +236,7 @@ ls-button {
 }
 ```
 
-A better developer experience can be achieved by formatting the component tokens
+You can achieve a better developer experience by formatting the component tokens
 with an alias and default value. Here's the button background again using this
 approach.
 
@@ -250,7 +250,7 @@ export const props = css`
 // export const backgroundColor = css`var(--background-color)`
 ```
 
-Now any overrides can be defined in application root.
+Now you can define any overrides in the app root.
 
 ```css
 :root {
@@ -258,27 +258,32 @@ Now any overrides can be defined in application root.
 }
 ```
 
-## Implementing color schemes using the light-dark function
+## Using the light-dark function for color schemes
 
-To implement light and dark themes each affected token requires two different
+To create light and dark themes each affected token requires two different
 values. There's a few approaches on how to structure the tokens for this but no
 recommended approach is currently provided by the tokens specification or Style
 Dictionary.
 
-Design tools like Figma variables tend to have a full set of tokens for each
-mode that are exported to separate token files. Unless I've missed some feature
-in Style Dictionary, either the tokensneed to be processed before the build to
+Design tools like Figma Variables tend to have a full set of tokens for each
+mode that export to separate token files. Unless I've missed some feature in
+Style Dictionary, either you need to process the tokens before the build to
 prevent name clashes or after to combine the values.
 
-Take this token build for both light and dark tokens sets.
+Take this token build script for light and dark tokens sets.
 
 ```js
-for (const mode of ['light', 'dark']) {
-  // Get a list of all component token files
-  const components = (await glob('theme/components/')).map(path => path.replace('theme/components', ''))
+// The list of components might come from a configuration file or a
+// glob of the token JSON files
+const components = ["button"];
 
-  const sd = new StyleDictionary{
-    source: ["primitives/**/*.json", "globals/**/*.json", `theme/${mode}/**/*.json`],
+for (const mode of ["light", "dark"]) {
+  const sd = new StyleDictionary({
+    source: [
+      "primitives/**/*.json",
+      "globals/**/*.json",
+      `theme/${mode}/**/*.json`,
+    ],
     platforms: {
       css: {
         transformGroup: "css",
@@ -293,21 +298,55 @@ for (const mode of ['light', 'dark']) {
             // Filter out the components using the file path
             filter: (token) => !token.filePath.includes("components"),
           },
-          ...components.map(component => ({
+          // Build the JavaScript Lit CSS exports for each component
+          ...components.map((component) => ({
             destination: `${component}.js`,
             format: "javascript/litCSS",
             options: {
               outputReferences: true,
             },
             filter: (token) => token.filePath.includes(component),
-          }))
+          })),
         ],
       },
     },
-  };
+  });
 
-  await sd.buildAllPlatforms()
+  await sd.buildAllPlatforms();
 }
 ```
 
-The build from Style Dictionary outputs two directories of tokens, one for light and one for dark.
+The build from Style Dictionary outputs two directories of tokens, one for light
+and one for dark. From these built token exports this applies a simple pattern
+match to combine differing light and dark values into the light-dark function.
+
+```js
+const light = await fs.readFile("dist/light/variables.css", "utf-8");
+const dark = await fs.readFile("dist/dark/variables.css", "utf-8");
+
+const propertiesPattern = /(--[^:]+?):\s*([^;]+?);/g;
+const lightDark = {};
+
+light.matchAll(propertiesPattern).forEach(([, prop, value]) => {
+  lightDark[prop] = value;
+});
+
+dark.matchAll(propertiesPattern).forEach(([, prop, value]) => {
+  if (!lightDark[prop]) {
+    lightDark[prop] = value;
+  } else if (lightDark[prop] !== value) {
+    lightDark[prop] = `light-dark(${lightDark[prop]}, ${value})`;
+  }
+});
+
+const content = `:root {
+${Object.entries(lightDark)
+  .map(([prop, value]) => `  ${prop}: ${value};`)
+  .join("\n")}
+}`;
+
+await fs.writeFile("dist/variables.css", content, "utf-8");
+```
+
+You can apply a similar approach to the Lit CSS exports so the system generates
+combined files at the root of the dist directory as package exports.
