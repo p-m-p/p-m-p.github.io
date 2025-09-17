@@ -1,9 +1,8 @@
 ---
 title: Bundling type-safe design tokens for Lit web components
 description:
-  No doubt, Design Tokens are hard. I spent some time recently to create a build
-  pipeline for a design system monorepo that provides bundling of design tokens
-  for Lit web components developed with TypeScript. Here's what I ended up with.
+  I spent some time recently on a build pipeline for a design system monorepo
+  that bundles design tokens for Lit web components developed with TypeScript.
 tags:
   - posts
   - web components
@@ -18,16 +17,16 @@ draft: true
 The initial requirements for a build pipeline that generates CSS custom
 properties for Lit elements:
 
-1. Properties live in self contained component module and not in a root style
-   sheet
-1. Styles should all be in CSS and not require JavaScript changes to override.
-1. Light and dark mode support via the `light-dark` CSS function
-1. Properties are usable in Lit `css` tagged template literals without the need
-   for `unsafeCSS`
-1. Immediate feedback with failed builds for missing, misspelled or renamed
-   tokens
-1. Integrates with TypeScript tooling and IDEs to provide autocompletion
-1. Documents properties for the component in the custom element manifest
+- Properties live in self contained component module and not in a root style
+  sheet
+- Styles should all be in CSS and not require JavaScript changes to override.
+- Light and dark mode support via the `light-dark` CSS function
+- Properties are usable in Lit `css` tagged template literals without the need
+  for `unsafeCSS`
+- Immediate feedback with failed builds for missing, misspelled or renamed
+  tokens
+- Integrates with TypeScript tooling and IDEs to provide autocompletion
+- Documents properties for the component in the custom element manifest
 
 ## Token structure
 
@@ -350,3 +349,96 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 
 You can apply a similar approach to the Lit CSS exports so the system generates
 combined files at the root of the dist directory as package exports.
+
+## Documenting component properties
+
+Using the custom elements manifest format and analyzer package the component
+documentation can be generated from the source code. For the CSS custom
+properties to appear in the manifest they need to be added in the JSDoc comments
+for each component.
+
+Rather than maintain these manually the manifest build can look up the component
+in the generated tokens file and add them to the manifest. To simplify this
+lookup we can add a JavaScript platform build that contains all of the tokens
+for the components.
+
+```js
+const config = {
+  /* Original config for the CSS platform */
+};
+
+// For light mode only build all of the tokens into a JavaScript module with types
+if (mode === "light") {
+  config.platforms.js = {
+    transformGroup: "js",
+    buildPath: "dist/",
+    files: [
+      {
+        destination: "tokens.js",
+        format: "javascript/esm",
+      },
+      {
+        destination: "tokens.d.ts",
+        format: "typescript/module-declarations",
+      },
+    ],
+  };
+}
+
+const sd = new StyleDictionary(config);
+await sd.buildAllPlatforms();
+```
+
+With a simple plugin for the custom element manifest analyzer the CSS properties
+for the components can be applied from full set of tokens in the
+packageLinkPhase.
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/Button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Button element.",
+          "name": "Button",
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "my-button",
+          "customElement": true,
+          "cssProperties": [
+            {
+              "name": "--button-background-color",
+              "description": "Button background color",
+              "default": "#00ff00"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Button",
+          "declaration": {
+            "name": "Button",
+            "module": "src/Button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "my-button",
+          "declaration": {
+            "name": "Button",
+            "module": "src/Button.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
