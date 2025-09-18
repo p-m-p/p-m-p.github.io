@@ -174,6 +174,41 @@ properties for the component with individual variable exports for use in style
 declarations. The format applies the `css` template string tag for use with Lit.
 
 ```js
+import StyleDictionary from "style-dictionary";
+import { propertyFormatNames, transforms } from "style-dictionary/enums";
+import { formattedVariables } from "style-dictionary/utils";
+
+StyleDictionary.registerFormat({
+  name: "javascript/litCSS",
+  format: ({ dictionary, options }) => {
+    return [
+      `import { css } from 'lit';`,
+      `export const props = css\`:host {\n${formattedVariables({
+        format: propertyFormatNames.css,
+        dictionary,
+        outputReferences,
+        usesDtcg: true,
+      })}\n}\``,
+      dictionary.allTokens.map((token) => {
+        const nameCamel = StyleDictionary.hooks.transforms[
+          transforms.nameCamel
+        ].transform(token, options);
+        const nameKebab = StyleDictionary.hooks.transforms[
+          transforms.nameKebab
+        ].transform(token, options);
+
+        return `export const ${nameCamel} = css\`var(--${nameKebab})\``;
+      }),
+    ].join("\n\n");
+  },
+});
+```
+
+The format results in a JavaScript file with the CSS string exports. To add
+TypeScript definitions, a similar format ca export the same variables with the
+`CSSResultGroup` type from Lit or run the generated files through TypeScript.
+
+```js
 import { css } from "lit";
 
 // The props export contains the host selector with all of the component
