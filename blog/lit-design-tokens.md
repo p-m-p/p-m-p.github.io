@@ -1,8 +1,10 @@
 ---
-title: Bundling type-safe design tokens for Lit web components
+title: Bundling design tokens for Lit web components
 description:
-  I spent some time recently on a build pipeline for a design system monorepo
-  that bundles design tokens for Lit web components developed with TypeScript.
+  Building a scalable design token pipeline for Lit components requires
+  balancing automation with developer experience. Here's how to isolate
+  component styles, generate type-safe tokens, and support light-dark themes
+  with Style Dictionary.
 tags:
   - posts
   - web components
@@ -12,72 +14,56 @@ date: 2025-09-16
 draft: true
 ---
 
-The main goal of the pipeline involves carrying styles from design tokens through to
-code in an automated way. Ignoring the difficulties that creating a scalable
-token architecture bring, attempting to create a system that automates the build
-process for components that use modern CSS features and provides a good
-developer experience with fast feedback quickly becomes a gnarly mess of
-configuration files and custom build scripts.
+## Pipeline structure and requirements
 
-Consider these requirements for a scalable build pipeline that generates CSS
-custom properties for use in Lit components:
+The main goal of the pipeline is to carry styles from design tokens through to
+code in an automated way. Creating a system that automates the build process of
+components using modern CSS features and providing a good developer experience
+with fast feedback can quickly become a gnarly mess of configuration files and
+custom build scripts.
 
-- Isolation of properties to the element module and not in a root style sheet
-- Styles only exist in CSS and not require JavaScript changes to customise.
+Consider the following requirements:
+
+- Isolation of CSS custom properties in the element module and not in a root
+  style sheet
+- Styles exist only in CSS and don't require JavaScript to apply customisation
 - Light and dark mode support via the `light-dark` CSS function
-- Properties work in Lit `css` tagged template literals without the need for
+- Properties work in Lit `css` template literals without the need for
   `unsafeCSS`
-- Immediate feedback with failed builds for any token changes not carried
+- Fast feedback loop with failed builds for any token changes not carried
   through to code
-- Integration with TypeScript tooling and IDEs to provide things like
-  autocompletion
-- Document element CSS properties in the custom element manifest
+- Integration with TypeScript tooling and IDEs to provide autocompletion
+- Documentation of element CSS properties in the custom element manifest
 
 ## Design token architecture
 
-The tokens organize into three layers. In the first layer primitive tokens
-define raw values for things like color, sizing, and fonts in a Category, Type,
-Item format. Global tokens also follow the Category, Type, Item
-format and alias primitives to provide semantic meaning such as text.size.small.
-Component tokens define the style properties for components using the global
-semantic tokens.
+Organising the tokens into three layers with primitive and alias tokens in the
+first two layers and component tokens in the third the first two layers get
+bundled into a root CSS file and component tokens bundled with the component
+module.
 
-Take this basic example of a primitive token for the color green using the
-Design Token Community Group format.
+Take this basic example of the three token layers to apply the background color
+to a button. The tokens use the Design Token Community Group format.
 
 ```json
 {
   "color": {
     "$type": "color",
+    "$description": "This is the primitive green color palette",
     "green": {
       "500": {
         "$value": "#00ff00"
       }
-    }
-  }
-}
-```
-
-The global layer references the green token as an action surface color.
-
-```json
-{
-  "color": {
-    "$type": "color",
+    },
     "surface": {
       "action": {
+        "$description": "A semantic color for action surfaces",
         "$value": "{color.green.500}"
       }
     }
-  }
-}
-```
-
-The component layer consumes the global token for the button background.
-
-```json
-{
+  },
   "button": {
+    "$description": "Button specific tokens",
     "background-color": {
       "$value": "{color.surface.action}"
     }
@@ -86,7 +72,7 @@ The component layer consumes the global token for the button background.
 ```
 
 Building these tokens with Style Dictionary using the default format for CSS
-variables with output references, the output looks like this:
+variables with output references, the output looks something like this:
 
 ```css
 :root {
@@ -96,8 +82,8 @@ variables with output references, the output looks like this:
 }
 ```
 
-This works, but the component tokens should ship with the component and not in a
-single style sheet.
+This works, but the component tokens should ship with the component and not in
+the root style sheet.
 
 ## Isolating component tokens
 
@@ -112,9 +98,9 @@ configuration needs to reflect the token layers. Primitive and Global tokens get
 bundled together in a root style sheet and components into individual files.
 
 To filter out component properties so that the root style sheet only contains
-global styles, use a filter function to match the tokens in those layers.
-This example uses the file system path but you could also
-use any attribute of the token.
+global styles, use a filter function to match the tokens in those layers. This
+example uses the file system path but you could also use any attribute of the
+token.
 
 In the configuration below the components exist in a separate directory and
 checking the path removes them from the variables file.
@@ -286,8 +272,8 @@ Exporting tokens from design tools like Figma tends to result in a full set of
 tokens for each mode. Processing these tokens with Style Dictionary results in
 two independent builds to produce separate style sheets, one for light and one
 for dark. Naming the dark token categories with a prefix such as `dark:color`
-would allow processing both sets together but the export
-process doesn't support this well.
+would allow processing both sets together but the export process doesn't support
+this well.
 
 The separate style sheets require a bit of post processing to combine into the
 `light-dark` syntax. Take this token build script for light and dark tokens
@@ -338,9 +324,8 @@ for (const mode of ["light", "dark"]) {
 ```
 
 The build from Style Dictionary outputs two directories, one for light and one
-for dark. With a bit of pattern matching, combine the tokens with light and
-dark values into the light-dark function and save as a new variables style
-sheet.
+for dark. With a bit of pattern matching, combine the tokens with light and dark
+values into the light-dark function and save as a new variables style sheet.
 
 ```js
 const light = await fs.readFile("dist/light/variables.css", "utf-8");
@@ -374,7 +359,8 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 ```
 
 Applying a similar approach to the Lit exports files for each component results
-in a single set of exports for both color schemes. Include the `variables.css` file in the root app bundle while components reference the global properties
+in a single set of exports for both color schemes. Include the `variables.css`
+file in the root app bundle while components reference the global properties
 from their isolated imports.
 
 ## Documenting component properties
