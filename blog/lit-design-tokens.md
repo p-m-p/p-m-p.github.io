@@ -12,7 +12,7 @@ date: 2025-09-16
 draft: true
 ---
 
-The main goal of the pipeline is to carry styles from design tokens through to
+The main goal of the pipeline involves carrying styles from design tokens through to
 code in an automated way. Ignoring the difficulties that creating a scalable
 token architecture bring, attempting to create a system that automates the build
 process for components that use modern CSS features and provides a good
@@ -35,9 +35,9 @@ custom properties for use in Lit components:
 
 ## Design token architecture
 
-The tokens are organized into three layers. In the first layer primitive tokens
+The tokens organize into three layers. In the first layer primitive tokens
 define raw values for things like color, sizing, and fonts in a Category, Type,
-Item format. Global tokens are also structured in the Category, Type, Item
+Item format. Global tokens also follow the Category, Type, Item
 format and alias primitives to provide semantic meaning such as text.size.small.
 Component tokens define the style properties for components using the global
 semantic tokens.
@@ -111,12 +111,12 @@ To isolate component tokens into their respective modules the Style Dictionary
 configuration needs to reflect the token layers. Primitive and Global tokens get
 bundled together in a root style sheet and components into individual files.
 
-To Filter out component properties so that the root style sheet only contains
-global styles a filter function is required to match the tokens in those layers.
-This example uses the file system path but any attribute of the token could also
-be used.
+To filter out component properties so that the root style sheet only contains
+global styles, use a filter function to match the tokens in those layers.
+This example uses the file system path but you could also
+use any attribute of the token.
 
-In the configuration below the components are in a separate directory and
+In the configuration below the components exist in a separate directory and
 checking the path removes them from the variables file.
 
 ```js
@@ -205,7 +205,7 @@ StyleDictionary.registerFormat({
 ```
 
 The format results in a JavaScript file with the CSS string exports. To add
-TypeScript definitions, a similar format ca export the same variables with the
+TypeScript definitions, a similar format can export the same variables with the
 `CSSResultGroup` type from Lit or run the generated files through TypeScript.
 
 ```js
@@ -223,7 +223,7 @@ export const props = css`
 // export const backgroundColor = css`var(--button-background-color)`
 ```
 
-In the component, the props are added to the component styles and reference the
+In the component, add the props to the component styles and reference the
 background color in the implementation.
 
 ```js
@@ -282,12 +282,12 @@ values. A few approaches exist for how to structure the tokens for different
 color schemes but no recommended approach currently exists in the token
 specification or Style Dictionary.
 
-Exporting tokens from design tools like Figma tend to result in a full set of
+Exporting tokens from design tools like Figma tends to result in a full set of
 tokens for each mode. Processing these tokens with Style Dictionary results in
 two independent builds to produce separate style sheets, one for light and one
 for dark. Naming the dark token categories with a prefix such as `dark:color`
-would allow processing both sets together but isn't well supported in export
-process.
+would allow processing both sets together but the export
+process doesn't support this well.
 
 The separate style sheets require a bit of post processing to combine into the
 `light-dark` syntax. Take this token build script for light and dark tokens
@@ -338,8 +338,8 @@ for (const mode of ["light", "dark"]) {
 ```
 
 The build from Style Dictionary outputs two directories, one for light and one
-for dark. With a bit of pattern matching the tokens are combined with light and
-dark values into the light-dark function and saved as a new variables style
+for dark. With a bit of pattern matching, combine the tokens with light and
+dark values into the light-dark function and save as a new variables style
 sheet.
 
 ```js
@@ -355,7 +355,7 @@ light.matchAll(propertiesPattern).forEach(([, prop, value]) => {
 });
 
 // Collect all dark tokens updating any existing light values
-// that differinto the light-dark() syntax
+// that differ into the light-dark() syntax
 dark.matchAll(propertiesPattern).forEach(([, prop, value]) => {
   if (!lightDark[prop]) {
     lightDark[prop] = value;
@@ -374,8 +374,7 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 ```
 
 Applying a similar approach to the Lit exports files for each component results
-in a single set of exports for both color schemes. The `variables.css` file is
-included in the root app bundle and components reference the global properties
+in a single set of exports for both color schemes. Include the `variables.css` file in the root app bundle while components reference the global properties
 from their isolated imports.
 
 ## Documenting component properties
