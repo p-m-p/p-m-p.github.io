@@ -10,8 +10,7 @@ tags:
   - web components
   - design systems
   - lit
-date: 2025-09-16
-draft: true
+date: 2025-09-21
 ---
 
 ## Pipeline structure and requirements
@@ -422,3 +421,11 @@ element manifest analyzer.
   ]
 }
 ```
+
+## What about feedback from visual testing
+
+Visual regression testing can provide similar feedback but requires more time
+and tooling overhead. Build pipeline failures deliver immediate feedback to
+developers and complement visual regression tests. This approach also offers
+flexibility in property naming, such as changing the token prefix, and prevents
+unused or unimplemented variables from accumulating in the codebase.
