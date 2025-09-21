@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bundling design tokens for Lit web components</title>
+  <meta name="description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
+  <meta property="og:title" content="Bundling design tokens for Lit web components">
+  <meta property="og:description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
+  <meta property="twitter:title" content="Bundling design tokens for Lit web components">
+  <meta property="twitter:description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>.ctc-image {
+  @media (hover: hover) {
+    &::part(button) {
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+
+    &:hover::part(button) {
+      opacity: 1;
+    }
+  }
+}
+
+copy-to-clipboard {
+  /* Keep these raw color values here until there is a light theme for code blocks */
+  --ctc-button-color: var(--color-white);
+  --ctc-button-background: var(--color-neutral-700);
+}
+
+back-to-top {
+  --btt-button-background: var(--color-bg-action);
+  --btt-button-background-hover: var(--color-bg-action-hover);
+  --btt-button-color: var(--color-text-primary);
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 var(--spacing-md);
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-md);
+
+  a {
+    color: var(--color-text-primary);
+    display: inline-flex;
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--color-bg-secondary);
+  margin: 0 0 var(--spacing-md);
+  padding: var(--spacing-md) 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: right;
+  padding: var(--spacing-md) 0 var(--spacing-xs);
+}
+
+.post-date {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.post-content {
+  color: var(--color-text-secondary);
+
+  blockquote {
+    border-left: solid 4px var(--color-border-primary);
+    font-style: italic;
+    padding: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  p,
+  ol,
+  ul {
+    margin: 0 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  ol,
+  ul {
+    padding: 0 0 0 var(--spacing-xl);
+  }
+
+  li {
+    margin: 0 0 var(--spacing-xs);
+  }
+
+  p code {
+    font-size: 0.875rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin: var(--spacing-3xl) 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 var(--spacing-3xl);
+    overflow: auto;
+    padding: var(--spacing-xs);
+  }
+
+  img {
+    background: var(--color-bg-secondary);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: var(--spacing-md);
+  }
+}
+
+figure {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
+.post-description {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.post-footer {
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
+  padding: var(--spacing-md) 0;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: var(--spacing-3xl);
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: var(--spacing-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: var(--color-bg-action);
+  border: none;
+  border-radius: 999px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 500;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+  line-height: 1;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  transition:
+    background 200ms,
+    color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
+}
+
+.theme-switcher {
+  height: 2.5rem;
+  width: 5rem;
+}
+
+theme-switch {
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-lozenge-background: var(--color-bg-action);
+}
+
+@media (pointer: coarse) {
+  .theme-switcher {
+    overflow: hidden;
+    width: 2.5rem;
+  }
+
+  theme-switch {
+    --ts-lozenge-background: transparent;
+
+    &::part(button-bar) {
+      background: var(--color-bg-action);
+    }
+
+    &::part(button) {
+      opacity: 1;
+    }
+
+    &::part(button dark-button) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &[data-theme="dark"] {
+      &::part(button dark-button) {
+        visibility: hidden;
+      }
+    }
+
+    &[data-theme="light"] {
+      &::part(button light-button) {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: var(--spacing-3xl) 0 0;
+    margin: 0 0 var(--spacing-3xl);
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: var(--spacing-md);
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+  background: var(--codeblock-bg);
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-stone: lch(50% 1.5 75);
+  --color-peach: lch(55% 48 38);
+
+  --color-white: lch(99% 4 75);
+  --color-black: lch(2% 4 75);
+
+  --color-primary-50: lch(from var(--color-peach) 95% c h);
+  --color-primary-100: lch(from var(--color-peach) 90% c h);
+  --color-primary-200: lch(from var(--color-peach) 80% c h);
+  --color-primary-300: lch(from var(--color-peach) 70% c h);
+  --color-primary-400: lch(from var(--color-peach) 60% c h);
+  --color-primary-500: lch(from var(--color-peach) l c h);
+  --color-primary-600: lch(from var(--color-peach) 40% c h);
+  --color-primary-700: lch(from var(--color-peach) 30% c h);
+  --color-primary-800: lch(from var(--color-peach) 20% c h);
+  --color-primary-900: lch(from var(--color-peach) 10% c h);
+  --color-primary-950: lch(from var(--color-peach) 5% c h);
+
+  --color-neutral-50: lch(from var(--color-stone) 95% c h);
+  --color-neutral-100: lch(from var(--color-stone) 90% c h);
+  --color-neutral-200: lch(from var(--color-stone) 80% c h);
+  --color-neutral-300: lch(from var(--color-stone) 70% c h);
+  --color-neutral-400: lch(from var(--color-stone) 60% c h);
+  --color-neutral-500: lch(from var(--color-stone) l c h);
+  --color-neutral-600: lch(from var(--color-stone) 40% c h);
+  --color-neutral-700: lch(from var(--color-stone) 30% c h);
+  --color-neutral-800: lch(from var(--color-stone) 20% c h);
+  --color-neutral-900: lch(from var(--color-stone) 10% c h);
+  --color-neutral-950: lch(from var(--color-stone) 5% c h);
+
+  --size-0: 0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
+  --color-border-primary: light-dark(var(--color-neutral-200),
+      var(--color-neutral-700));
+
+  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
+  --color-bg-secondary: light-dark(var(--color-neutral-50),
+      var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
+
+  --color-link: var(--color-text-primary);
+  --color-link-hover: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-underline: var(--color-primary-400);
+  --color-link-hover-underline: light-dark(var(--color-primary-600),
+      var(--color-primary-300));
+  --color-link-visited: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-visited-underline: var(--color-primary-400);
+  --color-link-focus: var(--color-link-hover);
+  --color-link-focus-underline: var(--color-link-hover);
+
+  --color-text-primary: light-dark(var(--color-black), var(--color-white));
+  --color-text-secondary: light-dark(var(--color-neutral-600),
+      var(--color-neutral-200));
+
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
+  --codeblock-bg: var(--color-neutral-900);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+  font-weight: 500;
+  position: relative;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited-underline);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    color: var(--color-link-focus);
+    text-decoration-color: var(--color-link-focus-underline);
+  }
+
+  &:active {
+    top: 0.125rem;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}</style>
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>Bundling design tokens for Lit web components</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+
+  <div class="theme-switcher">
+    <theme-switch data-strategy="class"></theme-switch>
+  </div>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title" style="view-transition-name: bundling-design-tokens-for-lit-web-components">Bundling design tokens for Lit web components</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-09-21">21 September 2025</time></div>
+
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Bundling%20design%20tokens%20for%20Lit%20web%20components%20https://philparsons.co.uk//blog/bundling-lit-design-tokens/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/bundling-lit-design-tokens/&title=Bundling%20design%20tokens%20for%20Lit%20web%20components">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/bundling-lit-design-tokens/&text=Bundling%20design%20tokens%20for%20Lit%20web%20components&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.</p>
+    <h2>Pipeline structure and requirements</h2>
+<p>The build pipeline needs to carry styles from design tokens through to code in
+Lit web components. Creating a system that automates the build process using
+modern CSS features and providing a good developer experience with fast feedback
+can quickly become a gnarly mess of configuration files and custom build
+scripts.</p>
+<p>Consider the following requirements:</p>
+<ul>
+<li>Isolation of CSS custom properties in the element module and not in a root
+style sheet</li>
+<li>Styles exist only in CSS and don't require JavaScript to apply customisation</li>
+<li>Light and dark mode support via the <code>light-dark</code> CSS function</li>
+<li>Properties work in Lit <code>css</code> template literals without the need for
+<code>unsafeCSS</code></li>
+<li>Fast feedback loop with failed builds for any token changes not carried
+through to code</li>
+<li>Integration with TypeScript tooling and IDEs to provide autocompletion</li>
+<li>Documentation of element CSS properties in the custom element manifest</li>
+</ul>
+<h2>Design token architecture</h2>
+<p>Organising tokens in three layers with primitive and alias tokens in the first
+two layers and component tokens in the third, the first two layers get bundled
+into a root CSS file and component tokens bundled separately for the component
+modules.</p>
+<p>Take this basic example of the three token layers to apply the background color
+to a button.</p>
+<copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"$type"</span><span class="token operator">:</span> <span class="token string">"color"</span><span class="token punctuation">,</span>
+    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"This is the primitive green color palette"</span><span class="token punctuation">,</span>
+    <span class="token property">"green"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"500"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"surface"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"action"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"A semantic color for action surfaces"</span><span class="token punctuation">,</span>
+        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.green.500}"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"button"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Button specific tokens"</span><span class="token punctuation">,</span>
+    <span class="token property">"background-color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.surface.action}"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Building these tokens with Style Dictionary using the default format for CSS
+variables with output references, the output looks something like this:</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
+  <span class="token property">--color-green-500</span><span class="token punctuation">:</span> #00ff00<span class="token punctuation">;</span>
+  <span class="token property">--color-surface-action</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--color-green-500<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--color-surface-action<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>This works, but the component tokens should live with the component and not in
+the root style sheet.</p>
+<h2>Isolating component tokens</h2>
+<p>Isolating the tokens means that they only get included into the bundle when
+using that component within an app. Tools exist to remove unused CSS during the
+bundling phase but having the styles for a component local only to that module
+or package helps to reduce bundling overhead and provides better separation of
+concerns.</p>
+<p>To isolate component tokens into their respective modules the Style Dictionary
+configuration needs to reflect the token layers.</p>
+<p>To filter out component properties requires a function to match the tokens in
+those layers. This example uses the file system path but it could apply to any
+attribute of the token including extensions.</p>
+<p>In the configuration below the components exist in a separate directory and a
+check of the path removes them from the variables file.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"primitives/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"globals/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"components/**/*.json"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">platforms</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">css</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">transformGroup</span><span class="token operator">:</span> <span class="token string">"css"</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">buildPath</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">dist/</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token literal-property property">files</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token string">"variables.css"</span><span class="token punctuation">,</span>
+          <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token string">"css/variables"</span><span class="token punctuation">,</span>
+          <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token comment">// Filter out the components using the file path</span>
+          <span class="token function-variable function">filter</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">!</span>token<span class="token punctuation">.</span>filePath<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"components"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>Lit recommends using the static style prop for component styles for the best
+performance. Generating the properties in CSS format doesn't align with this and
+lacks a strong link between the token and the component implementation.</p>
+<p>The component tokens need generating as JavaScript variables for use in the
+static style property but this doesn't allow for customisation via CSS
+properties. Tokens in ECMAScript module format require use of the unsafeCSS
+function and hide the value from customisation through the global CSS
+properties, something like the need to create a more dense theme by reducing
+spacing variables in the global properties layer.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> buttonBackgroundColor <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Background color is generated as the raw color value #00ff00</span>
+  <span class="token keyword">static</span> styles <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    button {
+      background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">unsafeCSS</span><span class="token punctuation">(</span>buttonBackgroundColor<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
+    }
+  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Finding a middle ground and generating the button properties as CSS string
+exports from an ECMAScript module creates the strong link to the token while
+maintaining the layering hierarchy.</p>
+<p>Adding a custom format for Style Dictionary creates exports of the CSS
+properties with individual variable exports for use in style declarations. The
+format wraps each export with the <code>css</code> template string tag for use with Lit.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> StyleDictionary <span class="token keyword">from</span> <span class="token string">"style-dictionary"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> propertyFormatNames<span class="token punctuation">,</span> transforms <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/enums"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> formattedVariables <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/utils"</span><span class="token punctuation">;</span>
+
+StyleDictionary<span class="token punctuation">.</span><span class="token function">registerFormat</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"javascript/litCSS"</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">format</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> dictionary<span class="token punctuation">,</span> options <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">import { css } from 'lit';</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token comment">// Generate all properties for the host element</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">export const props = css\`:host {\n</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">formattedVariables</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        <span class="token literal-property property">format</span><span class="token operator">:</span> propertyFormatNames<span class="token punctuation">.</span>css<span class="token punctuation">,</span>
+        dictionary<span class="token punctuation">,</span>
+        outputReferences<span class="token punctuation">,</span>
+        <span class="token literal-property property">usesDtcg</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">\n}\`</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token comment">// Export js/CSS variable references for each property</span>
+      dictionary<span class="token punctuation">.</span>allTokens<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> nameCamel <span class="token operator">=</span> StyleDictionary<span class="token punctuation">.</span>hooks<span class="token punctuation">.</span>transforms<span class="token punctuation">[</span>
+          transforms<span class="token punctuation">.</span>nameCamel
+        <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> nameKebab <span class="token operator">=</span> StyleDictionary<span class="token punctuation">.</span>hooks<span class="token punctuation">.</span>transforms<span class="token punctuation">[</span>
+          transforms<span class="token punctuation">.</span>nameKebab
+        <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">export const </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameCamel<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> = css\`var(--</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameKebab<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)\`</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>To add TypeScript definitions, a similar format can export the same variables
+with the <code>CSSResultGroup</code> type from Lit or run the generated files through
+TypeScript.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> css <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// The props export contains the host selector with all of the component</span>
+<span class="token comment">// tokens with reference to the global tokens</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> props <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+  :host {
+    --button-background-color: var(--color-surface-action);
+  }
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token comment">// Individual token exports</span>
+<span class="token comment">// export const backgroundColor = css`var(--button-background-color)`</span></code></pre></copy-to-clipboard>
+<p>In the component, add the props to the component styles and reference the
+background color in the implementation.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> styles <span class="token keyword">from</span> <span class="token string">"./styles/button.js"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> styles <span class="token operator">=</span> <span class="token punctuation">[</span>
+    styles<span class="token punctuation">.</span>props<span class="token punctuation">,</span>
+    css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      button {
+        background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>styles<span class="token punctuation">.</span>backgroundColor<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
+      }
+    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>Overriding the component styles requires setting the property value at the
+element.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">my-button</span> <span class="token punctuation">{</span>
+  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>To provide a better developer experience the format could provide the component
+with unimplemented properties and an alias as default value.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// --button-background-color is open for implementation</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> props <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+  :host {
+    --background-color: var(
+      --button-background-color,
+      var(--color-surface-action)
+    );
+  }
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token comment">// export const backgroundColor = css`var(--background-color)`</span></code></pre></copy-to-clipboard>
+<p>This makes it possible to override the properties at other levels such as the
+app root.</p>
+<copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
+  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>Using the light-dark function for color schemes</h2>
+<p>To create light and dark themes each token requires two different values. A few
+approaches exist to structure the tokens for different color schemes but
+currently no single approach exists in the token specification or Style
+Dictionary.</p>
+<p>Exporting tokens from design tools like Figma tends to result in a full set of
+tokens for each mode. Processing these tokens with Style Dictionary results in
+two independent builds to produce separate style sheets, one for light and one
+for dark.</p>
+<p>To combine separate style sheets into one with the <code>light-dark</code> syntax requires
+a bit of post processing.</p>
+<p>Here's the Style Dictionary build for the separate builds.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// The list of components might come from a configuration file or a</span>
+<span class="token comment">// glob of the token JSON files</span>
+<span class="token keyword">const</span> components <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"button"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> mode <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"light"</span><span class="token punctuation">,</span> <span class="token string">"dark"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> sd <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StyleDictionary</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"primitives/**/*.json"</span><span class="token punctuation">,</span>
+      <span class="token string">"globals/**/*.json"</span><span class="token punctuation">,</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">theme/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">platforms</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">css</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">transformGroup</span><span class="token operator">:</span> <span class="token string">"css"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">buildPath</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">dist/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+        <span class="token literal-property property">files</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">{</span>
+            <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token string">"variables.css"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token string">"css/variables"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token comment">// Filter out the components using the file path</span>
+            <span class="token function-variable function">filter</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">!</span>token<span class="token punctuation">.</span>filePath<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"components"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token comment">// Build the JavaScript Lit CSS exports for each component</span>
+          <span class="token operator">...</span>components<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">component</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+            <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>component<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.js</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+            <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token string">"javascript/litCSS"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token function-variable function">filter</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> token<span class="token punctuation">.</span>filePath<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>component<span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> sd<span class="token punctuation">.</span><span class="token function">buildAllPlatforms</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<p>The resulting build has two directories, one for light and one for dark. A bit
+of pattern matching merges the tokens with light and dark values into the
+light-dark function to create a new variables style sheet.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> light <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/light/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> dark <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/dark/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> propertiesPattern <span class="token operator">=</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">(--[^:]+?):\s*([^;]+?);</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> lightDark <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Collect all light tokens</span>
+light<span class="token punctuation">.</span><span class="token function">matchAll</span><span class="token punctuation">(</span>propertiesPattern<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span><span class="token punctuation">,</span> prop<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Collect all dark tokens updating any existing light values</span>
+<span class="token comment">// that differ into the light-dark() syntax</span>
+dark<span class="token punctuation">.</span><span class="token function">matchAll</span><span class="token punctuation">(</span>propertiesPattern<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span><span class="token punctuation">,</span> prop<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span> <span class="token operator">!==</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">light-dark(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>lightDark<span class="token punctuation">[</span>prop<span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Create a new variables style sheet</span>
+<span class="token keyword">const</span> content <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">:root {
+</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>lightDark<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>prop<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">  </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>prop<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+}</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+<span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">writeFile</span><span class="token punctuation">(</span><span class="token string">"dist/variables.css"</span><span class="token punctuation">,</span> content<span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>Applying a similar approach to the Lit exports files for each component results
+in a single set of exports for both color schemes.</p>
+<h2>Documenting component properties</h2>
+<p>Using the custom elements manifest tooling you can generate component
+documentation. Including the CSS custom properties in the manifest requires
+JSDoc comments for each component.</p>
+<p>Rather than maintain these manually the manifest build can look up the component
+in tokens file and add them to the manifest using a plugin for the custom
+element manifest analyzer.</p>
+<copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"schemaVersion"</span><span class="token operator">:</span> <span class="token string">"1.0.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"javascript-module"</span><span class="token punctuation">,</span>
+      <span class="token property">"path"</span><span class="token operator">:</span> <span class="token string">"src/Button.ts"</span><span class="token punctuation">,</span>
+      <span class="token property">"declarations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"class"</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Button element."</span><span class="token punctuation">,</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Button"</span><span class="token punctuation">,</span>
+          <span class="token property">"superclass"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"LitElement"</span><span class="token punctuation">,</span>
+            <span class="token property">"package"</span><span class="token operator">:</span> <span class="token string">"lit"</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"tagName"</span><span class="token operator">:</span> <span class="token string">"my-button"</span><span class="token punctuation">,</span>
+          <span class="token property">"customElement"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+          <span class="token property">"cssProperties"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"--button-background-color"</span><span class="token punctuation">,</span>
+              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Button background color"</span><span class="token punctuation">,</span>
+              <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"exports"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"js"</span><span class="token punctuation">,</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Button"</span><span class="token punctuation">,</span>
+          <span class="token property">"declaration"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Button"</span><span class="token punctuation">,</span>
+            <span class="token property">"module"</span><span class="token operator">:</span> <span class="token string">"src/Button.ts"</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"custom-element-definition"</span><span class="token punctuation">,</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"my-button"</span><span class="token punctuation">,</span>
+          <span class="token property">"declaration"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Button"</span><span class="token punctuation">,</span>
+            <span class="token property">"module"</span><span class="token operator">:</span> <span class="token string">"src/Button.ts"</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre></copy-to-clipboard>
+<h2>What about feedback from visual testing</h2>
+<p>Visual regression testing can provide similar feedback but requires more time
+and tooling overhead. Build pipeline failures deliver immediate feedback to
+developers and complement visual regression tests. This approach also offers
+flexibility in property naming, such as changing the token prefix, and prevents
+unused or unimplemented variables from accumulating in the codebase.</p>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.3/min.js" defer=""></script>
+
+</body>
+
+</html>
