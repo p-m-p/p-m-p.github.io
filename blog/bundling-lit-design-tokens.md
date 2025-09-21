@@ -55,16 +55,19 @@ to a button.
       }
     },
     "surface": {
+      "$description": "Semantic for surface colors",
       "action": {
-        "$description": "A semantic color for action surfaces",
         "$value": "{color.green.500}"
       }
     }
   },
+
   "button": {
-    "$description": "Button specific tokens",
-    "background-color": {
-      "$value": "{color.surface.action}"
+    "$description": "Component tokens for the button element",
+    "background": {
+      "color": {
+        "$value": "{color.surface.action}"
+      }
     }
   }
 }
@@ -125,6 +128,8 @@ export default {
 };
 ```
 
+## Applying tokens to components
+
 Lit recommends using the static style prop for component styles for the best
 performance. Generating the properties in CSS format doesn't align with this and
 lacks a strong link between the token and the component implementation.
@@ -172,19 +177,21 @@ StyleDictionary.registerFormat({
       `export const props = css\`:host {\n${formattedVariables({
         format: propertyFormatNames.css,
         dictionary,
-        outputReferences,
+        outputReferences: true,
         usesDtcg: true,
-      })}\n}\``,
+      })}\n}\`;`,
       // Export js/CSS variable references for each property
       dictionary.allTokens.map((token) => {
+        // Remove the component name from the JS variable for cleaner exports
+        const [, ...path] = token.path;
         const nameCamel = StyleDictionary.hooks.transforms[
           transforms.nameCamel
-        ].transform(token, options);
+        ].transform({ ...token, path }, options);
         const nameKebab = StyleDictionary.hooks.transforms[
           transforms.nameKebab
         ].transform(token, options);
 
-        return `export const ${nameCamel} = css\`var(--${nameKebab})\``;
+        return `export const ${nameCamel} = css\`var(--${nameKebab})\`;`;
       }),
     ].join("\n\n");
   },
@@ -289,13 +296,13 @@ for (const mode of ["light", "dark"]) {
   const sd = new StyleDictionary({
     source: [
       "primitives/**/*.json",
-      "globals/**/*.json",
-      `theme/${mode}/**/*.json`,
+      `globals/${mode}/**/*.json`,
+      `components/${mode}/**/*.json`,
     ],
     platforms: {
       css: {
         transformGroup: "css",
-        buildPath: `dist/${mode}`,
+        buildPath: `dist/${mode}/`,
         files: [
           {
             destination: "variables.css",
