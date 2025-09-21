@@ -16,11 +16,11 @@ draft: true
 
 ## Pipeline structure and requirements
 
-The main goal of the pipeline is to carry styles from design tokens through to
-code in an automated way. Creating a system that automates the build process of
-components using modern CSS features and providing a good developer experience
-with fast feedback can quickly become a gnarly mess of configuration files and
-custom build scripts.
+The build pipeline needs to carry styles from design tokens through to code in
+Lit web components. Creating a system that automates the build process using
+modern CSS features and providing a good developer experience with fast feedback
+can quickly become a gnarly mess of configuration files and custom build
+scripts.
 
 Consider the following requirements:
 
@@ -37,13 +37,13 @@ Consider the following requirements:
 
 ## Design token architecture
 
-Organising the tokens into three layers with primitive and alias tokens in the
-first two layers and component tokens in the third the first two layers get
-bundled into a root CSS file and component tokens bundled with the component
-module.
+Organising tokens in three layers with primitive and alias tokens in the first
+two layers and component tokens in the third, the first two layers get bundled
+into a root CSS file and component tokens bundled separately for the component
+modules.
 
 Take this basic example of the three token layers to apply the background color
-to a button. The tokens use the Design Token Community Group format.
+to a button.
 
 ```json
 {
@@ -82,7 +82,7 @@ variables with output references, the output looks something like this:
 }
 ```
 
-This works, but the component tokens should ship with the component and not in
+This works, but the component tokens should live with the component and not in
 the root style sheet.
 
 ## Isolating component tokens
@@ -94,16 +94,14 @@ or package helps to reduce bundling overhead and provides better separation of
 concerns.
 
 To isolate component tokens into their respective modules the Style Dictionary
-configuration needs to reflect the token layers. Primitive and Global tokens get
-bundled together in a root style sheet and components into individual files.
+configuration needs to reflect the token layers.
 
-To filter out component properties so that the root style sheet only contains
-global styles, use a filter function to match the tokens in those layers. This
-example uses the file system path but you could also use any attribute of the
-token.
+To filter out component properties requires a function to match the tokens in
+those layers. This example uses the file system path but it could apply to any
+attribute of the token including extensions.
 
-In the configuration below the components exist in a separate directory and
-checking the path removes them from the variables file.
+In the configuration below the components exist in a separate directory and a
+check of the path removes them from the variables file.
 
 ```js
 export default {
@@ -128,23 +126,23 @@ export default {
 };
 ```
 
-Lit recommends using the static style prop for component styles. Generating the
-properties as CSS goes against this and doesn't provide a strong link between
-the token and the component implementation.
+Lit recommends using the static style prop for component styles for the best
+performance. Generating the properties in CSS format doesn't align with this and
+lacks a strong link between the token and the component implementation.
 
-Generating the component tokens as JavaScript variables makes this possible but
-doesn't allow for customisation via CSS properties.
-
-Component tokens generated in ECMAScript module format require use of the
-unsafeCSS function and hides the value from customisation through the global CSS
-properties. Consider an example of wanting to create a more dense theme by
-reducing spacing variables in the global properties.
+The component tokens need generating as JavaScript variables for use in the
+static style property but this doesn't allow for customisation via CSS
+properties. Tokens in ECMAScript module format require use of the unsafeCSS
+function and hide the value from customisation through the global CSS
+properties, something like the need to create a more dense theme by reducing
+spacing variables in the global properties layer.
 
 ```js
 import { LitElement, unsafeCSS } from "lit";
 import { buttonBackgroundColor } from "styles/button.js";
 
 export class Button extends LitElement {
+  // Background color is generated as the raw color value #00ff00
   static styles = css`
     button {
       background-color: ${unsafeCSS(buttonBackgroundColor)};
@@ -153,11 +151,13 @@ export class Button extends LitElement {
 }
 ```
 
-Generating the button properties as CSS string exports in a JavaScript module
-helps to create the strong link between the component and the token.
-Implementing a custom format for Style Dictionary creates an export of the CSS
-properties for the component with individual variable exports for use in style
-declarations. The format applies the `css` template string tag for use with Lit.
+Finding a middle ground and generating the button properties as CSS string
+exports from an ECMAScript module creates the strong link to the token while
+maintaining the layering hierarchy.
+
+Adding a custom format for Style Dictionary creates exports of the CSS
+properties with individual variable exports for use in style declarations. The
+format wraps each export with the `css` template string tag for use with Lit.
 
 ```js
 import StyleDictionary from "style-dictionary";
@@ -169,12 +169,14 @@ StyleDictionary.registerFormat({
   format: ({ dictionary, options }) => {
     return [
       `import { css } from 'lit';`,
+      // Generate all properties for the host element
       `export const props = css\`:host {\n${formattedVariables({
         format: propertyFormatNames.css,
         dictionary,
         outputReferences,
         usesDtcg: true,
       })}\n}\``,
+      // Export js/CSS variable references for each property
       dictionary.allTokens.map((token) => {
         const nameCamel = StyleDictionary.hooks.transforms[
           transforms.nameCamel
@@ -190,9 +192,9 @@ StyleDictionary.registerFormat({
 });
 ```
 
-The format results in a JavaScript file with the CSS string exports. To add
-TypeScript definitions, a similar format can export the same variables with the
-`CSSResultGroup` type from Lit or run the generated files through TypeScript.
+To add TypeScript definitions, a similar format can export the same variables
+with the `CSSResultGroup` type from Lit or run the generated files through
+TypeScript.
 
 ```js
 import { css } from "lit";
@@ -227,8 +229,8 @@ export class Button extends LitElement {
 }
 ```
 
-With this format, overriding the component styles requires setting the property
-value at the element.
+Overriding the component styles requires setting the property value at the
+element.
 
 ```css
 my-button {
@@ -236,10 +238,11 @@ my-button {
 }
 ```
 
-To provide a better developer experience the format can provide the component
+To provide a better developer experience the format could provide the component
 with unimplemented properties and an alias as default value.
 
 ```js
+// --button-background-color is open for implementation
 export const props = css`
   :host {
     --background-color: var(
@@ -263,21 +266,20 @@ app root.
 
 ## Using the light-dark function for color schemes
 
-To create light and dark themes each affected token requires two different
-values. A few approaches exist for how to structure the tokens for different
-color schemes but no recommended approach currently exists in the token
-specification or Style Dictionary.
+To create light and dark themes each token requires two different values. A few
+approaches exist to structure the tokens for different color schemes but
+currently no single approach exists in the token specification or Style
+Dictionary.
 
 Exporting tokens from design tools like Figma tends to result in a full set of
 tokens for each mode. Processing these tokens with Style Dictionary results in
 two independent builds to produce separate style sheets, one for light and one
-for dark. Naming the dark token categories with a prefix such as `dark:color`
-would allow processing both sets together but the export process doesn't support
-this well.
+for dark.
 
-The separate style sheets require a bit of post processing to combine into the
-`light-dark` syntax. Take this token build script for light and dark tokens
-sets.
+To combine separate style sheets into one with the `light-dark` syntax requires
+a bit of post processing.
+
+Here's the Style Dictionary build for the separate builds.
 
 ```js
 // The list of components might come from a configuration file or a
@@ -323,9 +325,9 @@ for (const mode of ["light", "dark"]) {
 }
 ```
 
-The build from Style Dictionary outputs two directories, one for light and one
-for dark. With a bit of pattern matching, combine the tokens with light and dark
-values into the light-dark function and save as a new variables style sheet.
+The resulting build has two directories, one for light and one for dark. A bit
+of pattern matching merges the tokens with light and dark values into the
+light-dark function to create a new variables style sheet.
 
 ```js
 const light = await fs.readFile("dist/light/variables.css", "utf-8");
@@ -359,51 +361,17 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 ```
 
 Applying a similar approach to the Lit exports files for each component results
-in a single set of exports for both color schemes. Include the `variables.css`
-file in the root app bundle while components reference the global properties
-from their isolated imports.
+in a single set of exports for both color schemes.
 
 ## Documenting component properties
 
-Using the custom elements manifest format and analyzer package, you can generate
-the component documentation from the source code. For the CSS custom properties
-to appear in the manifest, add them in the JS Doc comments for each component.
+Using the custom elements manifest tooling you can generate component
+documentation. Including the CSS custom properties in the manifest requires
+JSDoc comments for each component.
 
 Rather than maintain these manually the manifest build can look up the component
-in the generated tokens file and add them to the manifest. To simplify this
-lookup, add a JavaScript platform build that contains the tokens for the
-components.
-
-```js
-const config = {
-  /* Original config for the CSS platform */
-};
-
-// For light mode only build all of the tokens into a JavaScript module with types
-if (mode === "light") {
-  config.platforms.js = {
-    transformGroup: "js",
-    buildPath: "dist/",
-    files: [
-      {
-        destination: "tokens.js",
-        format: "javascript/esm",
-      },
-      {
-        destination: "tokens.d.ts",
-        format: "typescript/module-declarations",
-      },
-    ],
-  };
-}
-
-const sd = new StyleDictionary(config);
-await sd.buildAllPlatforms();
-```
-
-With a simple plugin for the custom element manifest analyzer, you can apply the
-CSS properties for the components from the full set of tokens in the
-packageLinkPhase.
+in tokens file and add them to the manifest using a plugin for the custom
+element manifest analyzer.
 
 ```json
 {
