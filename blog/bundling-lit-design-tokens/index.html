@@ -794,16 +794,19 @@ to a button.</p>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token property">"surface"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Semantic for surface colors"</span><span class="token punctuation">,</span>
       <span class="token property">"action"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"A semantic color for action surfaces"</span><span class="token punctuation">,</span>
         <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.green.500}"</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
   <span class="token property">"button"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Button specific tokens"</span><span class="token punctuation">,</span>
-    <span class="token property">"background-color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.surface.action}"</span>
+    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Component tokens for the button element"</span><span class="token punctuation">,</span>
+    <span class="token property">"background"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.surface.action}"</span>
+      <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
@@ -849,6 +852,7 @@ check of the path removes them from the variables file.</p>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Applying tokens to components</h2>
 <p>Lit recommends using the static style prop for component styles for the best
 performance. Generating the properties in CSS format doesn't align with this and
 lacks a strong link between the token and the component implementation.</p>
@@ -888,19 +892,21 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
       <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">export const props = css\`:host {\n</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">formattedVariables</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
         <span class="token literal-property property">format</span><span class="token operator">:</span> propertyFormatNames<span class="token punctuation">.</span>css<span class="token punctuation">,</span>
         dictionary<span class="token punctuation">,</span>
-        outputReferences<span class="token punctuation">,</span>
+        <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
         <span class="token literal-property property">usesDtcg</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">\n}\`</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">\n}\`;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
       <span class="token comment">// Export js/CSS variable references for each property</span>
       dictionary<span class="token punctuation">.</span>allTokens<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token comment">// Remove the component name from the JS variable for cleaner exports</span>
+        <span class="token keyword">const</span> <span class="token punctuation">[</span><span class="token punctuation">,</span> <span class="token operator">...</span>path<span class="token punctuation">]</span> <span class="token operator">=</span> token<span class="token punctuation">.</span>path<span class="token punctuation">;</span>
         <span class="token keyword">const</span> nameCamel <span class="token operator">=</span> StyleDictionary<span class="token punctuation">.</span>hooks<span class="token punctuation">.</span>transforms<span class="token punctuation">[</span>
           transforms<span class="token punctuation">.</span>nameCamel
-        <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token operator">...</span>token<span class="token punctuation">,</span> path <span class="token punctuation">}</span><span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">const</span> nameKebab <span class="token operator">=</span> StyleDictionary<span class="token punctuation">.</span>hooks<span class="token punctuation">.</span>transforms<span class="token punctuation">[</span>
           transforms<span class="token punctuation">.</span>nameKebab
         <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">export const </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameCamel<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> = css\`var(--</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameKebab<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)\`</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">export const </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameCamel<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> = css\`var(--</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nameKebab<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)\`;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -977,13 +983,13 @@ a bit of post processing.</p>
   <span class="token keyword">const</span> sd <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StyleDictionary</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span>
       <span class="token string">"primitives/**/*.json"</span><span class="token punctuation">,</span>
-      <span class="token string">"globals/**/*.json"</span><span class="token punctuation">,</span>
-      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">theme/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">globals/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">components/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
     <span class="token punctuation">]</span><span class="token punctuation">,</span>
     <span class="token literal-property property">platforms</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token literal-property property">css</span><span class="token operator">:</span> <span class="token punctuation">{</span>
         <span class="token literal-property property">transformGroup</span><span class="token operator">:</span> <span class="token string">"css"</span><span class="token punctuation">,</span>
-        <span class="token literal-property property">buildPath</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">dist/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+        <span class="token literal-property property">buildPath</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">dist/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
         <span class="token literal-property property">files</span><span class="token operator">:</span> <span class="token punctuation">[</span>
           <span class="token punctuation">{</span>
             <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token string">"variables.css"</span><span class="token punctuation">,</span>
