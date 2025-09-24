@@ -1103,12 +1103,15 @@ element manifest analyzer.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<h2>What about feedback from visual testing</h2>
-<p>Visual regression testing can provide similar feedback but requires more time
-and tooling overhead. Build pipeline failures deliver immediate feedback to
-developers and complement visual regression tests. This approach also offers
-flexibility in property naming, such as changing the token prefix, and prevents
-unused or unimplemented variables from accumulating in the codebase.</p>
+<h2>Feedback from visual regression testing</h2>
+<p>Visual regression testing provides similar feedback but requires more time,
+tooling, and potential cost overhead. Build pipeline failures deliver a more
+immediate feedback to developers and prevent visual regression tests from
+running unnecessarily.</p>
+<p>This approach also offers flexibility in property naming, such as changing the
+token prefix, and prevents unused or unimplemented variables from accumulating
+in the codebase. Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working
+code and <a href="https://github.com/lime-soda/web-components">this repository</a> for a design system integration.</p>
 
   </main>
 

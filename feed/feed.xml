@@ -360,12 +360,15 @@ element manifest analyzer.&lt;/p&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;h2&gt;What about feedback from visual testing&lt;/h2&gt;
-&lt;p&gt;Visual regression testing can provide similar feedback but requires more time
-and tooling overhead. Build pipeline failures deliver immediate feedback to
-developers and complement visual regression tests. This approach also offers
-flexibility in property naming, such as changing the token prefix, and prevents
-unused or unimplemented variables from accumulating in the codebase.&lt;/p&gt;
+&lt;h2&gt;Feedback from visual regression testing&lt;/h2&gt;
+&lt;p&gt;Visual regression testing provides similar feedback but requires more time,
+tooling, and potential cost overhead. Build pipeline failures deliver a more
+immediate feedback to developers and prevent visual regression tests from
+running unnecessarily.&lt;/p&gt;
+&lt;p&gt;This approach also offers flexibility in property naming, such as changing the
+token prefix, and prevents unused or unimplemented variables from accumulating
+in the codebase. Check out this &lt;a href=&quot;https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts&quot;&gt;brief example&lt;/a&gt; for some working
+code and &lt;a href=&quot;https://github.com/lime-soda/web-components&quot;&gt;this repository&lt;/a&gt; for a design system integration.&lt;/p&gt;
 </content>
   </entry>
   <entry>
