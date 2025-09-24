@@ -429,10 +429,18 @@ element manifest analyzer.
 }
 ```
 
-## What about feedback from visual testing
+## Feedback from visual regression testing
 
-Visual regression testing can provide similar feedback but requires more time
-and tooling overhead. Build pipeline failures deliver immediate feedback to
-developers and complement visual regression tests. This approach also offers
-flexibility in property naming, such as changing the token prefix, and prevents
-unused or unimplemented variables from accumulating in the codebase.
+Visual regression testing provides similar feedback but requires more time,
+tooling, and potential cost overhead. Build pipeline failures deliver a more
+immediate feedback to developers and prevent visual regression tests from
+running unnecessarily.
+
+This approach also offers flexibility in property naming, such as changing the
+token prefix, and prevents unused or unimplemented variables from accumulating
+in the codebase. Check out this [brief example][stackblitz] for some working
+code and [this repository][lime-soda] for a design system integration.
+
+[stackblitz]:
+  https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts
+[lime-soda]: https://github.com/lime-soda/web-components
