@@ -83,10 +83,10 @@ bundling phase but having the styles for a component local only to that module
 or package helps to reduce bundling overhead and provides better separation of
 concerns.&lt;/p&gt;
 &lt;p&gt;To isolate component tokens into their respective modules the Style Dictionary
-configuration needs to reflect the token layers.&lt;/p&gt;
-&lt;p&gt;To filter out component properties requires a function to match the tokens in
-those layers. This example uses the file system path but it could apply to any
-attribute of the token including extensions.&lt;/p&gt;
+configuration needs to reflect the token layers. Filtering out the component
+properties requires a filter function to match only the tokens in those layers.
+The example uses the file system path but it could apply to any attribute of the
+token including extensions.&lt;/p&gt;
 &lt;p&gt;In the configuration below the components exist in a separate directory and a
 check of the path removes them from the variables file.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -110,15 +110,16 @@ check of the path removes them from the variables file.&lt;/p&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;h2&gt;Applying tokens to components&lt;/h2&gt;
-&lt;p&gt;Lit recommends using the static style prop for component styles for the best
-performance. Generating the properties in CSS format doesn&#39;t align with this and
-lacks a strong link between the token and the component implementation.&lt;/p&gt;
+&lt;p&gt;Lit recommends &lt;a href=&quot;https://lit.dev/docs/components/styles/&quot;&gt;using the static style prop&lt;/a&gt; for component styles
+for the best performance. Generating the properties in CSS format doesn&#39;t align
+with this and lacks a strong link between the token and the component
+implementation.&lt;/p&gt;
 &lt;p&gt;The component tokens need generating as JavaScript variables for use in the
 static style property but this doesn&#39;t allow for customisation via CSS
-properties. Tokens in ECMAScript module format require use of the unsafeCSS
-function and hide the value from customisation through the global CSS
-properties, something like the need to create a more dense theme by reducing
-spacing variables in the global properties layer.&lt;/p&gt;
+properties. Tokens in ECMAScript module format require use of the &lt;code&gt;unsafeCSS&lt;/code&gt;
+function and hide the value from customisation through global CSS properties,
+something like the need to create a more dense theme by reducing spacing
+variables in the global properties layer.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; LitElement&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; unsafeCSS &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;lit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; buttonBackgroundColor &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;styles/button.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
@@ -130,12 +131,11 @@ spacing variables in the global properties layer.&lt;/p&gt;
     }
   &lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;Finding a middle ground and generating the button properties as CSS string
-exports from an ECMAScript module creates the strong link to the token while
-maintaining the layering hierarchy.&lt;/p&gt;
-&lt;p&gt;Adding a custom format for Style Dictionary creates exports of the CSS
-properties with individual variable exports for use in style declarations. The
-format wraps each export with the &lt;code&gt;css&lt;/code&gt; template string tag for use with Lit.&lt;/p&gt;
+&lt;p&gt;Generating the button properties as CSS string exports from an ECMAScript module
+creates a strong link to the token while maintaining the CSS layering hierarchy.&lt;/p&gt;
+&lt;p&gt;Adding a custom format for Style Dictionary creates an export of all the CSS
+properties with individual exports for use in style declarations. The format
+wraps each export with the &lt;code&gt;css&lt;/code&gt; template string tag for use with Lit.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; StyleDictionary &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;style-dictionary&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; propertyFormatNames&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; transforms &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;style-dictionary/enums&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; formattedVariables &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;style-dictionary/utils&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -169,8 +169,8 @@ StyleDictionary&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;p&gt;To add TypeScript definitions, a similar format can export the same variables
-with the &lt;code&gt;CSSResultGroup&lt;/code&gt; type from Lit or run the generated files through
-TypeScript.&lt;/p&gt;
+with the &lt;code&gt;CSSResultGroup&lt;/code&gt; type from Lit or run the generated files through the
+TypeScript compiler to generate declarations.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; css &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;lit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token comment&quot;&gt;// The props export contains the host selector with all of the component&lt;/span&gt;
@@ -182,9 +182,9 @@ TypeScript.&lt;/p&gt;
 &lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token comment&quot;&gt;// Individual token exports&lt;/span&gt;
-&lt;span class=&quot;token comment&quot;&gt;// export const backgroundColor = css`var(--button-background-color)`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;In the component, add the props to the component styles and reference the
-background color in the implementation.&lt;/p&gt;
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; backgroundColor &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; css&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;var(--button-background-color)&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
+&lt;p&gt;In the component, add the props to the component styles and reference them in
+the component styles implementation.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; styles &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./styles/button.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Button&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LitElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -202,7 +202,7 @@ element.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-css&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token selector&quot;&gt;my-button&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;--button-background-color&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; red&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;To provide a better developer experience the format could provide the component
+&lt;p&gt;To provide a better developer experience the format can provide the component
 with unimplemented properties and an alias as default value.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// --button-background-color is open for implementation&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; props &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; css&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;
@@ -214,7 +214,7 @@ with unimplemented properties and an alias as default value.&lt;/p&gt;
   }
 &lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-&lt;span class=&quot;token comment&quot;&gt;// export const backgroundColor = css`var(--background-color)`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; backgroundColor &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; css&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;var(--background-color)&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;p&gt;This makes it possible to override the properties at other levels such as the
 app root.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-css&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token selector&quot;&gt;:root&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -223,15 +223,15 @@ app root.&lt;/p&gt;
 &lt;h2&gt;Using the light-dark function for color schemes&lt;/h2&gt;
 &lt;p&gt;To create light and dark themes each token requires two different values. A few
 approaches exist to structure the tokens for different color schemes but
-currently no single approach exists in the token specification or Style
+currently no single approach exists in the &lt;a href=&quot;https://www.designtokens.org/tr/drafts/&quot;&gt;token specification&lt;/a&gt; or Style
 Dictionary.&lt;/p&gt;
-&lt;p&gt;Exporting tokens from design tools like Figma tends to result in a full set of
-tokens for each mode. Processing these tokens with Style Dictionary results in
-two independent builds to produce separate style sheets, one for light and one
-for dark.&lt;/p&gt;
-&lt;p&gt;To combine separate style sheets into one with the &lt;code&gt;light-dark&lt;/code&gt; syntax requires
-a bit of post processing.&lt;/p&gt;
-&lt;p&gt;Here&#39;s the Style Dictionary build for the separate builds.&lt;/p&gt;
+&lt;p&gt;Exporting tokens from design tools like [Figma][figman] or [Tokens
+Studio][tokens-studio] tends to result in a full set of tokens for each mode.
+Processing these tokens with Style Dictionary requires two independent builds to
+produce separate style sheets, one for light and one for dark.&lt;/p&gt;
+&lt;p&gt;To combine the separate style sheets into one with the &lt;code&gt;light-dark&lt;/code&gt; syntax
+requires a bit of post processing.&lt;/p&gt;
+&lt;p&gt;Consider this Style Dictionary build script to create the separate builds.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// The list of components might come from a configuration file or a&lt;/span&gt;
 &lt;span class=&quot;token comment&quot;&gt;// glob of the token JSON files&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; components &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -273,9 +273,9 @@ a bit of post processing.&lt;/p&gt;
 
   &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; sd&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;buildAllPlatforms&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;The resulting build has two directories, one for light and one for dark. A bit
-of pattern matching merges the tokens with light and dark values into the
-light-dark function to create a new variables style sheet.&lt;/p&gt;
+&lt;p&gt;The result creates two directories, one for light and one for dark. A bit of
+pattern matching merges the tokens with light and dark values into the
+light-dark function syntax to create a new variables style sheet.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; light &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;readFile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;dist/light/variables.css&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; dark &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;readFile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;dist/dark/variables.css&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
@@ -306,13 +306,12 @@ dark&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writeFile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;dist/variables.css&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;p&gt;Applying a similar approach to the Lit exports files for each component results
 in a single set of exports for both color schemes.&lt;/p&gt;
-&lt;h2&gt;Documenting component properties&lt;/h2&gt;
-&lt;p&gt;Using the custom elements manifest tooling you can generate component
+&lt;h2&gt;Automating CSS property documentation&lt;/h2&gt;
+&lt;p&gt;Using the &lt;a href=&quot;https://custom-elements-manifest.open-wc.org/analyzer/getting-started/&quot;&gt;custom elements manifest&lt;/a&gt; tooling you can generate component
 documentation. Including the CSS custom properties in the manifest requires
-JSDoc comments for each component.&lt;/p&gt;
-&lt;p&gt;Rather than maintain these manually the manifest build can look up the component
-in tokens file and add them to the manifest using a plugin for the custom
-element manifest analyzer.&lt;/p&gt;
+JSDoc &lt;code&gt;@cssproperty&lt;/code&gt; tags but rather than maintain these manually the manifest
+build can look up the component in tokens file and add them to the manifest
+using a plugin.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;schemaVersion&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;modules&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
@@ -360,15 +359,15 @@ element manifest analyzer.&lt;/p&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;h2&gt;Feedback from visual regression testing&lt;/h2&gt;
-&lt;p&gt;Visual regression testing provides similar feedback but requires more time,
-tooling, and potential cost overhead. Build pipeline failures deliver a more
-immediate feedback to developers and prevent visual regression tests from
-running unnecessarily.&lt;/p&gt;
-&lt;p&gt;This approach also offers flexibility in property naming, such as changing the
-token prefix, and prevents unused or unimplemented variables from accumulating
-in the codebase. Check out this &lt;a href=&quot;https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts&quot;&gt;brief example&lt;/a&gt; for some working
-code and &lt;a href=&quot;https://github.com/lime-soda/web-components&quot;&gt;this repository&lt;/a&gt; for a design system integration.&lt;/p&gt;
+&lt;h2&gt;Importance of fast feedback&lt;/h2&gt;
+&lt;p&gt;Feedback from &lt;a href=&quot;https://www.browserstack.com/percy/visual-regression-testing&quot;&gt;visual regression testing&lt;/a&gt; requires more time,
+tooling, and potential cost overhead than build failures pipeline failures that
+deliver a more immediate feedback to developers.&lt;/p&gt;
+&lt;p&gt;This approach provides this fast feedback and provides other benefits such as
+flexibility in property naming, maybe changing the token prefix, and prevents
+unused or unimplemented variables from accumulating in the codebase.&lt;/p&gt;
+&lt;p&gt;Check out this &lt;a href=&quot;https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts&quot;&gt;brief example&lt;/a&gt; for some working code and &lt;a href=&quot;https://github.com/lime-soda/web-components&quot;&gt;this
+repository&lt;/a&gt; for a design system integration.&lt;/p&gt;
 </content>
   </entry>
   <entry>

@@ -826,10 +826,10 @@ bundling phase but having the styles for a component local only to that module
 or package helps to reduce bundling overhead and provides better separation of
 concerns.</p>
 <p>To isolate component tokens into their respective modules the Style Dictionary
-configuration needs to reflect the token layers.</p>
-<p>To filter out component properties requires a function to match the tokens in
-those layers. This example uses the file system path but it could apply to any
-attribute of the token including extensions.</p>
+configuration needs to reflect the token layers. Filtering out the component
+properties requires a filter function to match only the tokens in those layers.
+The example uses the file system path but it could apply to any attribute of the
+token including extensions.</p>
 <p>In the configuration below the components exist in a separate directory and a
 check of the path removes them from the variables file.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
@@ -853,15 +853,16 @@ check of the path removes them from the variables file.</p>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Applying tokens to components</h2>
-<p>Lit recommends using the static style prop for component styles for the best
-performance. Generating the properties in CSS format doesn't align with this and
-lacks a strong link between the token and the component implementation.</p>
+<p>Lit recommends <a href="https://lit.dev/docs/components/styles/">using the static style prop</a> for component styles
+for the best performance. Generating the properties in CSS format doesn't align
+with this and lacks a strong link between the token and the component
+implementation.</p>
 <p>The component tokens need generating as JavaScript variables for use in the
 static style property but this doesn't allow for customisation via CSS
-properties. Tokens in ECMAScript module format require use of the unsafeCSS
-function and hide the value from customisation through the global CSS
-properties, something like the need to create a more dense theme by reducing
-spacing variables in the global properties layer.</p>
+properties. Tokens in ECMAScript module format require use of the <code>unsafeCSS</code>
+function and hide the value from customisation through global CSS properties,
+something like the need to create a more dense theme by reducing spacing
+variables in the global properties layer.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> buttonBackgroundColor <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
 
@@ -873,12 +874,11 @@ spacing variables in the global properties layer.</p>
     }
   </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>Finding a middle ground and generating the button properties as CSS string
-exports from an ECMAScript module creates the strong link to the token while
-maintaining the layering hierarchy.</p>
-<p>Adding a custom format for Style Dictionary creates exports of the CSS
-properties with individual variable exports for use in style declarations. The
-format wraps each export with the <code>css</code> template string tag for use with Lit.</p>
+<p>Generating the button properties as CSS string exports from an ECMAScript module
+creates a strong link to the token while maintaining the CSS layering hierarchy.</p>
+<p>Adding a custom format for Style Dictionary creates an export of all the CSS
+properties with individual exports for use in style declarations. The format
+wraps each export with the <code>css</code> template string tag for use with Lit.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> StyleDictionary <span class="token keyword">from</span> <span class="token string">"style-dictionary"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> propertyFormatNames<span class="token punctuation">,</span> transforms <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/enums"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> formattedVariables <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/utils"</span><span class="token punctuation">;</span>
@@ -912,8 +912,8 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <p>To add TypeScript definitions, a similar format can export the same variables
-with the <code>CSSResultGroup</code> type from Lit or run the generated files through
-TypeScript.</p>
+with the <code>CSSResultGroup</code> type from Lit or run the generated files through the
+TypeScript compiler to generate declarations.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> css <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
 
 <span class="token comment">// The props export contains the host selector with all of the component</span>
@@ -925,9 +925,9 @@ TypeScript.</p>
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
 <span class="token comment">// Individual token exports</span>
-<span class="token comment">// export const backgroundColor = css`var(--button-background-color)`</span></code></pre></copy-to-clipboard>
-<p>In the component, add the props to the component styles and reference the
-background color in the implementation.</p>
+<span class="token keyword">export</span> <span class="token keyword">const</span> backgroundColor <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--button-background-color)</span><span class="token template-punctuation string">`</span></span></code></pre></copy-to-clipboard>
+<p>In the component, add the props to the component styles and reference them in
+the component styles implementation.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> styles <span class="token keyword">from</span> <span class="token string">"./styles/button.js"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
@@ -945,7 +945,7 @@ element.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">my-button</span> <span class="token punctuation">{</span>
   <span class="token property">--button-background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>To provide a better developer experience the format could provide the component
+<p>To provide a better developer experience the format can provide the component
 with unimplemented properties and an alias as default value.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// --button-background-color is open for implementation</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> props <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
@@ -957,7 +957,7 @@ with unimplemented properties and an alias as default value.</p>
   }
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
-<span class="token comment">// export const backgroundColor = css`var(--background-color)`</span></code></pre></copy-to-clipboard>
+<span class="token keyword">export</span> <span class="token keyword">const</span> backgroundColor <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--background-color)</span><span class="token template-punctuation string">`</span></span></code></pre></copy-to-clipboard>
 <p>This makes it possible to override the properties at other levels such as the
 app root.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
@@ -966,15 +966,15 @@ app root.</p>
 <h2>Using the light-dark function for color schemes</h2>
 <p>To create light and dark themes each token requires two different values. A few
 approaches exist to structure the tokens for different color schemes but
-currently no single approach exists in the token specification or Style
+currently no single approach exists in the <a href="https://www.designtokens.org/tr/drafts/">token specification</a> or Style
 Dictionary.</p>
-<p>Exporting tokens from design tools like Figma tends to result in a full set of
-tokens for each mode. Processing these tokens with Style Dictionary results in
-two independent builds to produce separate style sheets, one for light and one
-for dark.</p>
-<p>To combine separate style sheets into one with the <code>light-dark</code> syntax requires
-a bit of post processing.</p>
-<p>Here's the Style Dictionary build for the separate builds.</p>
+<p>Exporting tokens from design tools like [Figma][figman] or [Tokens
+Studio][tokens-studio] tends to result in a full set of tokens for each mode.
+Processing these tokens with Style Dictionary requires two independent builds to
+produce separate style sheets, one for light and one for dark.</p>
+<p>To combine the separate style sheets into one with the <code>light-dark</code> syntax
+requires a bit of post processing.</p>
+<p>Consider this Style Dictionary build script to create the separate builds.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// The list of components might come from a configuration file or a</span>
 <span class="token comment">// glob of the token JSON files</span>
 <span class="token keyword">const</span> components <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"button"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -1016,9 +1016,9 @@ a bit of post processing.</p>
 
   <span class="token keyword">await</span> sd<span class="token punctuation">.</span><span class="token function">buildAllPlatforms</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>The resulting build has two directories, one for light and one for dark. A bit
-of pattern matching merges the tokens with light and dark values into the
-light-dark function to create a new variables style sheet.</p>
+<p>The result creates two directories, one for light and one for dark. A bit of
+pattern matching merges the tokens with light and dark values into the
+light-dark function syntax to create a new variables style sheet.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> light <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/light/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> dark <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/dark/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -1049,13 +1049,12 @@ dark<span class="token punctuation">.</span><span class="token function">matchAl
 <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">writeFile</span><span class="token punctuation">(</span><span class="token string">"dist/variables.css"</span><span class="token punctuation">,</span> content<span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <p>Applying a similar approach to the Lit exports files for each component results
 in a single set of exports for both color schemes.</p>
-<h2>Documenting component properties</h2>
-<p>Using the custom elements manifest tooling you can generate component
+<h2>Automating CSS property documentation</h2>
+<p>Using the <a href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/">custom elements manifest</a> tooling you can generate component
 documentation. Including the CSS custom properties in the manifest requires
-JSDoc comments for each component.</p>
-<p>Rather than maintain these manually the manifest build can look up the component
-in tokens file and add them to the manifest using a plugin for the custom
-element manifest analyzer.</p>
+JSDoc <code>@cssproperty</code> tags but rather than maintain these manually the manifest
+build can look up the component in tokens file and add them to the manifest
+using a plugin.</p>
 <copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"schemaVersion"</span><span class="token operator">:</span> <span class="token string">"1.0.0"</span><span class="token punctuation">,</span>
   <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -1103,15 +1102,15 @@ element manifest analyzer.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<h2>Feedback from visual regression testing</h2>
-<p>Visual regression testing provides similar feedback but requires more time,
-tooling, and potential cost overhead. Build pipeline failures deliver a more
-immediate feedback to developers and prevent visual regression tests from
-running unnecessarily.</p>
-<p>This approach also offers flexibility in property naming, such as changing the
-token prefix, and prevents unused or unimplemented variables from accumulating
-in the codebase. Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working
-code and <a href="https://github.com/lime-soda/web-components">this repository</a> for a design system integration.</p>
+<h2>Importance of fast feedback</h2>
+<p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time,
+tooling, and potential cost overhead than build failures pipeline failures that
+deliver a more immediate feedback to developers.</p>
+<p>This approach provides this fast feedback and provides other benefits such as
+flexibility in property naming, maybe changing the token prefix, and prevents
+unused or unimplemented variables from accumulating in the codebase.</p>
+<p>Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working code and <a href="https://github.com/lime-soda/web-components">this
+repository</a> for a design system integration.</p>
 
   </main>
 
