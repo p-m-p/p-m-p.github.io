@@ -213,7 +213,7 @@ export const props = css`
 `;
 
 // Individual token exports
-// export const backgroundColor = css`var(--button-background-color)`
+export const backgroundColor = css`var(--button-background-color)`
 ```
 
 In the component, add the props to the component styles and reference them in
@@ -257,7 +257,7 @@ export const props = css`
   }
 `;
 
-// export const backgroundColor = css`var(--background-color)`
+export const backgroundColor = css`var(--background-color)`
 ```
 
 This makes it possible to override the properties at other levels such as the
