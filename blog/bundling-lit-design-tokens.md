@@ -1,10 +1,11 @@
 ---
 title: Bundling design tokens for Lit web components
 description:
-  Building a scalable design token pipeline for Lit components requires
-  balancing automation with developer experience. Here's how to isolate
-  component styles, generate type-safe tokens, and support light-dark themes
-  with Style Dictionary.
+  Building a design token pipeline that keeps component styles isolated while
+  generating type-safe JavaScript exports and supporting light-dark color
+  schemes requires balancing automation with flexibility. This post demonstrates
+  a Style Dictionary approach that maintains CSS customization without sacrificing
+  performance or developer experience.
 tags:
   - posts
   - web components
@@ -114,7 +115,7 @@ export default {
 
 ## Applying tokens to components
 
-Lit recommends [using the static style prop][lit-styles] for component styles to achieve the best performance. But generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.
+Lit recommends [using the static style prop][lit-styles] for component styles to achieve the best performance. Generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.
 
 You must generate component tokens as JavaScript variables for use in the static style property, but this approach doesn't allow for customization via CSS properties. Tokens in ECMAScript module format require the `unsafeCSS` function and hide the value from customization through global CSS properties. This prevents scenarios like creating a more dense theme by reducing spacing variables in the global properties layer.
 
@@ -380,7 +381,7 @@ Using the [custom elements manifest][cem] tooling, you can generate component do
 }
 ```
 
-## Importance of fast feedback
+## Build failures deliver fast feedback
 
 Feedback from [visual regression testing][visual-testing] requires more time, tooling, and potential cost overhead than build pipeline failures that deliver more immediate feedback to developers.
 
