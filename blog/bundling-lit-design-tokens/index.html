@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bundling design tokens for Lit web components</title>
-  <meta name="description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta name="description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="og:title" content="Bundling design tokens for Lit web components">
-  <meta property="og:description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta property="og:description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="twitter:title" content="Bundling design tokens for Lit web components">
-  <meta property="twitter:description" content="Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.">
+  <meta property="twitter:description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -757,7 +757,7 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">Building a scalable design token pipeline for Lit components requires balancing automation with developer experience. Here&#39;s how to isolate component styles, generate type-safe tokens, and support light-dark themes with Style Dictionary.</p>
+    <p class="post-description">Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.</p>
     <h2>Pipeline structure and requirements</h2>
 <p>The build pipeline needs to carry styles from design tokens through to code in
 Lit web components. Creating a system that automates the build process using
@@ -838,7 +838,7 @@ through to code</li>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Applying tokens to components</h2>
-<p>Lit recommends <a href="https://lit.dev/docs/components/styles/">using the static style prop</a> for component styles to achieve the best performance. But generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.</p>
+<p>Lit recommends <a href="https://lit.dev/docs/components/styles/">using the static style prop</a> for component styles to achieve the best performance. Generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.</p>
 <p>You must generate component tokens as JavaScript variables for use in the static style property, but this approach doesn't allow for customization via CSS properties. Tokens in ECMAScript module format require the <code>unsafeCSS</code> function and hide the value from customization through global CSS properties. This prevents scenarios like creating a more dense theme by reducing spacing variables in the global properties layer.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> buttonBackgroundColor <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
@@ -1056,7 +1056,7 @@ dark<span class="token punctuation">.</span><span class="token function">matchAl
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<h2>Importance of fast feedback</h2>
+<h2>Build failures deliver fast feedback</h2>
 <p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time, tooling, and potential cost overhead than build pipeline failures that deliver more immediate feedback to developers.</p>
 <p>This approach provides fast feedback and offers other benefits, such as flexibility in property naming (including changing the token prefix) and preventing unused or unimplemented variables from accumulating in the codebase.</p>
 <p>Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working code and <a href="https://github.com/lime-soda/web-components">this
