@@ -96,11 +96,10 @@ or package helps to reduce bundling overhead and provides better separation of
 concerns.
 
 To isolate component tokens into their respective modules the Style Dictionary
-configuration needs to reflect the token layers.
-
-To filter out component properties requires a function to match the tokens in
-those layers. This example uses the file system path but it could apply to any
-attribute of the token including extensions.
+configuration needs to reflect the token layers. Filtering out the component
+properties requires a filter function to match only the tokens in those layers.
+The example uses the file system path but it could apply to any attribute of the
+token including extensions.
 
 In the configuration below the components exist in a separate directory and a
 check of the path removes them from the variables file.
@@ -130,16 +129,17 @@ export default {
 
 ## Applying tokens to components
 
-Lit recommends using the static style prop for component styles for the best
-performance. Generating the properties in CSS format doesn't align with this and
-lacks a strong link between the token and the component implementation.
+Lit recommends [using the static style prop][lit-styles] for component styles
+for the best performance. Generating the properties in CSS format doesn't align
+with this and lacks a strong link between the token and the component
+implementation.
 
 The component tokens need generating as JavaScript variables for use in the
 static style property but this doesn't allow for customisation via CSS
-properties. Tokens in ECMAScript module format require use of the unsafeCSS
-function and hide the value from customisation through the global CSS
-properties, something like the need to create a more dense theme by reducing
-spacing variables in the global properties layer.
+properties. Tokens in ECMAScript module format require use of the `unsafeCSS`
+function and hide the value from customisation through global CSS properties,
+something like the need to create a more dense theme by reducing spacing
+variables in the global properties layer.
 
 ```js
 import { LitElement, unsafeCSS } from "lit";
@@ -155,13 +155,12 @@ export class Button extends LitElement {
 }
 ```
 
-Finding a middle ground and generating the button properties as CSS string
-exports from an ECMAScript module creates the strong link to the token while
-maintaining the layering hierarchy.
+Generating the button properties as CSS string exports from an ECMAScript module
+creates a strong link to the token while maintaining the CSS layering hierarchy.
 
-Adding a custom format for Style Dictionary creates exports of the CSS
-properties with individual variable exports for use in style declarations. The
-format wraps each export with the `css` template string tag for use with Lit.
+Adding a custom format for Style Dictionary creates an export of all the CSS
+properties with individual exports for use in style declarations. The format
+wraps each export with the `css` template string tag for use with Lit.
 
 ```js
 import StyleDictionary from "style-dictionary";
@@ -199,8 +198,8 @@ StyleDictionary.registerFormat({
 ```
 
 To add TypeScript definitions, a similar format can export the same variables
-with the `CSSResultGroup` type from Lit or run the generated files through
-TypeScript.
+with the `CSSResultGroup` type from Lit or run the generated files through the
+TypeScript compiler to generate declarations.
 
 ```js
 import { css } from "lit";
@@ -217,8 +216,8 @@ export const props = css`
 // export const backgroundColor = css`var(--button-background-color)`
 ```
 
-In the component, add the props to the component styles and reference the
-background color in the implementation.
+In the component, add the props to the component styles and reference them in
+the component styles implementation.
 
 ```js
 import * as styles from "./styles/button.js";
@@ -244,7 +243,7 @@ my-button {
 }
 ```
 
-To provide a better developer experience the format could provide the component
+To provide a better developer experience the format can provide the component
 with unimplemented properties and an alias as default value.
 
 ```js
@@ -274,18 +273,18 @@ app root.
 
 To create light and dark themes each token requires two different values. A few
 approaches exist to structure the tokens for different color schemes but
-currently no single approach exists in the token specification or Style
+currently no single approach exists in the [token specification][dtcg] or Style
 Dictionary.
 
-Exporting tokens from design tools like Figma tends to result in a full set of
-tokens for each mode. Processing these tokens with Style Dictionary results in
-two independent builds to produce separate style sheets, one for light and one
-for dark.
+Exporting tokens from design tools like [Figma][figman] or [Tokens
+Studio][tokens-studio] tends to result in a full set of tokens for each mode.
+Processing these tokens with Style Dictionary requires two independent builds to
+produce separate style sheets, one for light and one for dark.
 
-To combine separate style sheets into one with the `light-dark` syntax requires
-a bit of post processing.
+To combine the separate style sheets into one with the `light-dark` syntax
+requires a bit of post processing.
 
-Here's the Style Dictionary build for the separate builds.
+Consider this Style Dictionary build script to create the separate builds.
 
 ```js
 // The list of components might come from a configuration file or a
@@ -331,9 +330,9 @@ for (const mode of ["light", "dark"]) {
 }
 ```
 
-The resulting build has two directories, one for light and one for dark. A bit
-of pattern matching merges the tokens with light and dark values into the
-light-dark function to create a new variables style sheet.
+The result creates two directories, one for light and one for dark. A bit of
+pattern matching merges the tokens with light and dark values into the
+light-dark function syntax to create a new variables style sheet.
 
 ```js
 const light = await fs.readFile("dist/light/variables.css", "utf-8");
@@ -369,15 +368,13 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 Applying a similar approach to the Lit exports files for each component results
 in a single set of exports for both color schemes.
 
-## Documenting component properties
+## Automating CSS property documentation
 
-Using the custom elements manifest tooling you can generate component
+Using the [custom elements manifest][cem] tooling you can generate component
 documentation. Including the CSS custom properties in the manifest requires
-JSDoc comments for each component.
-
-Rather than maintain these manually the manifest build can look up the component
-in tokens file and add them to the manifest using a plugin for the custom
-element manifest analyzer.
+JSDoc `@cssproperty` tags but rather than maintain these manually the manifest
+build can look up the component in tokens file and add them to the manifest
+using a plugin.
 
 ```json
 {
@@ -429,18 +426,23 @@ element manifest analyzer.
 }
 ```
 
-## Feedback from visual regression testing
+## Importance of fast feedback
 
-Visual regression testing provides similar feedback but requires more time,
-tooling, and potential cost overhead. Build pipeline failures deliver a more
-immediate feedback to developers and prevent visual regression tests from
-running unnecessarily.
+Feedback from [visual regression testing][visual-testing] requires more time,
+tooling, and potential cost overhead than build failures pipeline failures that
+deliver a more immediate feedback to developers.
 
-This approach also offers flexibility in property naming, such as changing the
-token prefix, and prevents unused or unimplemented variables from accumulating
-in the codebase. Check out this [brief example][stackblitz] for some working
-code and [this repository][lime-soda] for a design system integration.
+This approach provides this fast feedback and provides other benefits such as
+flexibility in property naming, maybe changing the token prefix, and prevents
+unused or unimplemented variables from accumulating in the codebase.
 
+Check out this [brief example][stackblitz] for some working code and [this
+repository][lime-soda] for a design system integration.
+
+[cem]: https://custom-elements-manifest.open-wc.org/analyzer/getting-started/
+[dtcg]: https://www.designtokens.org/tr/drafts/
+[lit-styles]: https://lit.dev/docs/components/styles/
 [stackblitz]:
   https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts
 [lime-soda]: https://github.com/lime-soda/web-components
+[visual-testing]: https://www.browserstack.com/percy/visual-regression-testing
