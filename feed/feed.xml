@@ -130,7 +130,7 @@ component implementation.&lt;/p&gt;
 &lt;p&gt;Generating tokens in ECMAScript module format for use with Lit require the
 &lt;a href=&quot;https://lit.dev/docs/api/styles/#unsafeCSS&quot;&gt;&lt;code&gt;unsafeCSS&lt;/code&gt;&lt;/a&gt; function and prevents customization through CSS
 properties.&lt;/p&gt;
-&lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; LitElement&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; unsafeCSS &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;lit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; LitElement&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; css&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; unsafeCSS &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;lit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; primaryBackground &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;styles/button.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Button&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LitElement&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -235,11 +235,10 @@ app root.&lt;/p&gt;
 approaches exist to structure tokens for different color schemes, but currently
 no standardized approach exists in the &lt;a href=&quot;https://www.designtokens.org/tr/drafts/&quot;&gt;token specification&lt;/a&gt; or Style
 Dictionary.&lt;/p&gt;
-&lt;p&gt;Exporting tokens from design tools like [Figma][figman] or [Tokens
-Studio][tokens-studio] tends to result in a full set of tokens for each mode at
-the theme and component tiers. Processing these tokens with Style Dictionary
-requires two independent builds to produce separate style sheets: one for light
-and one for dark.&lt;/p&gt;
+&lt;p&gt;Exporting tokens from design tools like Figma or &lt;a href=&quot;https://tokens.studio/&quot;&gt;Tokens Studio&lt;/a&gt;
+tends to result in a full set of tokens for each mode at the theme and component
+tiers. Processing these tokens with Style Dictionary requires two independent
+builds to produce separate style sheets: one for light and one for dark.&lt;/p&gt;
 &lt;p&gt;To combine the separate style sheets into one with the &lt;code&gt;light-dark&lt;/code&gt; syntax
 requires some post-processing.&lt;/p&gt;
 &lt;p&gt;Here&#39;s a Style Dictionary build script that creates the separate builds:&lt;/p&gt;

@@ -873,7 +873,7 @@ component implementation.</p>
 <p>Generating tokens in ECMAScript module format for use with Lit require the
 <a href="https://lit.dev/docs/api/styles/#unsafeCSS"><code>unsafeCSS</code></a> function and prevents customization through CSS
 properties.</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> css<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> primaryBackground <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
@@ -978,11 +978,10 @@ app root.</p>
 approaches exist to structure tokens for different color schemes, but currently
 no standardized approach exists in the <a href="https://www.designtokens.org/tr/drafts/">token specification</a> or Style
 Dictionary.</p>
-<p>Exporting tokens from design tools like [Figma][figman] or [Tokens
-Studio][tokens-studio] tends to result in a full set of tokens for each mode at
-the theme and component tiers. Processing these tokens with Style Dictionary
-requires two independent builds to produce separate style sheets: one for light
-and one for dark.</p>
+<p>Exporting tokens from design tools like Figma or <a href="https://tokens.studio/">Tokens Studio</a>
+tends to result in a full set of tokens for each mode at the theme and component
+tiers. Processing these tokens with Style Dictionary requires two independent
+builds to produce separate style sheets: one for light and one for dark.</p>
 <p>To combine the separate style sheets into one with the <code>light-dark</code> syntax
 requires some post-processing.</p>
 <p>Here's a Style Dictionary build script that creates the separate builds:</p>
