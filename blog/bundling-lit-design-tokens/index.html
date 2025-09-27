@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bundling design tokens for Lit web components</title>
-  <meta name="description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
+  <meta name="description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="og:title" content="Bundling design tokens for Lit web components">
-  <meta property="og:description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
+  <meta property="og:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="twitter:title" content="Bundling design tokens for Lit web components">
-  <meta property="twitter:description" content="Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.">
+  <meta property="twitter:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -757,13 +757,18 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">Building a design token pipeline that keeps component styles isolated while generating type-safe JavaScript exports and supporting light-dark color schemes requires balancing automation with flexibility. This post demonstrates a Style Dictionary approach that maintains CSS customization without sacrificing performance or developer experience.</p>
+    <p class="post-description">Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.</p>
     <h2>Pipeline structure and requirements</h2>
-<p>The build pipeline needs to carry styles from design tokens through to code in
-Lit web components. Creating a system that automates the build process using
-modern CSS features while providing a good developer experience with fast feedback
-can quickly become a complex mess of configuration files and custom build
-scripts.</p>
+<p>The <a href="https://styledictionary.com/">Style Dictionary</a> build transforms styles from design
+tokens in <a href="https://www.designtokens.org/tr/drafts/">JSON format</a> through to code for use in <a href="https://lit.dev/">Lit</a> web
+components. The library comes with built in formats to generate tokens for
+different platforms but there doesn't yet seem to be a standard approach for
+combining light and dark color schemes into a single set of tokens that use the
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark"><code>light-dark</code></a> CSS function.</p>
+<p>It is possible to create a system that automates the build process to use this
+modern CSS feature thanks to the flexible API that Style Dictionary provides.
+Here's one approach that combines CSS and JavaScript to provide CSS tokens for
+use in Lit components.</p>
 <p>Consider the following requirements:</p>
 <ul>
 <li>Isolation of CSS custom properties in the element module and not in a root
@@ -778,47 +783,70 @@ through to code</li>
 <li>Documentation of element CSS properties in the custom element manifest</li>
 </ul>
 <h2>Design token architecture</h2>
-<p>Organize design tokens in three layers. The first two layers contain primitive and alias tokens, while the third layer contains component tokens. The build process bundles the first two layers into a root CSS file and bundles component tokens separately for their respective component modules.</p>
-<p>Here's a basic example showing how the three token layers work together to apply a background color to a button:</p>
+<p>For this example the design tokens are organized into <a href="https://bradfrost.com/blog/post/creating-themeable-design-systems/">three
+tiers</a>. The first two tiers contain primitive and semantic
+tokens, while the third tier contains component tokens. The build process
+bundles the first two layers into a root CSS file for inclusion in the app root
+and bundles component tokens separately for their respective component modules.</p>
+<p>Here's a basic example showing how the three token tiers work together to apply
+a background color to a button. In most cases the light and dark variants of a
+token exist in the theme tier but they may also appear in components.</p>
 <copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"$type"</span><span class="token operator">:</span> <span class="token string">"color"</span><span class="token punctuation">,</span>
-    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"This is the primitive green color palette"</span><span class="token punctuation">,</span>
-    <span class="token property">"green"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"500"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"This is the color palette definitions"</span><span class="token punctuation">,</span>
+    <span class="token property">"brand"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"green"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
         <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span>
       <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"surface"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Semantic for surface colors"</span><span class="token punctuation">,</span>
-      <span class="token property">"action"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.green.500}"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  <span class="token property">"theme"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$type"</span><span class="token operator">:</span> <span class="token string">"color"</span><span class="token punctuation">,</span>
+      <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Theme color tokens alias the definitions"</span><span class="token punctuation">,</span>
+      <span class="token property">"primary"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"background"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.brand.green}"</span>
+        <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 
   <span class="token property">"button"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Component tokens for the button element"</span><span class="token punctuation">,</span>
-    <span class="token property">"background"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{color.surface.action}"</span>
+    <span class="token property">"$description"</span><span class="token operator">:</span> <span class="token string">"Component tokens for the button element reference the theme"</span><span class="token punctuation">,</span>
+    <span class="token property">"primary"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"background"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"$type"</span><span class="token operator">:</span> <span class="token string">"color"</span><span class="token punctuation">,</span>
+        <span class="token property">"$value"</span><span class="token operator">:</span> <span class="token string">"{theme.color.primary.background}"</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>When building these tokens with Style Dictionary using the default format for CSS variables with output references, the generated output looks like this:</p>
+<p>Building these tokens with Style Dictionary using the default format for CSS
+variables using output references, the generated output looks like this:</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
-  <span class="token property">--color-green-500</span><span class="token punctuation">:</span> #00ff00<span class="token punctuation">;</span>
-  <span class="token property">--color-surface-action</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--color-green-500<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--color-surface-action<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--color-brand-green</span><span class="token punctuation">:</span> #00ff00<span class="token punctuation">;</span>
+  <span class="token property">--theme-color-primary-background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--color-brand-green<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--button-primary-background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--theme-color-primary-background<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>This approach works, but it has a problem: component tokens should live with their respective components, not in the root style sheet.</p>
 <h2>Isolating component tokens</h2>
-<p>Isolating the tokens means they only get included in the bundle when using that component within an app. While tools exist to remove unused CSS during the bundling phase, keeping component styles local to their module or package helps reduce bundling overhead and provides better separation of concerns.</p>
-<p>To isolate component tokens into their respective modules, the Style Dictionary configuration needs to reflect the token layers. Filtering out the component properties requires a filter function to match only the tokens in those layers. The following example uses the file system path, but this approach could apply to any token attribute, including extensions.</p>
-<p>In the configuration below, components exist in a separate directory, and a path check removes them from the variables file:</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"primitives/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"globals/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"components/**/*.json"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<p>Isolating the component tokens means they only get bundled or loaded when using
+that component within an app. While tools exist to remove unused CSS during the
+bundling phase, keeping component styles local to their module or package helps
+reduce overhead and provides better separation of concerns.</p>
+<p>To achieve this isolation the Style Dictionary build configuration needs to
+respect the three token tiers. Filtering the component properties out of the
+root style sheet requires a function to include only the tokens in those tiers.</p>
+<p>This example uses the file system path, but this approach could apply to any
+token attribute, including <a href="https://www.designtokens.org/tr/drafts/format/#extensions">extensions</a>. The components exist
+in a separate directory, and a path check removes them from the root variables
+file:</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> StyleDictionary <span class="token keyword">from</span> <span class="token string">"style-dictionary"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> sd <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StyleDictionary</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"definitions/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"theme/**/*.json"</span><span class="token punctuation">,</span> <span class="token string">"components/**/*.json"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token literal-property property">platforms</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">css</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token literal-property property">transformGroup</span><span class="token operator">:</span> <span class="token string">"css"</span><span class="token punctuation">,</span>
@@ -830,29 +858,38 @@ through to code</li>
           <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
             <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
           <span class="token punctuation">}</span><span class="token punctuation">,</span>
-          <span class="token comment">// Filter out the components using the file path</span>
+          <span class="token comment">// Filter out the components using the token file path</span>
           <span class="token function-variable function">filter</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">!</span>token<span class="token punctuation">.</span>filePath<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"components"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
         <span class="token punctuation">}</span><span class="token punctuation">,</span>
       <span class="token punctuation">]</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Applying tokens to components</h2>
-<p>Lit recommends <a href="https://lit.dev/docs/components/styles/">using the static style prop</a> for component styles to achieve the best performance. Generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.</p>
-<p>You must generate component tokens as JavaScript variables for use in the static style property, but this approach doesn't allow for customization via CSS properties. Tokens in ECMAScript module format require the <code>unsafeCSS</code> function and hide the value from customization through global CSS properties. This prevents scenarios like creating a more dense theme by reducing spacing variables in the global properties layer.</p>
+<p>Lit recommends <a href="https://lit.dev/docs/components/styles/">using the static style prop</a> for component styles to
+achieve the best performance. Generating properties in CSS format doesn't align
+with this recommendation and lacks a strong link between the token and the
+component implementation.</p>
+<p>Generating tokens in ECMAScript module format for use with Lit require the
+<a href="https://lit.dev/docs/api/styles/#unsafeCSS"><code>unsafeCSS</code></a> function and prevents customization through CSS
+properties.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> LitElement<span class="token punctuation">,</span> unsafeCSS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> buttonBackgroundColor <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> primaryBackground <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"styles/button.js"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
   <span class="token comment">// Background color is generated as the raw color value #00ff00</span>
   <span class="token keyword">static</span> styles <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
     button {
-      background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">unsafeCSS</span><span class="token punctuation">(</span>buttonBackgroundColor<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
+      background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">unsafeCSS</span><span class="token punctuation">(</span>primaryBackground<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
     }
   </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>A better approach is generating button properties as CSS string exports from an ECMAScript module. This creates a strong link to the token while maintaining the CSS layering hierarchy.</p>
-<p>Adding a custom format for Style Dictionary creates an export of all CSS properties with individual exports for use in style declarations. The format wraps each export with the <code>css</code> template string tag for use with Lit:</p>
+<p>A better approach is generating button properties as CSS string exports from an
+ECMAScript module. This creates a strong link to the token while keeping CSS as
+the source of truth for styling.</p>
+<p>Adding a custom format for Style Dictionary creates an export of all CSS
+properties with individual exports for use in style declarations. The format
+wraps each export with the <code>css</code> template string tag for use with Lit.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> StyleDictionary <span class="token keyword">from</span> <span class="token string">"style-dictionary"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> propertyFormatNames<span class="token punctuation">,</span> transforms <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/enums"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> formattedVariables <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"style-dictionary/utils"</span><span class="token punctuation">;</span>
@@ -885,56 +922,69 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
     <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>To add TypeScript definitions, create a similar format that exports the same variables with the <code>CSSResultGroup</code> type from Lit, or run the generated files through the TypeScript compiler to generate declarations.</p>
+<p>Save the files as JavaScript or TypeScript resulting in a module like this for
+the button element.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> css <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
 
-<span class="token comment">// The props export contains the host selector with all of the component</span>
-<span class="token comment">// tokens with reference to the global tokens</span>
+<span class="token comment">// The props export contains the host selector with all of the component properties</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> props <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
   :host {
-    --button-background-color: var(--color-surface-action);
+    --button-primary-background: var(--theme-color-primary-background);
   }
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
 <span class="token comment">// Individual token exports</span>
-<span class="token keyword">export</span> <span class="token keyword">const</span> backgroundColor <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--button-background-color)</span><span class="token template-punctuation string">`</span></span></code></pre></copy-to-clipboard>
-<p>In the component, add the props to the component styles and reference them in the component styles implementation:</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> styles <span class="token keyword">from</span> <span class="token string">"./styles/button.js"</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> primaryBackground <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--button-primary-background)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>In the component, add the props to the component styles and reference them in
+the component styles implementation:</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> props<span class="token punctuation">,</span> primaryBackground <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"./styles/button.js"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">Button</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
   <span class="token keyword">static</span> styles <span class="token operator">=</span> <span class="token punctuation">[</span>
-    styles<span class="token punctuation">.</span>props<span class="token punctuation">,</span>
+    props<span class="token punctuation">,</span>
     css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
-      button {
-        background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>styles<span class="token punctuation">.</span>backgroundColor<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
+      .primary {
+        background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>primaryBackground<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
       }
     </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
   <span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>To override the component styles, set the property value at the element:</p>
+<p>To override the component styles, set the property value at the element.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">my-button</span> <span class="token punctuation">{</span>
-  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+  <span class="token property">--button-primary-background</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>To provide a better developer experience, the format can provide the component with unimplemented properties and an alias as the default value:</p>
-<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// --button-background-color is open for implementation</span>
+<p>To provide a better developer experience, the format can provide the component
+with unimplemented properties with an alias as the default value.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> css <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"lit"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// --button-primary-background is open for implementation</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> props <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
   :host {
-    --background-color: var(
-      --button-background-color,
-      var(--color-surface-action)
+    --primary-background: var(
+      --button-primary-background,
+      var(--theme-color-primary-background)
     );
   }
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
-<span class="token keyword">export</span> <span class="token keyword">const</span> backgroundColor <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--background-color)</span><span class="token template-punctuation string">`</span></span></code></pre></copy-to-clipboard>
-<p>This makes it possible to override the properties at other levels, such as the app root:</p>
+<span class="token keyword">export</span> <span class="token keyword">const</span> primaryBackground <span class="token operator">=</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">var(--primary-background)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>This makes it possible to override the properties at other levels, such as the
+app root.</p>
 <copy-to-clipboard><pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
-  <span class="token property">--button-background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+  <span class="token property">--button-primary-background</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
 <h2>Using the light-dark function for color schemes</h2>
-<p>To create light and dark themes, each token requires two different values. Many approaches exist to structure tokens for different color schemes, but currently no single standardized approach exists in the <a href="https://www.designtokens.org/tr/drafts/">token specification</a> or Style Dictionary.</p>
-<p>Exporting tokens from design tools like [Figma][figman] or [Tokens Studio][tokens-studio] tends to result in a full set of tokens for each mode. Processing these tokens with Style Dictionary requires two independent builds to produce separate style sheets: one for light and one for dark.</p>
-<p>To combine the separate style sheets into one with the <code>light-dark</code> syntax requires some post-processing.</p>
+<p>To create light and dark themes, each token requires two different values. A few
+approaches exist to structure tokens for different color schemes, but currently
+no standardized approach exists in the <a href="https://www.designtokens.org/tr/drafts/">token specification</a> or Style
+Dictionary.</p>
+<p>Exporting tokens from design tools like [Figma][figman] or [Tokens
+Studio][tokens-studio] tends to result in a full set of tokens for each mode at
+the theme and component tiers. Processing these tokens with Style Dictionary
+requires two independent builds to produce separate style sheets: one for light
+and one for dark.</p>
+<p>To combine the separate style sheets into one with the <code>light-dark</code> syntax
+requires some post-processing.</p>
 <p>Here's a Style Dictionary build script that creates the separate builds:</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// The list of components might come from a configuration file or a</span>
 <span class="token comment">// glob of the token JSON files</span>
@@ -943,8 +993,8 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> mode <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"light"</span><span class="token punctuation">,</span> <span class="token string">"dark"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> sd <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StyleDictionary</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-      <span class="token string">"primitives/**/*.json"</span><span class="token punctuation">,</span>
-      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">globals/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token string">"definitions/**/*.json"</span><span class="token punctuation">,</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">theme/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
       <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">components/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/**/*.json</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
     <span class="token punctuation">]</span><span class="token punctuation">,</span>
     <span class="token literal-property property">platforms</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -961,9 +1011,9 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
             <span class="token comment">// Filter out the components using the file path</span>
             <span class="token function-variable function">filter</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">!</span>token<span class="token punctuation">.</span>filePath<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"components"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
           <span class="token punctuation">}</span><span class="token punctuation">,</span>
-          <span class="token comment">// Build the JavaScript Lit CSS exports for each component</span>
+          <span class="token comment">// Build the JavaScript Lit CSS exports for each component as .ts</span>
           <span class="token operator">...</span>components<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">component</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
-            <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>component<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.js</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+            <span class="token literal-property property">destination</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>component<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.ts</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
             <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token string">"javascript/litCSS"</span><span class="token punctuation">,</span>
             <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
               <span class="token literal-property property">outputReferences</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
@@ -977,10 +1027,14 @@ StyleDictionary<span class="token punctuation">.</span><span class="token functi
 
   <span class="token keyword">await</span> sd<span class="token punctuation">.</span><span class="token function">buildAllPlatforms</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<p>This approach creates two directories: one for light and one for dark. Pattern matching then merges the tokens with light and dark values into the light-dark function syntax to create a new variables style sheet:</p>
+<p>This approach creates two directories, one for light and one for dark. Using
+pattern matching in a post build script merges the tokens with light and dark
+values into the light-dark function syntax to create a new variables style
+sheet.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> light <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/light/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> dark <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">"dist/dark/variables.css"</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+<span class="token comment">// Matches css properties like --them-color-primary-background</span>
 <span class="token keyword">const</span> propertiesPattern <span class="token operator">=</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">(--[^:]+?):\s*([^;]+?);</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> lightDark <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
 
@@ -1006,9 +1060,14 @@ dark<span class="token punctuation">.</span><span class="token function">matchAl
   <span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
 }</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">writeFile</span><span class="token punctuation">(</span><span class="token string">"dist/variables.css"</span><span class="token punctuation">,</span> content<span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>Applying a similar approach to the Lit export files for each component results in a single set of exports that works for both color schemes.</p>
+<p>Applying a similar approach to the ECMAScript files for each component results
+in a single set of exports that works for both color schemes.</p>
 <h2>Automating CSS property documentation</h2>
-<p>Using the <a href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/">custom elements manifest</a> tooling, you can generate component documentation. Including the CSS custom properties in the manifest requires JS Doc <code>@cssproperty</code> tags, but rather than maintain these manually, the manifest build can look up the component in the tokens file and add them to the manifest using a plugin.</p>
+<p>Using the <a href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/">custom elements manifest</a> tooling, you can generate component
+documentation. Including the CSS custom properties in the manifest requires JS
+Doc <code>@cssproperty</code> tags, but rather than maintain these manually, the manifest
+build can look up the component in a tokens file and add them to the manifest
+using a plugin.</p>
 <copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"schemaVersion"</span><span class="token operator">:</span> <span class="token string">"1.0.0"</span><span class="token punctuation">,</span>
   <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -1057,8 +1116,12 @@ dark<span class="token punctuation">.</span><span class="token function">matchAl
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
 <h2>Build failures deliver fast feedback</h2>
-<p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time, tooling, and potential cost overhead than build pipeline failures that deliver more immediate feedback to developers.</p>
-<p>This approach provides fast feedback and offers other benefits, such as flexibility in property naming (including changing the token prefix) and preventing unused or unimplemented variables from accumulating in the codebase.</p>
+<p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time,
+tooling, and potential cost overhead than build pipeline failures that deliver
+more immediate feedback to developers.</p>
+<p>This approach provides fast feedback and offers other benefits, such as
+flexibility in property naming (including changing the token prefix) and
+preventing unused or unimplemented variables from accumulating in the codebase.</p>
 <p>Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working code and <a href="https://github.com/lime-soda/web-components">this
 repository</a> for a design system integration.</p>
 
