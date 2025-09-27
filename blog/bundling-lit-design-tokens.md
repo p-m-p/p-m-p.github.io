@@ -1,11 +1,10 @@
 ---
 title: Bundling design tokens for Lit web components
 description:
-  Building a design token pipeline that keeps component styles isolated while
-  generating type-safe JavaScript exports and supporting light-dark color
-  schemes requires balancing automation with flexibility. This post demonstrates
-  a Style Dictionary approach that maintains CSS customization without sacrificing
-  performance or developer experience.
+  Building a design token pipeline that keeps component styles isolated and
+  supports light-dark color schemes requires a balance in automation and
+  developer experience. This post demonstrates a Style Dictionary approach that
+  exports JavaScript tokens for Lit while maintaining the flexibility of CSS.
 tags:
   - posts
   - web components
@@ -16,11 +15,17 @@ date: 2025-09-21
 
 ## Pipeline structure and requirements
 
-The build pipeline needs to carry styles from design tokens through to code in
-Lit web components. Creating a system that automates the build process using
-modern CSS features while providing a good developer experience with fast feedback
-can quickly become a complex mess of configuration files and custom build
-scripts.
+The [Style Dictionary][style-dictionary] build transforms styles from design
+tokens in [JSON format][dtcg] through to code for use in [Lit][lit] web
+components. The library comes with built in formats to generate tokens for
+different platforms but there doesn't yet seem to be a standard approach for
+combining light and dark color schemes into a single set of tokens that use the
+[`light-dark`][light-dark] CSS function.
+
+It is possible to create a system that automates the build process to use this
+modern CSS feature thanks to the flexible API that Style Dictionary provides.
+Here's one approach that combines CSS and JavaScript to provide CSS tokens for
+use in Lit components.
 
 Consider the following requirements:
 
@@ -37,62 +42,84 @@ Consider the following requirements:
 
 ## Design token architecture
 
-Organize design tokens in three layers. The first two layers contain primitive and alias tokens, while the third layer contains component tokens. The build process bundles the first two layers into a root CSS file and bundles component tokens separately for their respective component modules.
+For this example the design tokens are organized into [three
+tiers][three-tier-tokens]. The first two tiers contain primitive and semantic
+tokens, while the third tier contains component tokens. The build process
+bundles the first two layers into a root CSS file for inclusion in the app root
+and bundles component tokens separately for their respective component modules.
 
-Here's a basic example showing how the three token layers work together to apply a background color to a button:
+Here's a basic example showing how the three token tiers work together to apply
+a background color to a button. In most cases the light and dark variants of a
+token exist in the theme tier but they may also appear in components.
 
 ```json
 {
   "color": {
     "$type": "color",
-    "$description": "This is the primitive green color palette",
-    "green": {
-      "500": {
+    "$description": "This is the color palette definitions",
+    "brand": {
+      "green": {
         "$value": "#00ff00"
       }
-    },
-    "surface": {
-      "$description": "Semantic for surface colors",
-      "action": {
-        "$value": "{color.green.500}"
+    }
+  },
+
+  "theme": {
+    "color": {
+      "$type": "color",
+      "$description": "Theme color tokens alias the definitions",
+      "primary": {
+        "background": {
+          "$value": "{color.brand.green}"
+        }
       }
     }
   },
 
   "button": {
-    "$description": "Component tokens for the button element",
-    "background": {
-      "color": {
-        "$value": "{color.surface.action}"
+    "$description": "Component tokens for the button element reference the theme",
+    "primary": {
+      "background": {
+        "$type": "color",
+        "$value": "{theme.color.primary.background}"
       }
     }
   }
 }
 ```
 
-When building these tokens with Style Dictionary using the default format for CSS variables with output references, the generated output looks like this:
+Building these tokens with Style Dictionary using the default format for CSS
+variables using output references, the generated output looks like this:
 
 ```css
 :root {
-  --color-green-500: #00ff00;
-  --color-surface-action: var(--color-green-500);
-  --button-background-color: var(--color-surface-action);
+  --color-brand-green: #00ff00;
+  --theme-color-primary-background: var(--color-brand-green);
+  --button-primary-background: var(--theme-color-primary-background);
 }
 ```
 
-This approach works, but it has a problem: component tokens should live with their respective components, not in the root style sheet.
-
 ## Isolating component tokens
 
-Isolating the tokens means they only get included in the bundle when using that component within an app. While tools exist to remove unused CSS during the bundling phase, keeping component styles local to their module or package helps reduce bundling overhead and provides better separation of concerns.
+Isolating the component tokens means they only get bundled or loaded when using
+that component within an app. While tools exist to remove unused CSS during the
+bundling phase, keeping component styles local to their module or package helps
+reduce overhead and provides better separation of concerns.
 
-To isolate component tokens into their respective modules, the Style Dictionary configuration needs to reflect the token layers. Filtering out the component properties requires a filter function to match only the tokens in those layers. The following example uses the file system path, but this approach could apply to any token attribute, including extensions.
+To achieve this isolation the Style Dictionary build configuration needs to
+respect the three token tiers. Filtering the component properties out of the
+root style sheet requires a function to include only the tokens in those tiers.
 
-In the configuration below, components exist in a separate directory, and a path check removes them from the variables file:
+This example uses the file system path, but this approach could apply to any
+token attribute, including [extensions][dtcg-extensions]. The components exist
+in a separate directory, and a path check removes them from the root variables
+file:
 
 ```js
-export default {
-  source: ["primitives/**/*.json", "globals/**/*.json", "components/**/*.json"],
+import StyleDictionary from "style-dictionary";
+
+const sd = new StyleDictionary({
+  source: ["definitions/**/*.json", "theme/**/*.json", "components/**/*.json"],
   platforms: {
     css: {
       transformGroup: "css",
@@ -104,38 +131,47 @@ export default {
           options: {
             outputReferences: true,
           },
-          // Filter out the components using the file path
+          // Filter out the components using the token file path
           filter: (token) => !token.filePath.includes("components"),
         },
       ],
     },
   },
-};
+});
 ```
 
 ## Applying tokens to components
 
-Lit recommends [using the static style prop][lit-styles] for component styles to achieve the best performance. Generating properties in CSS format doesn't align with this recommendation and lacks a strong link between the token and the component implementation.
+Lit recommends [using the static style prop][lit-styles] for component styles to
+achieve the best performance. Generating properties in CSS format doesn't align
+with this recommendation and lacks a strong link between the token and the
+component implementation.
 
-You must generate component tokens as JavaScript variables for use in the static style property, but this approach doesn't allow for customization via CSS properties. Tokens in ECMAScript module format require the `unsafeCSS` function and hide the value from customization through global CSS properties. This prevents scenarios like creating a more dense theme by reducing spacing variables in the global properties layer.
+Generating tokens in ECMAScript module format for use with Lit require the
+[`unsafeCSS`][lit-unsafecss] function and prevents customization through CSS
+properties.
 
 ```js
 import { LitElement, unsafeCSS } from "lit";
-import { buttonBackgroundColor } from "styles/button.js";
+import { primaryBackground } from "styles/button.js";
 
 export class Button extends LitElement {
   // Background color is generated as the raw color value #00ff00
   static styles = css`
     button {
-      background-color: ${unsafeCSS(buttonBackgroundColor)};
+      background-color: ${unsafeCSS(primaryBackground)};
     }
   `;
 }
 ```
 
-A better approach is generating button properties as CSS string exports from an ECMAScript module. This creates a strong link to the token while maintaining the CSS layering hierarchy.
+A better approach is generating button properties as CSS string exports from an
+ECMAScript module. This creates a strong link to the token while keeping CSS as
+the source of truth for styling.
 
-Adding a custom format for Style Dictionary creates an export of all CSS properties with individual exports for use in style declarations. The format wraps each export with the `css` template string tag for use with Lit:
+Adding a custom format for Style Dictionary creates an export of all CSS
+properties with individual exports for use in style declarations. The format
+wraps each export with the `css` template string tag for use with Lit.
 
 ```js
 import StyleDictionary from "style-dictionary";
@@ -172,79 +208,92 @@ StyleDictionary.registerFormat({
 });
 ```
 
-To add TypeScript definitions, create a similar format that exports the same variables with the `CSSResultGroup` type from Lit, or run the generated files through the TypeScript compiler to generate declarations.
+Save the files as JavaScript or TypeScript resulting in a module like this for
+the button element.
 
 ```js
 import { css } from "lit";
 
-// The props export contains the host selector with all of the component
-// tokens with reference to the global tokens
+// The props export contains the host selector with all of the component properties
 export const props = css`
   :host {
-    --button-background-color: var(--color-surface-action);
+    --button-primary-background: var(--theme-color-primary-background);
   }
 `;
 
 // Individual token exports
-export const backgroundColor = css`var(--button-background-color)`
+export const primaryBackground = css`var(--button-primary-background)`;
 ```
 
-In the component, add the props to the component styles and reference them in the component styles implementation:
+In the component, add the props to the component styles and reference them in
+the component styles implementation:
 
 ```js
-import * as styles from "./styles/button.js";
+import { props, primaryBackground } from "./styles/button.js";
 
 export class Button extends LitElement {
   static styles = [
-    styles.props,
+    props,
     css`
-      button {
-        background-color: ${styles.backgroundColor};
+      .primary {
+        background-color: ${primaryBackground};
       }
     `,
   ];
 }
 ```
 
-To override the component styles, set the property value at the element:
+To override the component styles, set the property value at the element.
 
 ```css
 my-button {
-  --button-background-color: red;
+  --button-primary-background: red;
 }
 ```
 
-To provide a better developer experience, the format can provide the component with unimplemented properties and an alias as the default value:
+To provide a better developer experience, the format can provide the component
+with unimplemented properties with an alias as the default value.
 
 ```js
-// --button-background-color is open for implementation
+import { css } from "lit";
+
+// --button-primary-background is open for implementation
 export const props = css`
   :host {
-    --background-color: var(
-      --button-background-color,
-      var(--color-surface-action)
+    --primary-background: var(
+      --button-primary-background,
+      var(--theme-color-primary-background)
     );
   }
 `;
 
-export const backgroundColor = css`var(--background-color)`
+export const primaryBackground = css`var(--primary-background)`;
 ```
 
-This makes it possible to override the properties at other levels, such as the app root:
+This makes it possible to override the properties at other levels, such as the
+app root.
 
 ```css
 :root {
-  --button-background-color: red;
+  --button-primary-background: red;
 }
 ```
 
 ## Using the light-dark function for color schemes
 
-To create light and dark themes, each token requires two different values. Many approaches exist to structure tokens for different color schemes, but currently no single standardized approach exists in the [token specification][dtcg] or Style Dictionary.
+To create light and dark themes, each token requires two different values. A few
+approaches exist to structure tokens for different color schemes, but currently
+no standardized approach exists in the [token specification][dtcg] or Style
+Dictionary.
 
-Exporting tokens from design tools like [Figma][figman] or [Tokens Studio][tokens-studio] tends to result in a full set of tokens for each mode. Processing these tokens with Style Dictionary requires two independent builds to produce separate style sheets: one for light and one for dark.
+Exporting tokens from design tools like [Figma][figman] or [Tokens
+Studio][tokens-studio] tends to result in a full set of tokens for each mode at
+the theme and component tiers. Processing these tokens with Style Dictionary
+requires two independent builds to produce separate style sheets: one for light
+and one for dark.
 
-To combine the separate style sheets into one with the `light-dark` syntax requires some post-processing.
+To combine the separate style sheets into one with the `light-dark` syntax
+requires some post-processing.
 
 Here's a Style Dictionary build script that creates the separate builds:
 
@@ -256,8 +305,8 @@ const components = ["button"];
 for (const mode of ["light", "dark"]) {
   const sd = new StyleDictionary({
     source: [
-      "primitives/**/*.json",
-      `globals/${mode}/**/*.json`,
+      "definitions/**/*.json",
+      `theme/${mode}/**/*.json`,
       `components/${mode}/**/*.json`,
     ],
     platforms: {
@@ -274,9 +323,9 @@ for (const mode of ["light", "dark"]) {
             // Filter out the components using the file path
             filter: (token) => !token.filePath.includes("components"),
           },
-          // Build the JavaScript Lit CSS exports for each component
+          // Build the JavaScript Lit CSS exports for each component as .ts
           ...components.map((component) => ({
-            destination: `${component}.js`,
+            destination: `${component}.ts`,
             format: "javascript/litCSS",
             options: {
               outputReferences: true,
@@ -292,12 +341,16 @@ for (const mode of ["light", "dark"]) {
 }
 ```
 
-This approach creates two directories: one for light and one for dark. Pattern matching then merges the tokens with light and dark values into the light-dark function syntax to create a new variables style sheet:
+This approach creates two directories, one for light and one for dark. Using
+pattern matching in a post build script merges the tokens with light and dark
+values into the light-dark function syntax to create a new variables style
+sheet.
 
 ```js
 const light = await fs.readFile("dist/light/variables.css", "utf-8");
 const dark = await fs.readFile("dist/dark/variables.css", "utf-8");
 
+// Matches css properties like --them-color-primary-background
 const propertiesPattern = /(--[^:]+?):\s*([^;]+?);/g;
 const lightDark = {};
 
@@ -325,11 +378,16 @@ ${Object.entries(lightDark)
 await fs.writeFile("dist/variables.css", content, "utf-8");
 ```
 
-Applying a similar approach to the Lit export files for each component results in a single set of exports that works for both color schemes.
+Applying a similar approach to the ECMAScript files for each component results
+in a single set of exports that works for both color schemes.
 
 ## Automating CSS property documentation
 
-Using the [custom elements manifest][cem] tooling, you can generate component documentation. Including the CSS custom properties in the manifest requires JS Doc `@cssproperty` tags, but rather than maintain these manually, the manifest build can look up the component in the tokens file and add them to the manifest using a plugin.
+Using the [custom elements manifest][cem] tooling, you can generate component
+documentation. Including the CSS custom properties in the manifest requires JS
+Doc `@cssproperty` tags, but rather than maintain these manually, the manifest
+build can look up the component in a tokens file and add them to the manifest
+using a plugin.
 
 ```json
 {
@@ -383,17 +441,29 @@ Using the [custom elements manifest][cem] tooling, you can generate component do
 
 ## Build failures deliver fast feedback
 
-Feedback from [visual regression testing][visual-testing] requires more time, tooling, and potential cost overhead than build pipeline failures that deliver more immediate feedback to developers.
+Feedback from [visual regression testing][visual-testing] requires more time,
+tooling, and potential cost overhead than build pipeline failures that deliver
+more immediate feedback to developers.
 
-This approach provides fast feedback and offers other benefits, such as flexibility in property naming (including changing the token prefix) and preventing unused or unimplemented variables from accumulating in the codebase.
+This approach provides fast feedback and offers other benefits, such as
+flexibility in property naming (including changing the token prefix) and
+preventing unused or unimplemented variables from accumulating in the codebase.
 
 Check out this [brief example][stackblitz] for some working code and [this
 repository][lime-soda] for a design system integration.
 
 [cem]: https://custom-elements-manifest.open-wc.org/analyzer/getting-started/
 [dtcg]: https://www.designtokens.org/tr/drafts/
+[dtcg-extensions]: https://www.designtokens.org/tr/drafts/format/#extensions
+[light-dark]:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark
+[lime-soda]: https://github.com/lime-soda/web-components
+[lit]: https://lit.dev/
 [lit-styles]: https://lit.dev/docs/components/styles/
+[lit-unsafecss]: https://lit.dev/docs/api/styles/#unsafeCSS
 [stackblitz]:
   https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts
-[lime-soda]: https://github.com/lime-soda/web-components
+[style-dictionary]: https://styledictionary.com/
+[three-tier-tokens]:
+  https://bradfrost.com/blog/post/creating-themeable-design-systems/
 [visual-testing]: https://www.browserstack.com/percy/visual-regression-testing
