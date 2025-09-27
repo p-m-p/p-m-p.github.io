@@ -152,7 +152,7 @@ Generating tokens in ECMAScript module format for use with Lit require the
 properties.
 
 ```js
-import { LitElement, unsafeCSS } from "lit";
+import { LitElement, css, unsafeCSS } from "lit";
 import { primaryBackground } from "styles/button.js";
 
 export class Button extends LitElement {
@@ -286,11 +286,10 @@ approaches exist to structure tokens for different color schemes, but currently
 no standardized approach exists in the [token specification][dtcg] or Style
 Dictionary.
 
-Exporting tokens from design tools like [Figma][figman] or [Tokens
-Studio][tokens-studio] tends to result in a full set of tokens for each mode at
-the theme and component tiers. Processing these tokens with Style Dictionary
-requires two independent builds to produce separate style sheets: one for light
-and one for dark.
+Exporting tokens from design tools like Figma or [Tokens Studio][tokens-studio]
+tends to result in a full set of tokens for each mode at the theme and component
+tiers. Processing these tokens with Style Dictionary requires two independent
+builds to produce separate style sheets: one for light and one for dark.
 
 To combine the separate style sheets into one with the `light-dark` syntax
 requires some post-processing.
@@ -466,4 +465,5 @@ repository][lime-soda] for a design system integration.
 [style-dictionary]: https://styledictionary.com/
 [three-tier-tokens]:
   https://bradfrost.com/blog/post/creating-themeable-design-systems/
+[tokens-studio]: https://tokens.studio/
 [visual-testing]: https://www.browserstack.com/percy/visual-regression-testing
