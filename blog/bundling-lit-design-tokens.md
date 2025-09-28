@@ -380,13 +380,40 @@ await fs.writeFile("dist/variables.css", content, "utf-8");
 Applying a similar approach to the ECMAScript files for each component results
 in a single set of exports that works for both color schemes.
 
+## Build failures deliver fast feedback
+
+Feedback from [visual regression testing][visual-testing] requires more time,
+tooling, and potential cost overhead than build pipeline failures that deliver
+more immediate feedback to developers.
+
+This approach provides fast feedback and offers other benefits, such as
+flexibility in property naming (including changing the token prefix) and
+preventing unused or unimplemented variables from accumulating in the codebase.
+
 ## Automating CSS property documentation
 
-Using the [custom elements manifest][cem] tooling, you can generate component
-documentation. Including the CSS custom properties in the manifest requires JS
-Doc `@cssproperty` tags, but rather than maintain these manually, the manifest
-build can look up the component in a tokens file and add them to the manifest
-using a plugin.
+The [custom elements manifest][cem] analyzer generates component documentation
+using a framework plugin for Lit. To include CSS properties in the documentation
+requires `@cssproperty` JS Doc tags for each property but instead of adding
+these manually an [analyzer plugin][cem-plugin] can add them during the
+`pacakgeLinkPhase`. The plugin requires the component tokens in JavaScript
+format and maps the properties to each entry in the manifest.
+
+```js
+import { cssPropertiesPlugin } from "@lime-soda/cem-plugin-css-properties";
+import tokens from "./design-tokens.js";
+
+// custom-elements-manifest.config.js
+export default {
+  globs: ["src/components/**/*.js"],
+  outdir: "dist",
+  LitElement: true,
+  plugins: [cssPropertiesPlugin(tokens, { prefix: "my" })],
+};
+```
+
+The resulting manifest file contains the property information for each
+component.
 
 ```json
 {
@@ -408,8 +435,8 @@ using a plugin.
           "customElement": true,
           "cssProperties": [
             {
-              "name": "--button-background-color",
-              "description": "Button background color",
+              "name": "--button-primary-background",
+              "description": "Primary button background color",
               "default": "#00ff00"
             }
           ]
@@ -438,25 +465,15 @@ using a plugin.
 }
 ```
 
-## Build failures deliver fast feedback
-
-Feedback from [visual regression testing][visual-testing] requires more time,
-tooling, and potential cost overhead than build pipeline failures that deliver
-more immediate feedback to developers.
-
-This approach provides fast feedback and offers other benefits, such as
-flexibility in property naming (including changing the token prefix) and
-preventing unused or unimplemented variables from accumulating in the codebase.
-
-Check out this [brief example][stackblitz] for some working code and [this
-repository][lime-soda] for a design system integration.
+Check out this [brief example][stackblitz] for a working example.
 
 [cem]: https://custom-elements-manifest.open-wc.org/analyzer/getting-started/
+[cem-plugin]:
+  https://github.com/lime-soda/web-components/tree/main/support/cem-plugin-css-properties
 [dtcg]: https://www.designtokens.org/tr/drafts/
 [dtcg-extensions]: https://www.designtokens.org/tr/drafts/format/#extensions
 [light-dark]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark
-[lime-soda]: https://github.com/lime-soda/web-components
 [lit]: https://lit.dev/
 [lit-styles]: https://lit.dev/docs/components/styles/
 [lit-unsafecss]: https://lit.dev/docs/api/styles/#unsafeCSS
