@@ -1061,12 +1061,32 @@ dark<span class="token punctuation">.</span><span class="token function">matchAl
 <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">writeFile</span><span class="token punctuation">(</span><span class="token string">"dist/variables.css"</span><span class="token punctuation">,</span> content<span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <p>Applying a similar approach to the ECMAScript files for each component results
 in a single set of exports that works for both color schemes.</p>
+<h2>Build failures deliver fast feedback</h2>
+<p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time,
+tooling, and potential cost overhead than build pipeline failures that deliver
+more immediate feedback to developers.</p>
+<p>This approach provides fast feedback and offers other benefits, such as
+flexibility in property naming (including changing the token prefix) and
+preventing unused or unimplemented variables from accumulating in the codebase.</p>
 <h2>Automating CSS property documentation</h2>
-<p>Using the <a href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/">custom elements manifest</a> tooling, you can generate component
-documentation. Including the CSS custom properties in the manifest requires JS
-Doc <code>@cssproperty</code> tags, but rather than maintain these manually, the manifest
-build can look up the component in a tokens file and add them to the manifest
-using a plugin.</p>
+<p>The <a href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/">custom elements manifest</a> analyzer generates component documentation
+using a framework plugin for Lit. To include CSS properties in the documentation
+requires <code>@cssproperty</code> JS Doc tags for each property but instead of adding
+these manually an <a href="https://github.com/lime-soda/web-components/tree/main/support/cem-plugin-css-properties">analyzer plugin</a> can add them during the
+<code>pacakgeLinkPhase</code>. The plugin requires the component tokens in JavaScript
+format and maps the properties to each entry in the manifest.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> cssPropertiesPlugin <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"@lime-soda/cem-plugin-css-properties"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> tokens <span class="token keyword">from</span> <span class="token string">"./design-tokens.js"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// custom-elements-manifest.config.js</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">globs</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"src/components/**/*.js"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">outdir</span><span class="token operator">:</span> <span class="token string">"dist"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">LitElement</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token function">cssPropertiesPlugin</span><span class="token punctuation">(</span>tokens<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">prefix</span><span class="token operator">:</span> <span class="token string">"my"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>The resulting manifest file contains the property information for each
+component.</p>
 <copy-to-clipboard><pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"schemaVersion"</span><span class="token operator">:</span> <span class="token string">"1.0.0"</span><span class="token punctuation">,</span>
   <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -1086,8 +1106,8 @@ using a plugin.</p>
           <span class="token property">"customElement"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
           <span class="token property">"cssProperties"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
             <span class="token punctuation">{</span>
-              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"--button-background-color"</span><span class="token punctuation">,</span>
-              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Button background color"</span><span class="token punctuation">,</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"--button-primary-background"</span><span class="token punctuation">,</span>
+              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Primary button background color"</span><span class="token punctuation">,</span>
               <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span>
             <span class="token punctuation">}</span>
           <span class="token punctuation">]</span>
@@ -1114,15 +1134,7 @@ using a plugin.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre></copy-to-clipboard>
-<h2>Build failures deliver fast feedback</h2>
-<p>Feedback from <a href="https://www.browserstack.com/percy/visual-regression-testing">visual regression testing</a> requires more time,
-tooling, and potential cost overhead than build pipeline failures that deliver
-more immediate feedback to developers.</p>
-<p>This approach provides fast feedback and offers other benefits, such as
-flexibility in property naming (including changing the token prefix) and
-preventing unused or unimplemented variables from accumulating in the codebase.</p>
-<p>Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for some working code and <a href="https://github.com/lime-soda/web-components">this
-repository</a> for a design system integration.</p>
+<p>Check out this <a href="https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts">brief example</a> for a working example.</p>
 
   </main>
 

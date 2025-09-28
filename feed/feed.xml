@@ -318,12 +318,32 @@ dark&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writeFile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;dist/variables.css&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;p&gt;Applying a similar approach to the ECMAScript files for each component results
 in a single set of exports that works for both color schemes.&lt;/p&gt;
+&lt;h2&gt;Build failures deliver fast feedback&lt;/h2&gt;
+&lt;p&gt;Feedback from &lt;a href=&quot;https://www.browserstack.com/percy/visual-regression-testing&quot;&gt;visual regression testing&lt;/a&gt; requires more time,
+tooling, and potential cost overhead than build pipeline failures that deliver
+more immediate feedback to developers.&lt;/p&gt;
+&lt;p&gt;This approach provides fast feedback and offers other benefits, such as
+flexibility in property naming (including changing the token prefix) and
+preventing unused or unimplemented variables from accumulating in the codebase.&lt;/p&gt;
 &lt;h2&gt;Automating CSS property documentation&lt;/h2&gt;
-&lt;p&gt;Using the &lt;a href=&quot;https://custom-elements-manifest.open-wc.org/analyzer/getting-started/&quot;&gt;custom elements manifest&lt;/a&gt; tooling, you can generate component
-documentation. Including the CSS custom properties in the manifest requires JS
-Doc &lt;code&gt;@cssproperty&lt;/code&gt; tags, but rather than maintain these manually, the manifest
-build can look up the component in a tokens file and add them to the manifest
-using a plugin.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;https://custom-elements-manifest.open-wc.org/analyzer/getting-started/&quot;&gt;custom elements manifest&lt;/a&gt; analyzer generates component documentation
+using a framework plugin for Lit. To include CSS properties in the documentation
+requires &lt;code&gt;@cssproperty&lt;/code&gt; JS Doc tags for each property but instead of adding
+these manually an &lt;a href=&quot;https://github.com/lime-soda/web-components/tree/main/support/cem-plugin-css-properties&quot;&gt;analyzer plugin&lt;/a&gt; can add them during the
+&lt;code&gt;pacakgeLinkPhase&lt;/code&gt;. The plugin requires the component tokens in JavaScript
+format and maps the properties to each entry in the manifest.&lt;/p&gt;
+&lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; cssPropertiesPlugin &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;@lime-soda/cem-plugin-css-properties&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; tokens &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./design-tokens.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// custom-elements-manifest.config.js&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token literal-property property&quot;&gt;globs&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;src/components/**/*.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token literal-property property&quot;&gt;outdir&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;dist&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token literal-property property&quot;&gt;LitElement&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token literal-property property&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;cssPropertiesPlugin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;tokens&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;my&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
+&lt;p&gt;The resulting manifest file contains the property information for each
+component.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;schemaVersion&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token property&quot;&gt;&quot;modules&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
@@ -343,8 +363,8 @@ using a plugin.&lt;/p&gt;
           &lt;span class=&quot;token property&quot;&gt;&quot;customElement&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
           &lt;span class=&quot;token property&quot;&gt;&quot;cssProperties&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
             &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-              &lt;span class=&quot;token property&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;--button-background-color&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-              &lt;span class=&quot;token property&quot;&gt;&quot;description&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Button background color&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;token property&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;--button-primary-background&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;token property&quot;&gt;&quot;description&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Primary button background color&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
               &lt;span class=&quot;token property&quot;&gt;&quot;default&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;#00ff00&quot;&lt;/span&gt;
             &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
           &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
@@ -371,15 +391,7 @@ using a plugin.&lt;/p&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;h2&gt;Build failures deliver fast feedback&lt;/h2&gt;
-&lt;p&gt;Feedback from &lt;a href=&quot;https://www.browserstack.com/percy/visual-regression-testing&quot;&gt;visual regression testing&lt;/a&gt; requires more time,
-tooling, and potential cost overhead than build pipeline failures that deliver
-more immediate feedback to developers.&lt;/p&gt;
-&lt;p&gt;This approach provides fast feedback and offers other benefits, such as
-flexibility in property naming (including changing the token prefix) and
-preventing unused or unimplemented variables from accumulating in the codebase.&lt;/p&gt;
-&lt;p&gt;Check out this &lt;a href=&quot;https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts&quot;&gt;brief example&lt;/a&gt; for some working code and &lt;a href=&quot;https://github.com/lime-soda/web-components&quot;&gt;this
-repository&lt;/a&gt; for a design system integration.&lt;/p&gt;
+&lt;p&gt;Check out this &lt;a href=&quot;https://stackblitz.com/edit/vitejs-vite-w8jtdtqu?file=src%2Fmy-button.ts&quot;&gt;brief example&lt;/a&gt; for a working example.&lt;/p&gt;
 </content>
   </entry>
   <entry>
