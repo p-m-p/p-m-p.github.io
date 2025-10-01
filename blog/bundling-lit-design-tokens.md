@@ -2,14 +2,16 @@
 title: Bundling design tokens for Lit web components
 description:
   Building a design token pipeline that keeps component styles isolated and
-  supports light-dark color schemes requires a balance in automation and
-  developer experience. This post demonstrates a Style Dictionary approach that
-  exports JavaScript tokens for Lit while maintaining the flexibility of CSS.
+  supports light-dark color schemes requires balancing automation with developer
+  experience. This post demonstrates a Style Dictionary approach that exports
+  JavaScript tokens for Lit elements that maintains CSS as the source of truth
+  for styling.
 tags:
   - posts
   - web components
-  - design systems
+  - design tokens
   - lit
+  - css
 date: 2025-09-21
 ---
 
@@ -436,8 +438,7 @@ component.
           "cssProperties": [
             {
               "name": "--button-primary-background",
-              "description": "Primary button background color",
-              "default": "#00ff00"
+              "description": "Primary button background color"
             }
           ]
         }
