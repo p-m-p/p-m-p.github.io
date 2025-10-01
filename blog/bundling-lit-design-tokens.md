@@ -407,12 +407,12 @@ import tokens from "./design-tokens.js";
 export default {
   globs: ["src/components/**/*.js"],
   outdir: "dist",
-  LitElement: true,
+  litelement: true,
   plugins: [cssPropertiesPlugin(tokens, { prefix: "my" })],
 };
 ```
 
-The resulting manifest file contains the property information for each
+The resulting manifest file contains the CSS property information for each
 component.
 
 ```json
