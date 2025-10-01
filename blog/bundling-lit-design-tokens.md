@@ -13,6 +13,7 @@ tags:
   - lit
   - css
 date: 2025-09-21
+social_card: bundling-lit-design-tokens.jpg
 ---
 
 ## Pipeline structure and requirements
