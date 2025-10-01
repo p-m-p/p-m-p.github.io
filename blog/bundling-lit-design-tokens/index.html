@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bundling design tokens for Lit web components</title>
-  <meta name="description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
+  <meta name="description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="og:title" content="Bundling design tokens for Lit web components">
-  <meta property="og:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
+  <meta property="og:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/bundling-lit-design-tokens/">
   <meta property="twitter:title" content="Bundling design tokens for Lit web components">
-  <meta property="twitter:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.">
+  <meta property="twitter:description" content="Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -757,7 +757,7 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires a balance in automation and developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit while maintaining the flexibility of CSS.</p>
+    <p class="post-description">Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.</p>
     <h2>Pipeline structure and requirements</h2>
 <p>The <a href="https://styledictionary.com/">Style Dictionary</a> build transforms styles from design
 tokens in <a href="https://www.designtokens.org/tr/drafts/">JSON format</a> through to code for use in <a href="https://lit.dev/">Lit</a> web
@@ -1107,8 +1107,7 @@ component.</p>
           <span class="token property">"cssProperties"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
             <span class="token punctuation">{</span>
               <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"--button-primary-background"</span><span class="token punctuation">,</span>
-              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Primary button background color"</span><span class="token punctuation">,</span>
-              <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span>
+              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Primary button background color"</span>
             <span class="token punctuation">}</span>
           <span class="token punctuation">]</span>
         <span class="token punctuation">}</span>
