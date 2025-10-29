@@ -188,6 +188,16 @@ port.addEventListener("message", (event) => {
 });
 ```
 
-[shared-worker]: https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker
-[websocket]: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+## Combining these strategies into shared worker utilities
+
+I have combined these strategies into a super small set of shared worker
+utilities that can be used to manage connections to a shared worker much like
+the examples here. The [shared-worker-utils][shared-worker-utils] NPM package
+can be used in both the shared worker and client app to simplify connection
+management. There is a full example of using the package to manage web socket in
+the GitHub repository.
+
 [message-port]: https://developer.mozilla.org/en-US/docs/Web/API/MessagePort
+[shared-worker]: https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker
+[shared-worker-utils]: https://github.com/p-m-p/shared-worker-utils
+[websocket]: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
