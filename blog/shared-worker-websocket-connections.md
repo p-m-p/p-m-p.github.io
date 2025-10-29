@@ -63,12 +63,12 @@ onconnect = (ev) => {
 ## Handling client disconnections
 
 Unfortunately, the shared worker doesn't provide a way to detect when a client
-disconnects. This means that if a user closes a tab, removing the
-associated MessagePort from the `connections` set isn't straightforward.
+disconnects. This means that if a user closes a tab, removing the associated
+MessagePort from the `connections` set isn't straightforward.
 
 The client side of the shared worker connection needs to notify the worker when
-the tab closes. Listen for the `beforeunload`
-event and send a message to the worker to signal that the tab closes.
+the tab closes. Listen for the `beforeunload` event and send a message to the
+worker to signal that the tab closes.
 
 ```js
 const worker = new SharedWorker("shared-worker.js");
@@ -107,10 +107,11 @@ onconnect = (ev) => {
 
 ## Pausing connection on visibility change
 
-When a user switches to a different tab, the browser may throttle or pause
-JavaScript execution in the background tab. To ensure that the web socket
-connection remains active, listen for the `visibilitychange` event on the
-client side and notify the shared worker when the tab becomes hidden or visible.
+When the tab is not visible, such as when the user switches to another tab, the
+web socket connection may not be needed. To optimize resource usage, the client
+can notify the shared worker of visibility changes using the Page Visibility
+API. Listen for the `visibilitychange` event and send a message to the worker
+indicating whether the document is hidden or visible.
 
 ```js
 document.addEventListener("visibilitychange", () => {
@@ -121,13 +122,14 @@ document.addEventListener("visibilitychange", () => {
 });
 ```
 
-In the shared worker, handle these visibility change messages to manage
-the web socket connection accordingly. For example, close the
-connection when all tabs hide and reopen it when at least one tab becomes
-visible.
+The shared worker can handle these visibility change messages to manage the web
+socket connection. For example, close the connection when all tabs hide and
+reopen it when at least one tab becomes visible.
 
 ```js
+// Keep track of hidden connections
 let hiddenCount = 0;
+
 onconnect = (ev) => {
   const port = ev.ports[0];
   connections.add(port);
@@ -154,6 +156,36 @@ onconnect = (ev) => {
     connectSocket();
   }
 };
+```
+
+## Handling connections that never disconnect
+
+The `beforeunload` event is not a reliable way to detect and close the port
+connection. To be sure closed ports are cleaned up from the `connections` set a
+heartbeat mechanism is needed.
+
+```js
+const lastPongs = new Map();
+const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+
+setInterval(() => {
+  connections.forEach((port) => {
+    const lastPong = lastPongs.get(port) || 0;
+
+    // If no pong received in the last 30 seconds, consider the port disconnected
+    if (lastPong < Date.now() - HEARTBEAT_INTERVAL) {
+      connections.delete(port);
+    } else {
+      port.postMessage({ type: "ping" });
+    }
+  });
+}, HEARTBEAT_INTERVAL); // Ping every 30 seconds
+
+port.addEventListener("message", (event) => {
+  if (event.data.type === "pong") {
+    lastPong.set(port, Date.now());
+  }
+});
 ```
 
 [shared-worker]: https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker
