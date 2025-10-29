@@ -6,7 +6,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(vale:*)"
+      "Bash(vale:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }

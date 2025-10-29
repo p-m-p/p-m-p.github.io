@@ -107,11 +107,11 @@ onconnect = (ev) => {
 
 ## Pausing connection on visibility change
 
-When the tab is not visible, such as when the user switches to another tab, the
-web socket connection may not be needed. To optimize resource usage, the client
-can notify the shared worker of visibility changes using the Page Visibility
-API. Listen for the `visibilitychange` event and send a message to the worker
-indicating whether the document is hidden or visible.
+When the tab becomes invisible, such as when the user switches to another tab,
+the web socket connection becomes unnecessary. To optimize resource usage, the
+client can notify the shared worker of visibility changes using the Page
+Visibility API. Listen for the `visibilitychange` event and send a message to
+the worker indicating whether the document hides or shows.
 
 ```js
 document.addEventListener("visibilitychange", () => {
@@ -160,9 +160,9 @@ onconnect = (ev) => {
 
 ## Handling connections that never disconnect
 
-The `beforeunload` event is not a reliable way to detect and close the port
-connection. To be sure closed ports are cleaned up from the `connections` set a
-heartbeat mechanism is needed.
+The `beforeunload` event isn't a reliable way to detect and close the port
+connection. To ensure the cleanup of closed ports from the `connections` set, a
+heartbeat mechanism becomes necessary.
 
 ```js
 const lastPongs = new Map();
@@ -190,13 +190,73 @@ port.addEventListener("message", (event) => {
 
 ## Combining these strategies into shared worker utilities
 
-I have combined these strategies into a super small set of shared worker
-utilities that can be used to manage connections to a shared worker much like
-the examples here. The [shared-worker-utils][shared-worker-utils] NPM package
-can be used in both the shared worker and client app to simplify connection
-management. There is a full example of using the package to manage web socket in
-the GitHub repository.
+These strategies combine into a super small set of shared worker utilities that
+manage connections to a shared worker much like the examples here. The
+[shared-worker-utils][shared-worker-utils] Node Package Manager (NPM) package
+works in both the shared worker and client app to simplify connection
+management.
 
+Create the shared worker with the `PortManager`:
+
+```js
+import { PortManager } from "shared-worker-utils";
+
+let socket;
+
+const portManager = new PortManager({
+  onActiveCountChange: (activeCount, totalCount) => {
+    // Close socket when no active clients, open when clients become active
+    if (activeCount === 0 && socket) {
+      socket.close();
+      socket = null;
+    } else if (activeCount > 0 && !socket) {
+      connectSocket();
+    }
+  },
+  onMessage: (port, message) => {
+    if (message.type === "custom-action") {
+      // Handle custom messages from clients
+      console.log("Custom action received:", message.data);
+    }
+  },
+});
+
+function connectSocket() {
+  socket = new WebSocket("wss://example.com/socket");
+
+  socket.addEventListener("message", (event) => {
+    // Broadcast to all connected clients
+    portManager.broadcast(JSON.parse(event.data));
+  });
+}
+
+self.onconnect = (event) => {
+  portManager.handleConnect(event.ports[0]);
+};
+```
+
+Connect from the client side with the `SharedWorkerClient`:
+
+```js
+import { SharedWorkerClient } from "shared-worker-utils";
+
+const worker = new SharedWorker("./shared-worker.js", { type: "module" });
+
+const client = new SharedWorkerClient(worker, {
+  onMessage: (message) => {
+    console.log("WebSocket update:", message.data);
+  },
+});
+
+// Send custom messages to the worker
+client.send({ type: "custom-action", data: "some data" });
+```
+
+A full example of using the package to manage web socket exists in the [GitHub
+repository][github-repo-example].
+
+[github-repo-example]:
+  https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example
 [message-port]: https://developer.mozilla.org/en-US/docs/Web/API/MessagePort
 [shared-worker]: https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker
 [shared-worker-utils]: https://github.com/p-m-p/shared-worker-utils
