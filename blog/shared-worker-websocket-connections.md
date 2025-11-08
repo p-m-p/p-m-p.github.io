@@ -1,10 +1,9 @@
 ---
-title: Effectively managing connections to a shared worker
+title: Optimising web socket connections with a shared worker
 description:
-  A shared worker can eliminate multiple web socket or event source connections
-  across many tabs by centralizing the connection management. As I recently
-  discovered, managing connections to the shared worker can be tricky. Here's
-  one approach to solving the problem.
+  Shared workers are a good way to limit the number of websocket connections
+  across multiple tabs or windows. Managing connections to the shared worker can
+  be tricky though.
 tags:
   - posts
   - web workers
@@ -15,14 +14,14 @@ date: 2025-10-11
 draft: true
 ---
 
-## Using a shared worker for web socket connections
+## Using a shared worker for a websocket connection
 
-An online shopping site may use a web socket connection to notify users of
-events such as order updates or promotional offers. Users typically open a
-number of browser tabs to the site with different products they're considering
-purchasing. Each browser tab creates and manages a web socket connection to the
-server and uses a heartbeat mechanism to keep the connection alive. As the
-number of visitors to the site increases, so does the number of open web socket
+Consider an online shopping site that uses a web socket connection to notify
+users of events such as order updates, the amount people viewing the same item
+or the status of promotional deals. Users typically open a few browser tabs to
+the same site with different products they're considering purchasing. Each
+browser tab creates a web socket connection to the server and as the number of
+visitors to the site increases, so does the number of open web socket
 connections and the load on the server.
 
 Moving the web socket connection management to a [SharedWorker][shared-worker]
@@ -52,23 +51,31 @@ function broadcast(message) {
 
 // Handle new connections from clients
 onconnect = (ev) => {
-  connections.add(ev.ports[0]);
+  const port = ev.ports[0];
+  connections.add(port);
 
   if (!socket) {
     connectSocket();
   }
+
+  // Optionally handle messages from the port and send to the websocket
+  port.addEventListener("message", (event) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(event.data);
+    }
+  });
 };
 ```
 
 ## Handling client disconnections
 
-Unfortunately, the shared worker doesn't provide a way to detect when a client
-disconnects. This means that if a user closes a tab, removing the associated
-MessagePort from the `connections` set isn't straightforward.
+The MessagePort API doesn't provide an event for when a client disconnects. This
+means that if a user closes a tab, removing the associated MessagePort from the
+set of `connections` becomes problematic.
 
 The client side of the shared worker connection needs to notify the worker when
-the tab closes. Listen for the `beforeunload` event and send a message to the
-worker to signal that the tab closes.
+the tab closes. Listening for the `beforeunload` event and sending a specific
+message to the worker to signal that the tab closed.
 
 ```js
 const worker = new SharedWorker("shared-worker.js");
@@ -85,33 +92,36 @@ window.addEventListener("beforeunload", () => {
 });
 ```
 
-In the shared worker, listen for these disconnect messages and remove the
-corresponding MessagePort from the `connections` set.
+The shared worker listens for the message and removes the corresponding
+MessagePort from the `connections` set.
 
 ```js
 onconnect = (ev) => {
   const port = ev.ports[0];
   connections.add(port);
 
+  if (!socket) {
+    connectSocket();
+  }
+
   port.addEventListener("message", (event) => {
     if (event.data.type === "disconnect") {
       connections.delete(port);
     }
   });
-
-  if (!socket) {
-    connectSocket();
-  }
 };
 ```
 
+This works in most cases but isn't totally reliable. More on that later.
+
 ## Pausing connection on visibility change
 
-When the tab becomes invisible, such as when the user switches to another tab,
-the web socket connection becomes unnecessary. To optimize resource usage, the
-client can notify the shared worker of visibility changes using the Page
-Visibility API. Listen for the `visibilitychange` event and send a message to
-the worker indicating whether the document hides or shows.
+When the tab becomes invisible, such as when the user switches to another tab or
+window, the web socket connection becomes unnecessary. To optimize resource
+usage, the client can notify the shared worker of visibility changes using the
+[Page Visibility API][page-visibility]. Listening for the `visibilitychange`
+event and sending a message to the worker indicating whether the document hides
+or shows.
 
 ```js
 document.addEventListener("visibilitychange", () => {
@@ -134,6 +144,10 @@ onconnect = (ev) => {
   const port = ev.ports[0];
   connections.add(port);
 
+  if (!socket) {
+    connectSocket();
+  }
+
   port.addEventListener("message", (event) => {
     if (event.data.type === "disconnect") {
       connections.delete(port);
@@ -151,35 +165,32 @@ onconnect = (ev) => {
       }
     }
   });
-
-  if (!socket) {
-    connectSocket();
-  }
 };
 ```
 
-## Handling connections that never disconnect
+## Handling dead connections that never send a disconnect
 
-The `beforeunload` event isn't a reliable way to detect and close the port
-connection. To ensure the cleanup of closed ports from the `connections` set, a
-heartbeat mechanism becomes necessary.
+The `beforeunload` event isn't a totally reliable way to detect and close the
+port connection. To ensure the cleanup of closed ports from the `connections`
+set, a heartbeat mechanism becomes necessary.
 
 ```js
 const lastPongs = new Map();
 const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+const HEARTBEAT_TIMEOUT = 5000; // 5 seconds
 
 setInterval(() => {
   connections.forEach((port) => {
     const lastPong = lastPongs.get(port) || 0;
 
-    // If no pong received in the last 30 seconds, consider the port disconnected
-    if (lastPong < Date.now() - HEARTBEAT_INTERVAL) {
+    // If no pong received the consider the port disconnected
+    if (Date.now() - lastPong > HEARTBEAT_INTERVAL + HEARTBEAT_TIMEOUT) {
       connections.delete(port);
     } else {
       port.postMessage({ type: "ping" });
     }
   });
-}, HEARTBEAT_INTERVAL); // Ping every 30 seconds
+}, HEARTBEAT_INTERVAL);
 
 port.addEventListener("message", (event) => {
   if (event.data.type === "pong") {
@@ -258,6 +269,8 @@ repository][github-repo-example].
 [github-repo-example]:
   https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example
 [message-port]: https://developer.mozilla.org/en-US/docs/Web/API/MessagePort
+[page-visibility]:
+  https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
 [shared-worker]: https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker
 [shared-worker-utils]: https://github.com/p-m-p/shared-worker-utils
 [websocket]: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
