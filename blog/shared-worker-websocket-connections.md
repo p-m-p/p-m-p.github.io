@@ -1,30 +1,29 @@
 ---
-title: Optimising websocket connections with a shared worker
+title: Optimising WebSocket connections with a shared worker
 description:
-  Shared workers are a good way to limit the number of websocket connections
+  Shared workers are a good way to limit the number of WebSocket connections
   across multiple browser tabs. Managing connections to the shared worker can be
-  tricky, here's a few patterns that can help.
+  tricky though, here's a few patterns that might help.
 tags:
   - posts
   - web workers
   - websockets
   - javascript
   - performance
-date: 2025-10-11
-draft: true
+date: 2025-11-14
 ---
 
-## Using a shared worker for a websocket connection
+## Using a shared worker for a WebSocket connection
 
-Consider an online shopping site that uses a web socket connection to notify
+Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount people viewing the same item
 or the status of promotional deals. Users typically open a few browser tabs to
-the same site with different products they're considering purchasing. Each
-browser tab creates a web socket connection to the server and as the number of
-visitors to the site increases, so does the number of open web socket
-connections and the load on the server.
+the same site with different products they are considering purchasing. Each
+browser tab creates a WebSocket connection to the server and as the number of
+visitors to the site increases, so does the number of open WebSocket connections
+and the load on the server.
 
-Moving the web socket connection management to a [SharedWorker][shared-worker]
+Moving the WebSocket connection management to a [SharedWorker][shared-worker]
 creates a single connection shared across the users open tabs. Each tab connects
 to the shared worker using a [MessagePort][message-port] and receives messages
 from the worker when events occur.
@@ -38,7 +37,7 @@ function connectSocket() {
   socket = new WebSocket("wss://example.com/socket");
 
   socket.addEventListener("message", (event) => {
-    boadcast(event.data);
+    broadcast(event.data);
   });
 }
 
@@ -112,12 +111,12 @@ onconnect = (ev) => {
 };
 ```
 
-This works in most cases but isn't totally reliable. More on that later.
+This works in most cases but is not totally reliable. More on that later.
 
 ## Pausing connection on visibility change
 
 When the tab becomes invisible, such as when the user switches to another tab or
-window, the web socket connection becomes unnecessary. To optimize resource
+window, the WebSocket connection becomes unnecessary. To optimize resource
 usage, the client can notify the shared worker of visibility changes using the
 [Page Visibility API][page-visibility]. Listening for the `visibilitychange`
 event and sending a message to the worker indicating whether the document hides
@@ -133,8 +132,8 @@ document.addEventListener("visibilitychange", () => {
 ```
 
 The shared worker can handle these visibility change messages to manage the web
-socket connection. For example, close the connection when all tabs hide and
-reopen it when at least one tab becomes visible.
+socket connection. For example, close the connection when all tabs are hidden
+and reopen it when at least one tab becomes visible.
 
 ```js
 // Keep track of hidden connections
@@ -170,7 +169,7 @@ onconnect = (ev) => {
 
 ## Handling dead connections that never send a disconnect
 
-The `beforeunload` event isn't a totally reliable way to detect and close the
+The `beforeunload` event is not a totally reliable way to detect and close the
 port connection. To ensure the cleanup of closed ports from the `connections`
 set, a heartbeat mechanism becomes necessary.
 
@@ -183,7 +182,7 @@ setInterval(() => {
   connections.forEach((port) => {
     const lastPong = lastPongs.get(port) || 0;
 
-    // If no pong received the consider the port disconnected
+    // If no pong received then consider the port disconnected
     if (Date.now() - lastPong > HEARTBEAT_INTERVAL + HEARTBEAT_TIMEOUT) {
       connections.delete(port);
     } else {
@@ -194,16 +193,17 @@ setInterval(() => {
 
 port.addEventListener("message", (event) => {
   if (event.data.type === "pong") {
-    lastPong.set(port, Date.now());
+    lastPongs.set(port, Date.now());
   }
 });
 ```
 
 ## Combining these strategies into shared worker utilities
 
-This small NPM package combines these strategies,
+This small package combines these strategies,
 [shared-worker-utils][shared-worker-utils]. In the shared worker the port
-manager handles connection management and is notified of tab visibility changes.
+manager handles connection management and receives notifications of tab
+visibility changes.
 
 ```js
 import { PortManager } from "shared-worker-utils";
