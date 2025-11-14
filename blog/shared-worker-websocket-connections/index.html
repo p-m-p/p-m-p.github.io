@@ -10,13 +10,13 @@
   <meta property="og:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="og:title" content="Optimising WebSocket connections with a SharedWorker">
   <meta property="og:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
-  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/shared-worker-websocket-connections.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="twitter:title" content="Optimising WebSocket connections with a SharedWorker">
   <meta property="twitter:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
-  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/shared-worker-websocket-connections.jpg">
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
@@ -914,9 +914,9 @@ port<span class="token punctuation">.</span><span class="token function">addEven
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Combining these strategies into SharedWorker utilities</h2>
 <p>This small package combines these strategies,
-<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the SharedWorker the port
-manager handles connection management and receives notifications of tab
-visibility changes.</p>
+<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the SharedWorker the port manager
+handles connection management and receives notifications of tab visibility
+changes.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> PortManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> socket<span class="token punctuation">;</span>
@@ -964,8 +964,8 @@ self<span class="token punctuation">.</span><span class="token function-variable
 
 <span class="token comment">// Send custom messages to the worker</span>
 client<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"custom-action"</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">"some data"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>Check the complete example of using the library to manage a WebSocket
-connection in the <a href="https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example">GitHub repository</a>.</p>
+<p>Check the complete example of using the library to manage a WebSocket connection
+in the <a href="https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example">GitHub repository</a>.</p>
 
   </main>
 

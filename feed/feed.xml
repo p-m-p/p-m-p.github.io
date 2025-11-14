@@ -171,9 +171,9 @@ port&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;h2&gt;Combining these strategies into SharedWorker utilities&lt;/h2&gt;
 &lt;p&gt;This small package combines these strategies,
-&lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils&quot;&gt;shared-worker-utils&lt;/a&gt;. In the SharedWorker the port
-manager handles connection management and receives notifications of tab
-visibility changes.&lt;/p&gt;
+&lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils&quot;&gt;shared-worker-utils&lt;/a&gt;. In the SharedWorker the port manager
+handles connection management and receives notifications of tab visibility
+changes.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; PortManager &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;shared-worker-utils&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; socket&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -221,8 +221,8 @@ self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 
 &lt;span class=&quot;token comment&quot;&gt;// Send custom messages to the worker&lt;/span&gt;
 client&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;custom-action&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;some data&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;Check the complete example of using the library to manage a WebSocket
-connection in the &lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example&quot;&gt;GitHub repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Check the complete example of using the library to manage a WebSocket connection
+in the &lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example&quot;&gt;GitHub repository&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   <entry>
