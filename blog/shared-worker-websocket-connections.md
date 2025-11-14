@@ -2,7 +2,7 @@
 title: Optimising WebSocket connections with a SharedWorker
 description:
   Shared workers are a good way to limit the number of WebSocket connections
-  across multiple browser tabs. Managing connections to the shared worker can be
+  across multiple browser tabs. Managing connections to the SharedWorker can be
   tricky though, here's a few patterns that might help.
 tags:
   - posts
@@ -13,7 +13,7 @@ tags:
 date: 2025-11-14
 ---
 
-## Using a shared worker for a WebSocket connection
+## Using a SharedWorker for a WebSocket connection
 
 Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount people viewing the same item
@@ -25,7 +25,7 @@ and the load on the server.
 
 Moving the WebSocket connection management to a [SharedWorker][shared-worker]
 creates a single connection shared across the users open tabs. Each tab connects
-to the shared worker using a [MessagePort][message-port] and receives messages
+to the SharedWorker using a [MessagePort][message-port] and receives messages
 from the worker when events occur.
 
 ```js
@@ -72,7 +72,7 @@ The MessagePort API doesn't provide an event for when a client disconnects. This
 means that if a user closes a tab, removing the associated MessagePort from the
 set of `connections` becomes problematic.
 
-The client side of the shared worker connection needs to notify the worker when
+The client side of the SharedWorker connection needs to notify the worker when
 the tab closes. Listening for the `beforeunload` event and sending a specific
 message to the worker to signal that the tab closed.
 
@@ -91,7 +91,7 @@ window.addEventListener("beforeunload", () => {
 });
 ```
 
-The shared worker listens for the message and removes the corresponding
+The SharedWorker listens for the message and removes the corresponding
 MessagePort from the `connections` set.
 
 ```js
@@ -117,7 +117,7 @@ This works in most cases but is not totally reliable. More on that later.
 
 When the tab becomes invisible, such as when the user switches to another tab or
 window, the WebSocket connection becomes unnecessary. To optimize resource
-usage, the client can notify the shared worker of visibility changes using the
+usage, the client can notify the SharedWorker of visibility changes using the
 [Page Visibility API][page-visibility]. Listening for the `visibilitychange`
 event and sending a message to the worker indicating whether the document hides
 or shows.
@@ -131,7 +131,7 @@ document.addEventListener("visibilitychange", () => {
 });
 ```
 
-The shared worker can handle these visibility change messages to manage the web
+The SharedWorker can handle these visibility change messages to manage the
 socket connection. For example, close the connection when all tabs are hidden
 and reopen it when at least one tab becomes visible.
 
@@ -198,10 +198,10 @@ port.addEventListener("message", (event) => {
 });
 ```
 
-## Combining these strategies into shared worker utilities
+## Combining these strategies into SharedWorker utilities
 
 This small package combines these strategies,
-[shared-worker-utils][shared-worker-utils]. In the shared worker the port
+[shared-worker-utils][shared-worker-utils]. In the SharedWorker the port
 manager handles connection management and receives notifications of tab
 visibility changes.
 
@@ -242,7 +242,7 @@ self.onconnect = (event) => {
 };
 ```
 
-On the client side the shared worker client receives messages from the worker.
+On the client side the SharedWorker client receives messages from the worker.
 
 ```js
 import { SharedWorkerClient } from "shared-worker-utils";
@@ -259,7 +259,7 @@ const client = new SharedWorkerClient(worker, {
 client.send({ type: "custom-action", data: "some data" });
 ```
 
-Check the complete example of using the library to manage a web socket
+Check the complete example of using the library to manage a WebSocket
 connection in the [GitHub repository][github-repo-example].
 
 [github-repo-example]:
