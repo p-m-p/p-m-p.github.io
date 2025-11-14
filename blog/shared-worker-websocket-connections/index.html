@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Optimising WebSocket connections with a SharedWorker</title>
-  <meta name="description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta name="description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="og:title" content="Optimising WebSocket connections with a SharedWorker">
-  <meta property="og:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="og:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="twitter:title" content="Optimising WebSocket connections with a SharedWorker">
-  <meta property="twitter:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="twitter:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -757,8 +757,8 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.</p>
-    <h2>Using a shared worker for a WebSocket connection</h2>
+    <p class="post-description">Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.</p>
+    <h2>Using a SharedWorker for a WebSocket connection</h2>
 <p>Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount people viewing the same item
 or the status of promotional deals. Users typically open a few browser tabs to
@@ -768,7 +768,7 @@ visitors to the site increases, so does the number of open WebSocket connections
 and the load on the server.</p>
 <p>Moving the WebSocket connection management to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker</a>
 creates a single connection shared across the users open tabs. Each tab connects
-to the shared worker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives messages
+to the SharedWorker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives messages
 from the worker when events occur.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> connections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> socket<span class="token punctuation">;</span>
@@ -809,7 +809,7 @@ from the worker when events occur.</p>
 <p>The MessagePort API doesn't provide an event for when a client disconnects. This
 means that if a user closes a tab, removing the associated MessagePort from the
 set of <code>connections</code> becomes problematic.</p>
-<p>The client side of the shared worker connection needs to notify the worker when
+<p>The client side of the SharedWorker connection needs to notify the worker when
 the tab closes. Listening for the <code>beforeunload</code> event and sending a specific
 message to the worker to signal that the tab closed.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorker</span><span class="token punctuation">(</span><span class="token string">"shared-worker.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -824,7 +824,7 @@ port<span class="token punctuation">.</span><span class="token function">addEven
 window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"beforeunload"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"disconnect"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>The shared worker listens for the message and removes the corresponding
+<p>The SharedWorker listens for the message and removes the corresponding
 MessagePort from the <code>connections</code> set.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -844,7 +844,7 @@ MessagePort from the <code>connections</code> set.</p>
 <h2>Pausing connection on visibility change</h2>
 <p>When the tab becomes invisible, such as when the user switches to another tab or
 window, the WebSocket connection becomes unnecessary. To optimize resource
-usage, the client can notify the shared worker of visibility changes using the
+usage, the client can notify the SharedWorker of visibility changes using the
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API">Page Visibility API</a>. Listening for the <code>visibilitychange</code>
 event and sending a message to the worker indicating whether the document hides
 or shows.</p>
@@ -854,7 +854,7 @@ or shows.</p>
     <span class="token literal-property property">hidden</span><span class="token operator">:</span> document<span class="token punctuation">.</span>hidden<span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>The shared worker can handle these visibility change messages to manage the web
+<p>The SharedWorker can handle these visibility change messages to manage the
 socket connection. For example, close the connection when all tabs are hidden
 and reopen it when at least one tab becomes visible.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// Keep track of hidden connections</span>
@@ -912,9 +912,9 @@ port<span class="token punctuation">.</span><span class="token function">addEven
     lastPongs<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>port<span class="token punctuation">,</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<h2>Combining these strategies into shared worker utilities</h2>
+<h2>Combining these strategies into SharedWorker utilities</h2>
 <p>This small package combines these strategies,
-<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the shared worker the port
+<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the SharedWorker the port
 manager handles connection management and receives notifications of tab
 visibility changes.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> PortManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
@@ -951,7 +951,7 @@ visibility changes.</p>
 self<span class="token punctuation">.</span><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   portManager<span class="token punctuation">.</span><span class="token function">handleConnect</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>On the client side the shared worker client receives messages from the worker.</p>
+<p>On the client side the SharedWorker client receives messages from the worker.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> SharedWorkerClient <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorker</span><span class="token punctuation">(</span><span class="token string">"./shared-worker.js"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"module"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -964,7 +964,7 @@ self<span class="token punctuation">.</span><span class="token function-variable
 
 <span class="token comment">// Send custom messages to the worker</span>
 client<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"custom-action"</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">"some data"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>Check the complete example of using the library to manage a web socket
+<p>Check the complete example of using the library to manage a WebSocket
 connection in the <a href="https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example">GitHub repository</a>.</p>
 
   </main>

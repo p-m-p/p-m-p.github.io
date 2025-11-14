@@ -15,7 +15,7 @@
     <link href="https://philparsons.co.uk/blog/shared-worker-websocket-connections/" />
     <updated>2025-11-14T00:00:00Z</updated>
     <id>https://philparsons.co.uk/blog/shared-worker-websocket-connections/</id>
-    <content type="html">&lt;h2&gt;Using a shared worker for a WebSocket connection&lt;/h2&gt;
+    <content type="html">&lt;h2&gt;Using a SharedWorker for a WebSocket connection&lt;/h2&gt;
 &lt;p&gt;Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount people viewing the same item
 or the status of promotional deals. Users typically open a few browser tabs to
@@ -25,7 +25,7 @@ visitors to the site increases, so does the number of open WebSocket connections
 and the load on the server.&lt;/p&gt;
 &lt;p&gt;Moving the WebSocket connection management to a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker&quot;&gt;SharedWorker&lt;/a&gt;
 creates a single connection shared across the users open tabs. Each tab connects
-to the shared worker using a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MessagePort&quot;&gt;MessagePort&lt;/a&gt; and receives messages
+to the SharedWorker using a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MessagePort&quot;&gt;MessagePort&lt;/a&gt; and receives messages
 from the worker when events occur.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; connections &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; socket&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -66,7 +66,7 @@ from the worker when events occur.&lt;/p&gt;
 &lt;p&gt;The MessagePort API doesn&#39;t provide an event for when a client disconnects. This
 means that if a user closes a tab, removing the associated MessagePort from the
 set of &lt;code&gt;connections&lt;/code&gt; becomes problematic.&lt;/p&gt;
-&lt;p&gt;The client side of the shared worker connection needs to notify the worker when
+&lt;p&gt;The client side of the SharedWorker connection needs to notify the worker when
 the tab closes. Listening for the &lt;code&gt;beforeunload&lt;/code&gt; event and sending a specific
 message to the worker to signal that the tab closed.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; worker &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;SharedWorker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;shared-worker.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -81,7 +81,7 @@ port&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 window&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;beforeunload&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   port&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;postMessage&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;disconnect&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;The shared worker listens for the message and removes the corresponding
+&lt;p&gt;The SharedWorker listens for the message and removes the corresponding
 MessagePort from the &lt;code&gt;connections&lt;/code&gt; set.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token function-variable function&quot;&gt;onconnect&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;ev&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; port &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ev&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;ports&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -101,7 +101,7 @@ MessagePort from the &lt;code&gt;connections&lt;/code&gt; set.&lt;/p&gt;
 &lt;h2&gt;Pausing connection on visibility change&lt;/h2&gt;
 &lt;p&gt;When the tab becomes invisible, such as when the user switches to another tab or
 window, the WebSocket connection becomes unnecessary. To optimize resource
-usage, the client can notify the shared worker of visibility changes using the
+usage, the client can notify the SharedWorker of visibility changes using the
 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API&quot;&gt;Page Visibility API&lt;/a&gt;. Listening for the &lt;code&gt;visibilitychange&lt;/code&gt;
 event and sending a message to the worker indicating whether the document hides
 or shows.&lt;/p&gt;
@@ -111,7 +111,7 @@ or shows.&lt;/p&gt;
     &lt;span class=&quot;token literal-property property&quot;&gt;hidden&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; document&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;hidden&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;The shared worker can handle these visibility change messages to manage the web
+&lt;p&gt;The SharedWorker can handle these visibility change messages to manage the
 socket connection. For example, close the connection when all tabs are hidden
 and reopen it when at least one tab becomes visible.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// Keep track of hidden connections&lt;/span&gt;
@@ -169,9 +169,9 @@ port&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
     lastPongs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;port&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; Date&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;h2&gt;Combining these strategies into shared worker utilities&lt;/h2&gt;
+&lt;h2&gt;Combining these strategies into SharedWorker utilities&lt;/h2&gt;
 &lt;p&gt;This small package combines these strategies,
-&lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils&quot;&gt;shared-worker-utils&lt;/a&gt;. In the shared worker the port
+&lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils&quot;&gt;shared-worker-utils&lt;/a&gt;. In the SharedWorker the port
 manager handles connection management and receives notifications of tab
 visibility changes.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; PortManager &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;shared-worker-utils&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -208,7 +208,7 @@ visibility changes.&lt;/p&gt;
 self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;onconnect&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   portManager&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;handleConnect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;event&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;ports&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;On the client side the shared worker client receives messages from the worker.&lt;/p&gt;
+&lt;p&gt;On the client side the SharedWorker client receives messages from the worker.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; SharedWorkerClient &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;shared-worker-utils&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; worker &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;SharedWorker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;./shared-worker.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;module&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -221,7 +221,7 @@ self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class
 
 &lt;span class=&quot;token comment&quot;&gt;// Send custom messages to the worker&lt;/span&gt;
 client&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;custom-action&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;some data&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;Check the complete example of using the library to manage a web socket
+&lt;p&gt;Check the complete example of using the library to manage a WebSocket
 connection in the &lt;a href=&quot;https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example&quot;&gt;GitHub repository&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
