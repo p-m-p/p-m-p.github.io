@@ -11,6 +11,7 @@ tags:
   - javascript
   - performance
 date: 2025-11-14
+social_card: shared-worker-websocket-connections.jpg
 ---
 
 ## Using a SharedWorker for a WebSocket connection
@@ -201,9 +202,9 @@ port.addEventListener("message", (event) => {
 ## Combining these strategies into SharedWorker utilities
 
 This small package combines these strategies,
-[shared-worker-utils][shared-worker-utils]. In the SharedWorker the port
-manager handles connection management and receives notifications of tab
-visibility changes.
+[shared-worker-utils][shared-worker-utils]. In the SharedWorker the port manager
+handles connection management and receives notifications of tab visibility
+changes.
 
 ```js
 import { PortManager } from "shared-worker-utils";
@@ -259,8 +260,8 @@ const client = new SharedWorkerClient(worker, {
 client.send({ type: "custom-action", data: "some data" });
 ```
 
-Check the complete example of using the library to manage a WebSocket
-connection in the [GitHub repository][github-repo-example].
+Check the complete example of using the library to manage a WebSocket connection
+in the [GitHub repository][github-repo-example].
 
 [github-repo-example]:
   https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example
