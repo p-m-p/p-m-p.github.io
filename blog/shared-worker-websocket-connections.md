@@ -1,5 +1,5 @@
 ---
-title: Optimising WebSocket connections with a shared worker
+title: Optimising WebSocket connections with a SharedWorker
 description:
   Shared workers are a good way to limit the number of WebSocket connections
   across multiple browser tabs. Managing connections to the shared worker can be
