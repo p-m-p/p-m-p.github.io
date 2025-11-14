@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimising WebSocket connections with a shared worker</title>
+  <meta name="description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
+  <meta property="og:title" content="Optimising WebSocket connections with a shared worker">
+  <meta property="og:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
+  <meta property="twitter:title" content="Optimising WebSocket connections with a shared worker">
+  <meta property="twitter:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/home.jpg">
+
+  <link rel="icon" href="/img/icon.png">
+  <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
+  <style>.ctc-image {
+  @media (hover: hover) {
+    &::part(button) {
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+
+    &:hover::part(button) {
+      opacity: 1;
+    }
+  }
+}
+
+copy-to-clipboard {
+  /* Keep these raw color values here until there is a light theme for code blocks */
+  --ctc-button-color: var(--color-white);
+  --ctc-button-background: var(--color-neutral-700);
+}
+
+back-to-top {
+  --btt-button-background: var(--color-bg-action);
+  --btt-button-background-hover: var(--color-bg-action-hover);
+  --btt-button-color: var(--color-text-primary);
+}
+
+figcaption {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 var(--spacing-md);
+}
+
+.banner {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-md);
+
+  a {
+    color: var(--color-text-primary);
+    display: inline-flex;
+    text-decoration: none;
+    transition:
+      transform 200ms,
+      color 200ms;
+
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+
+  a {
+    line-height: 1;
+
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+}
+
+.post {
+  max-width: 100%;
+  overflow: clip;
+}
+
+.post-header {
+  background: var(--color-bg-secondary);
+  margin: 0 0 var(--spacing-md);
+  padding: var(--spacing-md) 0 0;
+}
+
+.post-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.post-meta {
+  align-items: baseline;
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: right;
+  padding: var(--spacing-md) 0 var(--spacing-xs);
+}
+
+.post-date {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.post-content {
+  color: var(--color-text-secondary);
+
+  blockquote {
+    border-left: solid 4px var(--color-border-primary);
+    font-style: italic;
+    padding: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  p,
+  ol,
+  ul {
+    margin: 0 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  ol,
+  ul {
+    padding: 0 0 0 var(--spacing-xl);
+  }
+
+  li {
+    margin: 0 0 var(--spacing-xs);
+  }
+
+  p code {
+    font-size: 0.875rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin: var(--spacing-3xl) 0 var(--spacing-md);
+    text-wrap: pretty;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    margin: 0 0 var(--spacing-3xl);
+    overflow: auto;
+    padding: var(--spacing-xs);
+  }
+
+  img {
+    background: var(--color-bg-secondary);
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: var(--spacing-md);
+  }
+}
+
+figure {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
+.post-description {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.post-footer {
+  background: var(--color-bg-secondary);
+  border-top: solid 1px var(--color-border-primary);
+  padding: var(--spacing-md) 0;
+}
+
+#share-fallback {
+  background: black;
+  border: none;
+  border-radius: 1rem;
+  left: 50%;
+  min-width: 280px;
+  padding: var(--spacing-3xl);
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+}
+
+.share-fallback-title {
+  font-size: 1.25rem;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.share-fallback-links {
+  display: flex;
+  flex-flow: column;
+  gap: var(--spacing-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited,
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.share-btn {
+  align-items: center;
+  background: var(--color-bg-action);
+  border: none;
+  border-radius: 999px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 500;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+  line-height: 1;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  transition:
+    background 200ms,
+    color 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-bg-action-hover);
+    }
+  }
+}
+
+.theme-switcher {
+  height: 2.5rem;
+  width: 5rem;
+}
+
+theme-switch {
+  --ts-button-color: var(--color-text-primary);
+  --ts-button-size: 1.25rem;
+  --ts-button-bar-background: var(--color-bg-secondary);
+  --ts-lozenge-background: var(--color-bg-action);
+}
+
+@media (pointer: coarse) {
+  .theme-switcher {
+    overflow: hidden;
+    width: 2.5rem;
+  }
+
+  theme-switch {
+    --ts-lozenge-background: transparent;
+
+    &::part(button-bar) {
+      background: var(--color-bg-action);
+    }
+
+    &::part(button) {
+      opacity: 1;
+    }
+
+    &::part(button dark-button) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &[data-theme="dark"] {
+      &::part(button dark-button) {
+        visibility: hidden;
+      }
+    }
+
+    &[data-theme="light"] {
+      &::part(button light-button) {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+@media (width >=600px) {
+  .post-header {
+    padding: var(--spacing-3xl) 0 0;
+    margin: 0 0 var(--spacing-3xl);
+  }
+}
+
+@media (width >=1024px) {
+  .post-content {
+    font-size: 1.125rem;
+
+    p {
+      code {
+        font-size: 1rem;
+      }
+    }
+
+    pre {
+      padding: var(--spacing-md);
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .post-title {
+    font-size: 4rem;
+  }
+
+  .post-description {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes zoom-title {
+  to {
+    transform: rotate(-10deg) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .post-header {
+    animation: zoom-title linear both;
+    animation-timeline: scroll();
+    animation-range: 0 500px;
+  }
+}
+/**
+ * a11y-dark theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+  background: var(--codeblock-bg);
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #d4d0ab;
+}
+
+.token.punctuation {
+  color: #fefefe;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ffa07a;
+}
+
+.token.boolean,
+.token.number {
+  color: #00e0e0;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #abe338;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #00e0e0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #ffd700;
+}
+
+.token.keyword {
+  color: #00e0e0;
+}
+
+.token.regex,
+.token.important {
+  color: #ffd700;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+:root {
+  color-scheme: light dark;
+
+  --color-stone: lch(50% 1.5 75);
+  --color-peach: lch(55% 48 38);
+
+  --color-white: lch(99% 4 75);
+  --color-black: lch(2% 4 75);
+
+  --color-primary-50: lch(from var(--color-peach) 95% c h);
+  --color-primary-100: lch(from var(--color-peach) 90% c h);
+  --color-primary-200: lch(from var(--color-peach) 80% c h);
+  --color-primary-300: lch(from var(--color-peach) 70% c h);
+  --color-primary-400: lch(from var(--color-peach) 60% c h);
+  --color-primary-500: lch(from var(--color-peach) l c h);
+  --color-primary-600: lch(from var(--color-peach) 40% c h);
+  --color-primary-700: lch(from var(--color-peach) 30% c h);
+  --color-primary-800: lch(from var(--color-peach) 20% c h);
+  --color-primary-900: lch(from var(--color-peach) 10% c h);
+  --color-primary-950: lch(from var(--color-peach) 5% c h);
+
+  --color-neutral-50: lch(from var(--color-stone) 95% c h);
+  --color-neutral-100: lch(from var(--color-stone) 90% c h);
+  --color-neutral-200: lch(from var(--color-stone) 80% c h);
+  --color-neutral-300: lch(from var(--color-stone) 70% c h);
+  --color-neutral-400: lch(from var(--color-stone) 60% c h);
+  --color-neutral-500: lch(from var(--color-stone) l c h);
+  --color-neutral-600: lch(from var(--color-stone) 40% c h);
+  --color-neutral-700: lch(from var(--color-stone) 30% c h);
+  --color-neutral-800: lch(from var(--color-stone) 20% c h);
+  --color-neutral-900: lch(from var(--color-stone) 10% c h);
+  --color-neutral-950: lch(from var(--color-stone) 5% c h);
+
+  --size-0: 0;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-2: 0.5rem;
+  --size-3: 0.75rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+
+  --color-border-primary: light-dark(var(--color-neutral-200),
+      var(--color-neutral-700));
+
+  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
+  --color-bg-secondary: light-dark(var(--color-neutral-50),
+      var(--color-neutral-900));
+  --color-bg-action: light-dark(var(--color-neutral-100),
+      var(--color-neutral-700));
+  --color-bg-action-hover: light-dark(var(--color-primary-100),
+      var(--color-primary-600));
+
+  --color-link: var(--color-text-primary);
+  --color-link-hover: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-underline: var(--color-primary-400);
+  --color-link-hover-underline: light-dark(var(--color-primary-600),
+      var(--color-primary-300));
+  --color-link-visited: light-dark(var(--color-primary-600),
+      var(--color-primary-100));
+  --color-link-visited-underline: var(--color-primary-400);
+  --color-link-focus: var(--color-link-hover);
+  --color-link-focus-underline: var(--color-link-hover);
+
+  --color-text-primary: light-dark(var(--color-black), var(--color-white));
+  --color-text-secondary: light-dark(var(--color-neutral-600),
+      var(--color-neutral-200));
+
+  --spacing-2xs: var(--size-1);
+  --spacing-xs: var(--size-2);
+  --spacing-sm: var(--size-3);
+  --spacing-md: var(--size-4);
+  --spacing-lg: var(--size-5);
+  --spacing-xl: var(--size-6);
+  --spacing-2xl: var(--size-7);
+  --spacing-3xl: var(--size-8);
+
+  --codeblock-bg: var(--color-neutral-900);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+  font-weight: 500;
+  position: relative;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--color-link-underline);
+  transition:
+    text-decoration-color 200ms,
+    color 200ms;
+
+  &:visited {
+    color: var(--color-link-visited);
+    text-decoration-color: var(--color-link-visited-underline);
+    font-weight: 400;
+  }
+
+  &:focus-visible {
+    color: var(--color-link-focus);
+    text-decoration-color: var(--color-link-focus-underline);
+  }
+
+  &:active {
+    top: 0.125rem;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-link-hover);
+      text-decoration-color: var(--color-link-hover-underline);
+    }
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}</style>
+  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
+
+  <title>Optimising WebSocket connections with a shared worker</title>
+</head>
+
+<body>
+  
+<div class="banner container">
+  <a class="logo" href="/">Phil Parsons</a>
+
+  <nav class="nav">
+    <a href="https://github.com/p-m-p" aria-label="Github profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+    </a>
+    <a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn profile">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </a>
+    <a href="/feed/feed.xml" aria-label="RSS XML feed">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    </a>
+  </nav>
+
+  <div class="theme-switcher">
+    <theme-switch data-strategy="class"></theme-switch>
+  </div>
+</div>
+
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <h1 class="post-title" style="view-transition-name: optimising-websocket-connections-with-a-shared-worker">Optimising WebSocket connections with a shared worker</h1>
+
+      <div class="post-meta">
+        <div class="post-date"><time datetime="2025-11-14">14 November 2025</time></div>
+
+        <share-button>
+          <button class="share-btn" slot="button" popovertarget="share-fallback">
+            Share
+            <span class="share-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+            </span>
+          </button>
+
+          <div popover="" id="share-fallback">
+            <h2 class="share-fallback-title">Share this post</h2>
+            <ul class="share-fallback-links">
+              <li>
+                <a href="https://bsky.app/intent/compose?text=Optimising%20WebSocket%20connections%20with%20a%20shared%20worker%20https://philparsons.co.uk//blog/shared-worker-websocket-connections/">🦋 Share on Bluesky</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/shareArticle?url=https://philparsons.co.uk//blog/shared-worker-websocket-connections/&title=Optimising%20WebSocket%20connections%20with%20a%20shared%20worker">🏢 Share on LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://x.com/intent/post?url=https://philparsons.co.uk//blog/shared-worker-websocket-connections/&text=Optimising%20WebSocket%20connections%20with%20a%20shared%20worker&via=phil_parsons">
+                  💩 Share on X
+                </a>
+              </li>
+            </ul>
+          </div>
+        </share-button>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-content container">
+    <p class="post-description">Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the shared worker can be tricky though, here&#39;s a few patterns that might help.</p>
+    <h2>Using a shared worker for a WebSocket connection</h2>
+<p>Consider an online shopping site that uses a WebSocket connection to notify
+users of events such as order updates, the amount people viewing the same item
+or the status of promotional deals. Users typically open a few browser tabs to
+the same site with different products they are considering purchasing. Each
+browser tab creates a WebSocket connection to the server and as the number of
+visitors to the site increases, so does the number of open WebSocket connections
+and the load on the server.</p>
+<p>Moving the WebSocket connection management to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker</a>
+creates a single connection shared across the users open tabs. Each tab connects
+to the shared worker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives messages
+from the worker when events occur.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> connections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> socket<span class="token punctuation">;</span>
+
+<span class="token comment">// Establish the WebSocket connection</span>
+<span class="token keyword">function</span> <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WebSocket</span><span class="token punctuation">(</span><span class="token string">"wss://example.com/socket"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  socket<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">broadcast</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Broadcast a message to all connected ports</span>
+<span class="token keyword">function</span> <span class="token function">broadcast</span><span class="token punctuation">(</span><span class="token parameter">message</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  connections<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">port</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Handle new connections from clients</span>
+<span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  connections<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Optionally handle messages from the port and send to the websocket</span>
+  port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>socket <span class="token operator">&amp;&amp;</span> socket<span class="token punctuation">.</span>readyState <span class="token operator">===</span> WebSocket<span class="token punctuation">.</span><span class="token constant">OPEN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      socket<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Handling client disconnections</h2>
+<p>The MessagePort API doesn't provide an event for when a client disconnects. This
+means that if a user closes a tab, removing the associated MessagePort from the
+set of <code>connections</code> becomes problematic.</p>
+<p>The client side of the shared worker connection needs to notify the worker when
+the tab closes. Listening for the <code>beforeunload</code> event and sending a specific
+message to the worker to signal that the tab closed.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorker</span><span class="token punctuation">(</span><span class="token string">"shared-worker.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> port <span class="token operator">=</span> worker<span class="token punctuation">.</span>port<span class="token punctuation">;</span>
+
+port<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Received message from worker:"</span><span class="token punctuation">,</span> event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"beforeunload"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"disconnect"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>The shared worker listens for the message and removes the corresponding
+MessagePort from the <code>connections</code> set.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  connections<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"disconnect"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      connections<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>This works in most cases but is not totally reliable. More on that later.</p>
+<h2>Pausing connection on visibility change</h2>
+<p>When the tab becomes invisible, such as when the user switches to another tab or
+window, the WebSocket connection becomes unnecessary. To optimize resource
+usage, the client can notify the shared worker of visibility changes using the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API">Page Visibility API</a>. Listening for the <code>visibilitychange</code>
+event and sending a message to the worker indicating whether the document hides
+or shows.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js">document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"visibilitychange"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"visibilitychange"</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">hidden</span><span class="token operator">:</span> document<span class="token punctuation">.</span>hidden<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>The shared worker can handle these visibility change messages to manage the web
+socket connection. For example, close the connection when all tabs are hidden
+and reopen it when at least one tab becomes visible.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// Keep track of hidden connections</span>
+<span class="token keyword">let</span> hiddenCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  connections<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"disconnect"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      connections<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"visibilitychange"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">.</span>hidden<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        hiddenCount<span class="token operator">++</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        hiddenCount<span class="token operator">--</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>hiddenCount <span class="token operator">===</span> connections<span class="token punctuation">.</span>size<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        socket<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>socket <span class="token operator">||</span> socket<span class="token punctuation">.</span>readyState <span class="token operator">===</span> WebSocket<span class="token punctuation">.</span><span class="token constant">CLOSED</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Handling dead connections that never send a disconnect</h2>
+<p>The <code>beforeunload</code> event is not a totally reliable way to detect and close the
+port connection. To ensure the cleanup of closed ports from the <code>connections</code>
+set, a heartbeat mechanism becomes necessary.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> lastPongs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">HEARTBEAT_INTERVAL</span> <span class="token operator">=</span> <span class="token number">30000</span><span class="token punctuation">;</span> <span class="token comment">// 30 seconds</span>
+<span class="token keyword">const</span> <span class="token constant">HEARTBEAT_TIMEOUT</span> <span class="token operator">=</span> <span class="token number">5000</span><span class="token punctuation">;</span> <span class="token comment">// 5 seconds</span>
+
+<span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  connections<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">port</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> lastPong <span class="token operator">=</span> lastPongs<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// If no pong received then consider the port disconnected</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> lastPong <span class="token operator">></span> <span class="token constant">HEARTBEAT_INTERVAL</span> <span class="token operator">+</span> <span class="token constant">HEARTBEAT_TIMEOUT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      connections<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"ping"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token constant">HEARTBEAT_INTERVAL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"pong"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    lastPongs<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>port<span class="token punctuation">,</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<h2>Combining these strategies into shared worker utilities</h2>
+<p>This small package combines these strategies,
+<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the shared worker the port
+manager handles connection management and receives notifications of tab
+visibility changes.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> PortManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> socket<span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> portManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PortManager</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token function-variable function">onActiveCountChange</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">activeCount<span class="token punctuation">,</span> totalCount</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Close socket when no active clients, open when clients become active</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>activeCount <span class="token operator">===</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      socket<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      socket <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>activeCount <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">onMessage</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">port<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>message<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"custom-action"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Handle custom messages from clients</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Custom action received:"</span><span class="token punctuation">,</span> message<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WebSocket</span><span class="token punctuation">(</span><span class="token string">"wss://example.com/socket"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  socket<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Broadcast to all connected clients</span>
+    portManager<span class="token punctuation">.</span><span class="token function">broadcast</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+self<span class="token punctuation">.</span><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  portManager<span class="token punctuation">.</span><span class="token function">handleConnect</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>On the client side the shared worker client receives messages from the worker.</p>
+<copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> SharedWorkerClient <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorker</span><span class="token punctuation">(</span><span class="token string">"./shared-worker.js"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"module"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorkerClient</span><span class="token punctuation">(</span>worker<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">onMessage</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">message</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"WebSocket update:"</span><span class="token punctuation">,</span> message<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Send custom messages to the worker</span>
+client<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"custom-action"</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">"some data"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
+<p>Check the complete example of using the library to manage a web socket
+connection in the <a href="https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example">GitHub repository</a>.</p>
+
+  </main>
+
+  <footer class="post-footer">
+    <div class="container">
+      <div class="licence">
+        <p xmlns:cc="http://creativecommons.org/ns#">This post by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://philparsons.co.uk/">Phil Parsons</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<back-to-top data-scroll-behavior="smooth"></back-to-top>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@parsonic/all@1.1.3/min.js" defer=""></script>
+
+</body>
+
+</html>

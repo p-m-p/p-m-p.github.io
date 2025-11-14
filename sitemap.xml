@@ -47,22 +47,27 @@
 	</url>
 	
 	<url>
+		<loc>/blog/shared-worker-websocket-connections/</loc>
+		<lastmod>2025-11-14</lastmod>
+	</url>
+	
+	<url>
 		<loc>/CLAUDE/</loc>
-		<lastmod>2025-11-12</lastmod>
+		<lastmod>2025-11-14</lastmod>
 	</url>
 	
 	<url>
 		<loc>/</loc>
-		<lastmod>2025-11-12</lastmod>
+		<lastmod>2025-11-14</lastmod>
 	</url>
 	
 	<url>
 		<loc>/styles/write-good/README/</loc>
-		<lastmod>2025-11-12</lastmod>
+		<lastmod>2025-11-14</lastmod>
 	</url>
 	
 	<url>
 		<loc>/feed/feed.xml</loc>
-		<lastmod>2025-11-12</lastmod>
+		<lastmod>2025-11-14</lastmod>
 	</url>
 </urlset>
