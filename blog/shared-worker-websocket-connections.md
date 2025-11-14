@@ -1,9 +1,9 @@
 ---
-title: Optimising web socket connections with a shared worker
+title: Optimising websocket connections with a shared worker
 description:
   Shared workers are a good way to limit the number of websocket connections
-  across multiple tabs or windows. Managing connections to the shared worker can
-  be tricky though.
+  across multiple browser tabs. Managing connections to the shared worker can be
+  tricky, here's a few patterns that can help.
 tags:
   - posts
   - web workers
@@ -201,13 +201,9 @@ port.addEventListener("message", (event) => {
 
 ## Combining these strategies into shared worker utilities
 
-These strategies combine into a super small set of shared worker utilities that
-manage connections to a shared worker much like the examples here. The
-[shared-worker-utils][shared-worker-utils] Node Package Manager (NPM) package
-works in both the shared worker and client app to simplify connection
-management.
-
-Create the shared worker with the `PortManager`:
+This small NPM package combines these strategies,
+[shared-worker-utils][shared-worker-utils]. In the shared worker the port
+manager handles connection management and is notified of tab visibility changes.
 
 ```js
 import { PortManager } from "shared-worker-utils";
@@ -246,7 +242,7 @@ self.onconnect = (event) => {
 };
 ```
 
-Connect from the client side with the `SharedWorkerClient`:
+On the client side the shared worker client receives messages from the worker.
 
 ```js
 import { SharedWorkerClient } from "shared-worker-utils";
@@ -263,8 +259,8 @@ const client = new SharedWorkerClient(worker, {
 client.send({ type: "custom-action", data: "some data" });
 ```
 
-A full example of using the package to manage web socket exists in the [GitHub
-repository][github-repo-example].
+Check the complete example of using the library to manage a web socket
+connection in the [GitHub repository][github-repo-example].
 
 [github-repo-example]:
   https://github.com/p-m-p/shared-worker-utils/tree/main/packages/example
