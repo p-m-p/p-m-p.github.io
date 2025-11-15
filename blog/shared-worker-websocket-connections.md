@@ -1,9 +1,10 @@
 ---
 title: Optimising WebSocket connections with a SharedWorker
 description:
-  Shared workers are a good way to limit the number of WebSocket connections
-  across multiple browser tabs. Managing connections to the SharedWorker can be
-  tricky though, here's a few patterns that might help.
+  With a SharedWorker we can share a WebSocket connection across multiple
+  browser tabs. Effectively managing connections to the SharedWorker can be
+  tricky but these simple strategies ensure safe and efficient connection
+  handling.
 tags:
   - posts
   - web workers
@@ -14,20 +15,20 @@ date: 2025-11-14
 social_card: shared-worker-websocket-connections.jpg
 ---
 
-## Using a SharedWorker for a WebSocket connection
+## Using a SharedWorker to share a WebSocket connection
 
 Consider an online shopping site that uses a WebSocket connection to notify
-users of events such as order updates, the amount people viewing the same item
-or the status of promotional deals. Users typically open a few browser tabs to
-the same site with different products they are considering purchasing. Each
-browser tab creates a WebSocket connection to the server and as the number of
-visitors to the site increases, so does the number of open WebSocket connections
-and the load on the server.
+users of events such as order updates, the amount of people viewing the same
+item or the status of promotional deals. Users may typically open a few browser
+tabs to the same site with different products they're interested in purchasing.
+Without a SharedWorker each browser tab creates a WebSocket connection to the
+server and as the number of visitors to the site increases, so does the number
+of open connections and the load on the server.
 
 Moving the WebSocket connection management to a [SharedWorker][shared-worker]
-creates a single connection shared across the users open tabs. Each tab connects
-to the SharedWorker using a [MessagePort][message-port] and receives messages
-from the worker when events occur.
+creates a single connection shared across the users browser tabs. Each tab
+connects to the SharedWorker using a [MessagePort][message-port] and receives
+messages from the worker when events occur.
 
 ```js
 const connections = new Set();
@@ -38,15 +39,13 @@ function connectSocket() {
   socket = new WebSocket("wss://example.com/socket");
 
   socket.addEventListener("message", (event) => {
-    broadcast(event.data);
+    broadcast(JSON.parse(event.data));
   });
 }
 
 // Broadcast a message to all connected ports
 function broadcast(message) {
-  connections.forEach((port) => {
-    port.postMessage(message);
-  });
+  connections.forEach((port) => port.postMessage(message));
 }
 
 // Handle new connections from clients
@@ -54,24 +53,18 @@ onconnect = (ev) => {
   const port = ev.ports[0];
   connections.add(port);
 
+  // Establish the WebSocket connection if not already connected
   if (!socket) {
     connectSocket();
   }
-
-  // Optionally handle messages from the port and send to the websocket
-  port.addEventListener("message", (event) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(event.data);
-    }
-  });
 };
 ```
 
-## Handling client disconnections
+## Handling client disconnects
 
-The MessagePort API doesn't provide an event for when a client disconnects. This
-means that if a user closes a tab, removing the associated MessagePort from the
-set of `connections` becomes problematic.
+The MessagePort API doesn't provide an event for a disconnect. This means that
+if a user closes a tab, removing the associated MessagePort from the set of
+`connections` becomes problematic.
 
 The client side of the SharedWorker connection needs to notify the worker when
 the tab closes. Listening for the `beforeunload` event and sending a specific
@@ -92,8 +85,8 @@ window.addEventListener("beforeunload", () => {
 });
 ```
 
-The SharedWorker listens for the message and removes the corresponding
-MessagePort from the `connections` set.
+The SharedWorker needs to listen for the message and remove the corresponding
+MessagePort from the connections set.
 
 ```js
 onconnect = (ev) => {
@@ -112,16 +105,17 @@ onconnect = (ev) => {
 };
 ```
 
-This works in most cases but is not totally reliable. More on that later.
+This works in most cases but isn't totally reliable. More on how to deal with
+that later.
 
-## Pausing connection on visibility change
+## Closing the WebSocket connection on visibility change
 
-When the tab becomes invisible, such as when the user switches to another tab or
-window, the WebSocket connection becomes unnecessary. To optimize resource
-usage, the client can notify the SharedWorker of visibility changes using the
-[Page Visibility API][page-visibility]. Listening for the `visibilitychange`
-event and sending a message to the worker indicating whether the document hides
-or shows.
+When the tab becomes invisible, such as when the user switches to another
+website tab or minimises the browser, the WebSocket connection might become
+unnecessary. To optimize resource usage further, the client can notify the
+SharedWorker of visibility changes using the [Page Visibility
+API][page-visibility]. Listening for the `visibilitychange` event and sending a
+message to the worker indicating whether the document hides or shows.
 
 ```js
 document.addEventListener("visibilitychange", () => {
@@ -132,9 +126,9 @@ document.addEventListener("visibilitychange", () => {
 });
 ```
 
-The SharedWorker can handle these visibility change messages to manage the
-socket connection. For example, close the connection when all tabs are hidden
-and reopen it when at least one tab becomes visible.
+The SharedWorker can handle these visibility change messages to close the
+connection when all tabs are hidden and reopen it when at least one tab becomes
+visible.
 
 ```js
 // Keep track of hidden connections
@@ -170,21 +164,22 @@ onconnect = (ev) => {
 
 ## Handling dead connections that never send a disconnect
 
-The `beforeunload` event is not a totally reliable way to detect and close the
-port connection. To ensure the cleanup of closed ports from the `connections`
-set, a heartbeat mechanism becomes necessary.
+The `beforeunload` event isn't a totally reliable way to detect and close the
+port connection. To ensure the cleanup of closed ports from the connections set,
+a heartbeat mechanism becomes necessary. The heartbeat periodically sends a
+"ping" message to each connected port. If a port doesn't respond with a "pong"
+message before the next ping, remove it.
 
 ```js
 const lastPongs = new Map();
 const HEARTBEAT_INTERVAL = 30000; // 30 seconds
-const HEARTBEAT_TIMEOUT = 5000; // 5 seconds
 
 setInterval(() => {
   connections.forEach((port) => {
     const lastPong = lastPongs.get(port) || 0;
 
     // If no pong received then consider the port disconnected
-    if (Date.now() - lastPong > HEARTBEAT_INTERVAL + HEARTBEAT_TIMEOUT) {
+    if (Date.now() - lastPong > HEARTBEAT_INTERVAL) {
       connections.delete(port);
     } else {
       port.postMessage({ type: "ping" });
@@ -201,10 +196,9 @@ port.addEventListener("message", (event) => {
 
 ## Combining these strategies into SharedWorker utilities
 
-This small package combines these strategies,
-[shared-worker-utils][shared-worker-utils]. In the SharedWorker the port manager
-handles connection management and receives notifications of tab visibility
-changes.
+The [shared-worker-utils][shared-worker-utils] package implements these
+strategies in small helper classes. In a SharedWorker the PortManager handles
+connection management and tracks client state, tab visibility.
 
 ```js
 import { PortManager } from "shared-worker-utils";
@@ -222,10 +216,14 @@ const portManager = new PortManager({
     }
   },
   onMessage: (port, message) => {
-    if (message.type === "custom-action") {
-      // Handle custom messages from clients
-      console.log("Custom action received:", message.data);
-    }
+    // Handle custom messages from clients
+    console.log("Custom action received:", message.data);
+
+    // Respond to the client that sent the message
+    port.postMessage({
+      type: "custom-action-response",
+      data: `Received your data: ${message.data}`,
+    });
   },
 });
 
@@ -243,7 +241,8 @@ self.onconnect = (event) => {
 };
 ```
 
-On the client side the SharedWorker client receives messages from the worker.
+On the client side the SharedWorkerClient receives messages from the worker and
+sends messages internally when the tab visibility changes.
 
 ```js
 import { SharedWorkerClient } from "shared-worker-utils";
