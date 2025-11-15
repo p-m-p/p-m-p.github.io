@@ -20,13 +20,13 @@ social_card: shared-worker-websocket-connections.jpg
 Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount of people viewing the same
 item or the status of promotional deals. Users may typically open a few browser
-tabs to the same site with different products they're interested in purchasing.
+tabs to the same site with different products they are interested in purchasing.
 Without a SharedWorker each browser tab creates a WebSocket connection to the
 server and as the number of visitors to the site increases, so does the number
 of open connections and the load on the server.
 
 Moving the WebSocket connection management to a [SharedWorker][shared-worker]
-creates a single connection shared across the users browser tabs. Each tab
+creates a single connection shared across the user's browser tabs. Each tab
 connects to the SharedWorker using a [MessagePort][message-port] and receives
 messages from the worker when events occur.
 
@@ -105,7 +105,7 @@ onconnect = (ev) => {
 };
 ```
 
-This works in most cases but isn't totally reliable. More on how to deal with
+This works in most cases but is not totally reliable. More on how to deal with
 that later.
 
 ## Closing the WebSocket connection on visibility change
@@ -164,7 +164,7 @@ onconnect = (ev) => {
 
 ## Handling dead connections that never send a disconnect
 
-The `beforeunload` event isn't a totally reliable way to detect and close the
+The `beforeunload` event is not a totally reliable way to detect and close the
 port connection. To ensure the cleanup of closed ports from the connections set,
 a heartbeat mechanism becomes necessary. The heartbeat periodically sends a
 "ping" message to each connected port. If a port doesn't respond with a "pong"
