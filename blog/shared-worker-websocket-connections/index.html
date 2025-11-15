@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Optimising WebSocket connections with a SharedWorker</title>
-  <meta name="description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta name="description" content="With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure safe and efficient connection handling.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="og:title" content="Optimising WebSocket connections with a SharedWorker">
-  <meta property="og:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="og:description" content="With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure safe and efficient connection handling.">
   <meta property="og:image" content="https://philparsons.co.uk/img/socialcard/shared-worker-websocket-connections.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://philparsons.co.uk/blog/shared-worker-websocket-connections/">
   <meta property="twitter:title" content="Optimising WebSocket connections with a SharedWorker">
-  <meta property="twitter:description" content="Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.">
+  <meta property="twitter:description" content="With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure safe and efficient connection handling.">
   <meta property="twitter:image" content="https://philparsons.co.uk/img/socialcard/shared-worker-websocket-connections.jpg">
 
   <link rel="icon" href="/img/icon.png">
@@ -757,19 +757,19 @@ a {
   </header>
 
   <main class="post-content container">
-    <p class="post-description">Shared workers are a good way to limit the number of WebSocket connections across multiple browser tabs. Managing connections to the SharedWorker can be tricky though, here&#39;s a few patterns that might help.</p>
-    <h2>Using a SharedWorker for a WebSocket connection</h2>
+    <p class="post-description">With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure safe and efficient connection handling.</p>
+    <h2>Using a SharedWorker to share a WebSocket connection</h2>
 <p>Consider an online shopping site that uses a WebSocket connection to notify
-users of events such as order updates, the amount people viewing the same item
-or the status of promotional deals. Users typically open a few browser tabs to
-the same site with different products they are considering purchasing. Each
-browser tab creates a WebSocket connection to the server and as the number of
-visitors to the site increases, so does the number of open WebSocket connections
-and the load on the server.</p>
+users of events such as order updates, the amount of people viewing the same
+item or the status of promotional deals. Users may typically open a few browser
+tabs to the same site with different products they're interested in purchasing.
+Without a SharedWorker each browser tab creates a WebSocket connection to the
+server and as the number of visitors to the site increases, so does the number
+of open connections and the load on the server.</p>
 <p>Moving the WebSocket connection management to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker</a>
-creates a single connection shared across the users open tabs. Each tab connects
-to the SharedWorker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives messages
-from the worker when events occur.</p>
+creates a single connection shared across the users browser tabs. Each tab
+connects to the SharedWorker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives
+messages from the worker when events occur.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> connections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> socket<span class="token punctuation">;</span>
 
@@ -778,15 +778,13 @@ from the worker when events occur.</p>
   socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WebSocket</span><span class="token punctuation">(</span><span class="token string">"wss://example.com/socket"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   socket<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token function">broadcast</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">broadcast</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment">// Broadcast a message to all connected ports</span>
 <span class="token keyword">function</span> <span class="token function">broadcast</span><span class="token punctuation">(</span><span class="token parameter">message</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  connections<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">port</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  connections<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">port</span><span class="token punctuation">)</span> <span class="token operator">=></span> port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment">// Handle new connections from clients</span>
@@ -794,21 +792,15 @@ from the worker when events occur.</p>
   <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   connections<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+  <span class="token comment">// Establish the WebSocket connection if not already connected</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>socket<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token function">connectSocket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-
-  <span class="token comment">// Optionally handle messages from the port and send to the websocket</span>
-  port<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>socket <span class="token operator">&amp;&amp;</span> socket<span class="token punctuation">.</span>readyState <span class="token operator">===</span> WebSocket<span class="token punctuation">.</span><span class="token constant">OPEN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      socket<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<h2>Handling client disconnections</h2>
-<p>The MessagePort API doesn't provide an event for when a client disconnects. This
-means that if a user closes a tab, removing the associated MessagePort from the
-set of <code>connections</code> becomes problematic.</p>
+<h2>Handling client disconnects</h2>
+<p>The MessagePort API doesn't provide an event for a disconnect. This means that
+if a user closes a tab, removing the associated MessagePort from the set of
+<code>connections</code> becomes problematic.</p>
 <p>The client side of the SharedWorker connection needs to notify the worker when
 the tab closes. Listening for the <code>beforeunload</code> event and sending a specific
 message to the worker to signal that the tab closed.</p>
@@ -824,8 +816,8 @@ port<span class="token punctuation">.</span><span class="token function">addEven
 window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"beforeunload"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"disconnect"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>The SharedWorker listens for the message and removes the corresponding
-MessagePort from the <code>connections</code> set.</p>
+<p>The SharedWorker needs to listen for the message and remove the corresponding
+MessagePort from the connections set.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> port <span class="token operator">=</span> ev<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   connections<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -840,23 +832,24 @@ MessagePort from the <code>connections</code> set.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>This works in most cases but is not totally reliable. More on that later.</p>
-<h2>Pausing connection on visibility change</h2>
-<p>When the tab becomes invisible, such as when the user switches to another tab or
-window, the WebSocket connection becomes unnecessary. To optimize resource
-usage, the client can notify the SharedWorker of visibility changes using the
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API">Page Visibility API</a>. Listening for the <code>visibilitychange</code>
-event and sending a message to the worker indicating whether the document hides
-or shows.</p>
+<p>This works in most cases but isn't totally reliable. More on how to deal with
+that later.</p>
+<h2>Closing the WebSocket connection on visibility change</h2>
+<p>When the tab becomes invisible, such as when the user switches to another
+website tab or minimises the browser, the WebSocket connection might become
+unnecessary. To optimize resource usage further, the client can notify the
+SharedWorker of visibility changes using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API">Page Visibility
+API</a>. Listening for the <code>visibilitychange</code> event and sending a
+message to the worker indicating whether the document hides or shows.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js">document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"visibilitychange"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"visibilitychange"</span><span class="token punctuation">,</span>
     <span class="token literal-property property">hidden</span><span class="token operator">:</span> document<span class="token punctuation">.</span>hidden<span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>The SharedWorker can handle these visibility change messages to manage the
-socket connection. For example, close the connection when all tabs are hidden
-and reopen it when at least one tab becomes visible.</p>
+<p>The SharedWorker can handle these visibility change messages to close the
+connection when all tabs are hidden and reopen it when at least one tab becomes
+visible.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token comment">// Keep track of hidden connections</span>
 <span class="token keyword">let</span> hiddenCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
@@ -887,19 +880,20 @@ and reopen it when at least one tab becomes visible.</p>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Handling dead connections that never send a disconnect</h2>
-<p>The <code>beforeunload</code> event is not a totally reliable way to detect and close the
-port connection. To ensure the cleanup of closed ports from the <code>connections</code>
-set, a heartbeat mechanism becomes necessary.</p>
+<p>The <code>beforeunload</code> event isn't a totally reliable way to detect and close the
+port connection. To ensure the cleanup of closed ports from the connections set,
+a heartbeat mechanism becomes necessary. The heartbeat periodically sends a
+&quot;ping&quot; message to each connected port. If a port doesn't respond with a &quot;pong&quot;
+message before the next ping, remove it.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> lastPongs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> <span class="token constant">HEARTBEAT_INTERVAL</span> <span class="token operator">=</span> <span class="token number">30000</span><span class="token punctuation">;</span> <span class="token comment">// 30 seconds</span>
-<span class="token keyword">const</span> <span class="token constant">HEARTBEAT_TIMEOUT</span> <span class="token operator">=</span> <span class="token number">5000</span><span class="token punctuation">;</span> <span class="token comment">// 5 seconds</span>
 
 <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   connections<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">port</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> lastPong <span class="token operator">=</span> lastPongs<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
     <span class="token comment">// If no pong received then consider the port disconnected</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> lastPong <span class="token operator">></span> <span class="token constant">HEARTBEAT_INTERVAL</span> <span class="token operator">+</span> <span class="token constant">HEARTBEAT_TIMEOUT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> lastPong <span class="token operator">></span> <span class="token constant">HEARTBEAT_INTERVAL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       connections<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
       port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"ping"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -913,10 +907,9 @@ port<span class="token punctuation">.</span><span class="token function">addEven
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Combining these strategies into SharedWorker utilities</h2>
-<p>This small package combines these strategies,
-<a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a>. In the SharedWorker the port manager
-handles connection management and receives notifications of tab visibility
-changes.</p>
+<p>The <a href="https://github.com/p-m-p/shared-worker-utils">shared-worker-utils</a> package implements these
+strategies in small helper classes. In a SharedWorker the PortManager handles
+connection management and tracks client state, tab visibility.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> PortManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> socket<span class="token punctuation">;</span>
@@ -932,10 +925,14 @@ changes.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token function-variable function">onMessage</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">port<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>message<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">"custom-action"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token comment">// Handle custom messages from clients</span>
-      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Custom action received:"</span><span class="token punctuation">,</span> message<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
+    <span class="token comment">// Handle custom messages from clients</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Custom action received:"</span><span class="token punctuation">,</span> message<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Respond to the client that sent the message</span>
+    port<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"custom-action-response"</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Received your data: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>message<span class="token punctuation">.</span>data<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -951,7 +948,8 @@ changes.</p>
 self<span class="token punctuation">.</span><span class="token function-variable function">onconnect</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   portManager<span class="token punctuation">.</span><span class="token function">handleConnect</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>ports<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>On the client side the SharedWorker client receives messages from the worker.</p>
+<p>On the client side the SharedWorkerClient receives messages from the worker and
+sends messages internally when the tab visibility changes.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> SharedWorkerClient <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"shared-worker-utils"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">const</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SharedWorker</span><span class="token punctuation">(</span><span class="token string">"./shared-worker.js"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"module"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
