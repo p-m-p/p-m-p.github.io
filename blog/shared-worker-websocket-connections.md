@@ -3,7 +3,7 @@ title: Optimising WebSocket connections with a SharedWorker
 description:
   With a SharedWorker we can share a WebSocket connection across multiple
   browser tabs. Effectively managing connections to the SharedWorker can be
-  tricky but these simple strategies ensure safe and efficient connection
+  tricky but these simple strategies ensure stable and efficient connection
   handling.
 tags:
   - posts
