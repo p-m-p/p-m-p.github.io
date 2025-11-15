@@ -762,12 +762,12 @@ a {
 <p>Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount of people viewing the same
 item or the status of promotional deals. Users may typically open a few browser
-tabs to the same site with different products they're interested in purchasing.
+tabs to the same site with different products they are interested in purchasing.
 Without a SharedWorker each browser tab creates a WebSocket connection to the
 server and as the number of visitors to the site increases, so does the number
 of open connections and the load on the server.</p>
 <p>Moving the WebSocket connection management to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker</a>
-creates a single connection shared across the users browser tabs. Each tab
+creates a single connection shared across the user's browser tabs. Each tab
 connects to the SharedWorker using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MessagePort">MessagePort</a> and receives
 messages from the worker when events occur.</p>
 <copy-to-clipboard><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> connections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -832,7 +832,7 @@ MessagePort from the connections set.</p>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
-<p>This works in most cases but isn't totally reliable. More on how to deal with
+<p>This works in most cases but is not totally reliable. More on how to deal with
 that later.</p>
 <h2>Closing the WebSocket connection on visibility change</h2>
 <p>When the tab becomes invisible, such as when the user switches to another
@@ -880,7 +880,7 @@ visible.</p>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></copy-to-clipboard>
 <h2>Handling dead connections that never send a disconnect</h2>
-<p>The <code>beforeunload</code> event isn't a totally reliable way to detect and close the
+<p>The <code>beforeunload</code> event is not a totally reliable way to detect and close the
 port connection. To ensure the cleanup of closed ports from the connections set,
 a heartbeat mechanism becomes necessary. The heartbeat periodically sends a
 &quot;ping&quot; message to each connected port. If a port doesn't respond with a &quot;pong&quot;

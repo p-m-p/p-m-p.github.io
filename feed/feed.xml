@@ -19,12 +19,12 @@
 &lt;p&gt;Consider an online shopping site that uses a WebSocket connection to notify
 users of events such as order updates, the amount of people viewing the same
 item or the status of promotional deals. Users may typically open a few browser
-tabs to the same site with different products they&#39;re interested in purchasing.
+tabs to the same site with different products they are interested in purchasing.
 Without a SharedWorker each browser tab creates a WebSocket connection to the
 server and as the number of visitors to the site increases, so does the number
 of open connections and the load on the server.&lt;/p&gt;
 &lt;p&gt;Moving the WebSocket connection management to a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker&quot;&gt;SharedWorker&lt;/a&gt;
-creates a single connection shared across the users browser tabs. Each tab
+creates a single connection shared across the user&#39;s browser tabs. Each tab
 connects to the SharedWorker using a &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/MessagePort&quot;&gt;MessagePort&lt;/a&gt; and receives
 messages from the worker when events occur.&lt;/p&gt;
 &lt;copy-to-clipboard&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; connections &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -89,7 +89,7 @@ MessagePort from the connections set.&lt;/p&gt;
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
-&lt;p&gt;This works in most cases but isn&#39;t totally reliable. More on how to deal with
+&lt;p&gt;This works in most cases but is not totally reliable. More on how to deal with
 that later.&lt;/p&gt;
 &lt;h2&gt;Closing the WebSocket connection on visibility change&lt;/h2&gt;
 &lt;p&gt;When the tab becomes invisible, such as when the user switches to another
@@ -137,7 +137,7 @@ visible.&lt;/p&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/copy-to-clipboard&gt;
 &lt;h2&gt;Handling dead connections that never send a disconnect&lt;/h2&gt;
-&lt;p&gt;The &lt;code&gt;beforeunload&lt;/code&gt; event isn&#39;t a totally reliable way to detect and close the
+&lt;p&gt;The &lt;code&gt;beforeunload&lt;/code&gt; event is not a totally reliable way to detect and close the
 port connection. To ensure the cleanup of closed ports from the connections set,
 a heartbeat mechanism becomes necessary. The heartbeat periodically sends a
 &amp;quot;ping&amp;quot; message to each connected port. If a port doesn&#39;t respond with a &amp;quot;pong&amp;quot;
