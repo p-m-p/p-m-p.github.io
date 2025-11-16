@@ -174,15 +174,19 @@ message before the next ping, remove it.
 const lastPongs = new Map();
 const HEARTBEAT_INTERVAL = 30000; // 30 seconds
 
+function removePort(port) {
+  connections.delete(port);
+  lastPongs.delete(port);
+  port.removeEventListener("message", handleMessage);
+}
+
 function handleMessage(event) {
   const port = event.target;
 
   if (event.data.type === "pong") {
     lastPongs.set(port, Date.now());
   } else if (event.data.type === "disconnect") {
-    connections.delete(port);
-    lastPongs.delete(port);
-    port.removeEventListener("message", handleMessage);
+    removePort(port);
   }
 }
 
@@ -194,9 +198,7 @@ setInterval(() => {
     // If no pong received then consider the port disconnected
     // Skip newly connected ports that haven't received a ping yet
     if (lastPong && now - lastPong > HEARTBEAT_INTERVAL) {
-      connections.delete(port);
-      lastPongs.delete(port);
-      port.removeEventListener("message", handleMessage);
+      removePort(port);
     } else {
       port.postMessage({ type: "ping" });
       // Set initial timestamp for new connections
