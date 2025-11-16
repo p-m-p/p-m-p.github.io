@@ -176,22 +176,34 @@ const HEARTBEAT_INTERVAL = 30000; // 30 seconds
 
 setInterval(() => {
   connections.forEach((port) => {
-    const lastPong = lastPongs.get(port) || 0;
+    const now = Date.now();
+    const lastPong = lastPongs.get(port);
 
     // If no pong received then consider the port disconnected
-    if (Date.now() - lastPong > HEARTBEAT_INTERVAL) {
+    // Skip newly connected ports that haven't received a ping yet
+    if (lastPong && now - lastPong > HEARTBEAT_INTERVAL) {
       connections.delete(port);
+      lastPongs.delete(port);
     } else {
       port.postMessage({ type: "ping" });
+      // Set initial timestamp for new connections
+      if (!lastPong) {
+        lastPongs.set(port, now);
+      }
     }
   });
 }, HEARTBEAT_INTERVAL);
 
-port.addEventListener("message", (event) => {
-  if (event.data.type === "pong") {
-    lastPongs.set(port, Date.now());
-  }
-});
+onconnect = (ev) => {
+  const port = ev.ports[0];
+  connections.add(port);
+
+  port.addEventListener("message", (event) => {
+    if (event.data.type === "pong") {
+      lastPongs.set(port, Date.now());
+    }
+  });
+};
 ```
 
 ## Combining these strategies into SharedWorker utilities
