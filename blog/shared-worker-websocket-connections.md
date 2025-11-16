@@ -174,6 +174,18 @@ message before the next ping, remove it.
 const lastPongs = new Map();
 const HEARTBEAT_INTERVAL = 30000; // 30 seconds
 
+function handleMessage(event) {
+  const port = event.target;
+
+  if (event.data.type === "pong") {
+    lastPongs.set(port, Date.now());
+  } else if (event.data.type === "disconnect") {
+    connections.delete(port);
+    lastPongs.delete(port);
+    port.removeEventListener("message", handleMessage);
+  }
+}
+
 setInterval(() => {
   connections.forEach((port) => {
     const now = Date.now();
@@ -184,6 +196,7 @@ setInterval(() => {
     if (lastPong && now - lastPong > HEARTBEAT_INTERVAL) {
       connections.delete(port);
       lastPongs.delete(port);
+      port.removeEventListener("message", handleMessage);
     } else {
       port.postMessage({ type: "ping" });
       // Set initial timestamp for new connections
@@ -197,12 +210,7 @@ setInterval(() => {
 onconnect = (ev) => {
   const port = ev.ports[0];
   connections.add(port);
-
-  port.addEventListener("message", (event) => {
-    if (event.data.type === "pong") {
-      lastPongs.set(port, Date.now());
-    }
-  });
+  port.addEventListener("message", handleMessage);
 };
 ```
 
