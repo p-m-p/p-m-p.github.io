@@ -893,3 +893,203 @@ The key is to design your store with granular subscriptions in mind and use
 stable selector functions to minimize unnecessary re-renders. This approach
 scales well from simple counters to complex applications with multiple data
 sources and derived state.
+
+## Integration with Zustand
+
+While building custom stores gives you full control, you can also integrate `useSyncExternalStore` with existing state management libraries like Zustand for even more powerful data grid implementations:
+
+```js
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+
+const useDataGridStore = create(
+  subscribeWithSelector((set, get) => ({
+    rows: [
+      { id: 1, name: 'John Doe', email: 'john@example.com', age: 28 },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 32 },
+      { id: 3, name: 'Bob Johnson', email: 'bob@example.com', age: 45 }
+    ],
+    columns: [
+      { id: 'name', label: 'Name', width: 150 },
+      { id: 'email', label: 'Email', width: 200 },
+      { id: 'age', label: 'Age', width: 80 }
+    ],
+    sortBy: null,
+    sortDirection: 'asc',
+    filter: '',
+    
+    // Actions
+    updateRows: (newRows) => set({ rows: newRows }),
+    
+    sortByColumn: (columnId) => {
+      const { sortBy, sortDirection, rows } = get();
+      const direction = sortBy === columnId && sortDirection === 'asc' ? 'desc' : 'asc';
+      
+      const sortedRows = [...rows].sort((a, b) => {
+        if (direction === 'asc') {
+          return a[columnId] > b[columnId] ? 1 : -1;
+        }
+        return a[columnId] < b[columnId] ? 1 : -1;
+      });
+
+      set({
+        rows: sortedRows,
+        sortBy: columnId,
+        sortDirection: direction
+      });
+    },
+    
+    setFilter: (filter) => set({ filter }),
+    
+    // Computed values
+    get filteredRows() {
+      const { rows, filter } = get();
+      if (!filter) return rows;
+      
+      return rows.filter(row => 
+        Object.values(row).some(value => 
+          String(value).toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+    }
+  }))
+);
+```
+
+Create selective subscription hooks using Zustand's subscribe method:
+
+```jsx
+function useGridRows() {
+  return useSyncExternalStore(
+    (callback) => useDataGridStore.subscribe(
+      (state) => state.rows,
+      callback
+    ),
+    () => useDataGridStore.getState().rows
+  );
+}
+
+function useGridSort() {
+  return useSyncExternalStore(
+    (callback) => useDataGridStore.subscribe(
+      (state) => ({ sortBy: state.sortBy, sortDirection: state.sortDirection }),
+      callback
+    ),
+    () => {
+      const { sortBy, sortDirection } = useDataGridStore.getState();
+      return { sortBy, sortDirection };
+    }
+  );
+}
+
+function useGridFilter() {
+  return useSyncExternalStore(
+    (callback) => useDataGridStore.subscribe(
+      (state) => state.filter,
+      callback
+    ),
+    () => useDataGridStore.getState().filter
+  );
+}
+
+function useFilteredRows() {
+  return useSyncExternalStore(
+    (callback) => useDataGridStore.subscribe(
+      (state) => [state.rows, state.filter], // Subscribe to dependencies
+      callback
+    ),
+    () => useDataGridStore.getState().filteredRows
+  );
+}
+```
+
+Using these hooks in components:
+
+```jsx
+function ZustandDataGrid() {
+  return (
+    <div>
+      <ZustandGridFilter />
+      <table>
+        <ZustandGridHeader />
+        <ZustandGridBody />
+      </table>
+    </div>
+  );
+}
+
+function ZustandGridFilter() {
+  const filter = useGridFilter();
+  const setFilter = useDataGridStore((state) => state.setFilter);
+
+  return (
+    <input
+      type="text"
+      placeholder="Filter rows..."
+      value={filter}
+      onChange={(e) => setFilter(e.target.value)}
+    />
+  );
+}
+
+function ZustandGridHeader() {
+  const { sortBy, sortDirection } = useGridSort();
+  const columns = useSyncExternalStore(
+    (callback) => useDataGridStore.subscribe(
+      (state) => state.columns,
+      callback
+    ),
+    () => useDataGridStore.getState().columns
+  );
+  const sortByColumn = useDataGridStore((state) => state.sortByColumn);
+
+  return (
+    <thead>
+      <tr>
+        {columns.map((column) => {
+          const style = { width: column.width };
+          
+          return (
+            <th
+              key={column.id}
+              style={style}
+              onClick={() => sortByColumn(column.id)}
+            >
+              {column.label}
+              {sortBy === column.id && (
+                <span>{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+              )}
+            </th>
+          );
+        })}
+      </tr>
+    </thead>
+  );
+}
+
+function ZustandGridBody() {
+  const filteredRows = useFilteredRows();
+
+  return (
+    <tbody>
+      {filteredRows.map((row) => (
+        <tr key={row.id}>
+          <td>{row.name}</td>
+          <td>{row.email}</td>
+          <td>{row.age}</td>
+        </tr>
+      ))}
+    </tbody>
+  );
+}
+```
+
+This Zustand approach provides several benefits:
+
+- **DevTools Integration**: Built-in Redux DevTools support for debugging
+- **Middleware Support**: Easy integration with persistence, immer, and other middleware
+- **TypeScript Support**: Excellent TypeScript integration out of the box
+- **Computed Values**: Built-in support for derived state with getters
+- **Selective Subscriptions**: Fine-grained subscriptions using `subscribeWithSelector`
+
+The combination of Zustand's developer experience with `useSyncExternalStore`'s performance optimizations creates a powerful foundation for complex data grid implementations.
