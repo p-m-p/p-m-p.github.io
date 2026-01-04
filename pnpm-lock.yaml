@@ -25,10 +25,10 @@ importers:
         version: 3.7.2
       zod:
         specifier: ^4.0.0
-        version: 4.3.4
+        version: 4.3.5
       zod-validation-error:
         specifier: ^5.0.0
-        version: 5.0.0(zod@4.3.4)
+        version: 5.0.0(zod@4.3.5)
     devDependencies:
       '@eslint/js':
         specifier: ^9.30.0
@@ -1696,8 +1696,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.3.4:
-    resolution: {integrity: sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A==}
+  zod@4.3.5:
+    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
 snapshots:
 
@@ -3518,8 +3518,8 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-validation-error@5.0.0(zod@4.3.4):
+  zod-validation-error@5.0.0(zod@4.3.5):
     dependencies:
-      zod: 4.3.4
+      zod: 4.3.5
 
-  zod@4.3.4: {}
+  zod@4.3.5: {}
