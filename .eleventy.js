@@ -36,6 +36,13 @@ export default function eleventyConfig(eleventyConfig) {
     );
   });
 
+  eleventyConfig.addFilter("head", (array, n) => {
+    if (!Array.isArray(array) || array.length === 0) {
+      return [];
+    }
+    return n < 0 ? array.slice(n) : array.slice(0, n);
+  });
+
   eleventyConfig.addPreprocessor("drafts", "*", (data) => {
     if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
       return false;
