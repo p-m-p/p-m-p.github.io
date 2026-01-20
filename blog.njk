@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+title: Blog
+permalink: /blog/
+---
+
+{%- css %}{% include "./css/blog-index.css" %}{% endcss %}
+{% include "header.njk" %}
+<main class="container">
+  <header class="page-header">
+    <h1>Blog</h1>
+    <p>Thoughts on web development, performance, and modern browser APIs.</p>
+  </header>
+
+  <ol class="posts-list">
+    {% for post in collections.posts | reverse %}
+    <li class="post">
+      <h2 class="post-title" style="view-transition-name: {{ post.data.title | slugify }}"><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+      <p class="post-description">{{ post.data.description }}</p>
+      <div class="post-date"><time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time></div>
+    </li>
+    {% endfor %}
+  </ol>
+
+  {% include "footer.njk" %}
+</main>

@@ -29,6 +29,10 @@ pre[class*="language-"] {
 :not(pre)>code[class*="language-"],
 pre[class*="language-"] {
   background: var(--codeblock-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
 }
 
 /* Inline code */

@@ -34,64 +34,14 @@ figcaption {
   padding: 0 var(--spacing-md);
 }
 
-.banner {
-  align-items: center;
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: space-between;
-  padding: var(--spacing-xs) var(--spacing-md);
-
-  a {
-    color: var(--color-text-primary);
-    display: inline-flex;
-    text-decoration: none;
-    transition:
-      transform 200ms,
-      color 200ms;
-
-    &:visited {
-      color: var(--color-text-primary);
-    }
-
-    &:hover {
-      color: var(--color-link-hover);
-    }
-  }
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-
-.nav {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  gap: var(--spacing-md);
-  justify-content: flex-end;
-
-  a {
-    line-height: 1;
-
-    &:hover {
-      transform: scale(1.25);
-    }
-  }
-}
-
 .post {
   max-width: 100%;
   overflow: clip;
 }
 
 .post-header {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
   margin: 0 0 var(--spacing-md);
   padding: var(--spacing-md) 0 0;
 }
@@ -200,12 +150,6 @@ figure {
   font-style: italic;
 }
 
-.post-footer {
-  background: var(--color-bg-secondary);
-  border-top: solid 1px var(--color-border-primary);
-  padding: var(--spacing-md) 0;
-}
-
 #share-fallback {
   background: black;
   border: none;
@@ -262,55 +206,6 @@ figure {
   @media (hover: hover) {
     &:hover {
       background: var(--color-bg-action-hover);
-    }
-  }
-}
-
-.theme-switcher {
-  height: 2.5rem;
-  width: 5rem;
-}
-
-theme-switch {
-  --ts-button-color: var(--color-text-primary);
-  --ts-button-size: 1.25rem;
-  --ts-button-bar-background: var(--color-bg-secondary);
-  --ts-lozenge-background: var(--color-bg-action);
-}
-
-@media (pointer: coarse) {
-  .theme-switcher {
-    overflow: hidden;
-    width: 2.5rem;
-  }
-
-  theme-switch {
-    --ts-lozenge-background: transparent;
-
-    &::part(button-bar) {
-      background: var(--color-bg-action);
-    }
-
-    &::part(button) {
-      opacity: 1;
-    }
-
-    &::part(button dark-button) {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    &[data-theme="dark"] {
-      &::part(button dark-button) {
-        visibility: hidden;
-      }
-    }
-
-    &[data-theme="light"] {
-      &::part(button light-button) {
-        visibility: hidden;
-      }
     }
   }
 }
