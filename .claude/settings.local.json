@@ -11,7 +11,8 @@
       "Bash(head:*)",
       "Bash(pnpm run build)",
       "WebFetch(domain:preview.themeforest.net)",
-      "WebFetch(domain:localhost)"
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:framerusercontent.com)"
     ],
     "deny": []
   }

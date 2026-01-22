@@ -84,14 +84,6 @@
   --codeblock-bg: var(--color-bg-glass);
 }
 
-.dark {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
-}
-
 *,
 *::before,
 *::after {
@@ -240,7 +232,7 @@ a {
     &:hover {
       transform: translateY(-2px);
       background: var(--color-primary-500);
-      color: var(--color-black);
+      color: white;
     }
   }
 
@@ -258,9 +250,14 @@ a {
 
   .container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
+  }
+
+  span[aria-hidden] {
+    display: none;
   }
 
   p {
@@ -269,5 +266,71 @@ a {
 
   a {
     font-weight: 400;
+  }
+
+  @media (min-width: 600px) {
+    .container {
+      flex-direction: row;
+      gap: var(--spacing-md);
+    }
+
+    span[aria-hidden] {
+      display: inline;
+    }
+  }
+}
+
+/* Light Theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+
+    --color-accent: lch(50% 45 185);
+
+    --color-primary-50: lch(from var(--color-accent) 97% 15 h);
+    --color-primary-100: lch(from var(--color-accent) 94% 25 h);
+    --color-primary-200: lch(from var(--color-accent) 88% 35 h);
+    --color-primary-300: lch(from var(--color-accent) 78% 45 h);
+    --color-primary-400: lch(from var(--color-accent) 45% c h);
+    --color-primary-500: lch(from var(--color-accent) l c h);
+    --color-primary-600: lch(from var(--color-accent) 40% c h);
+    --color-primary-700: lch(from var(--color-accent) 35% c h);
+    --color-primary-800: lch(from var(--color-accent) 28% c h);
+    --color-primary-900: lch(from var(--color-accent) 22% 40 h);
+    --color-primary-950: lch(from var(--color-accent) 15% 25 h);
+
+    --color-border-primary: lch(from var(--color-accent) 50% 20 h / 0.3);
+    --color-border-glass: rgba(0, 0, 0, 0.08);
+
+    --color-bg-primary: lch(98% 1 80);
+    --color-bg-secondary: lch(95% 2 80);
+    --color-bg-glass: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --color-bg-action: var(--color-neutral-200);
+    --color-bg-action-hover: var(--color-primary-200);
+
+    --color-link: var(--color-primary-600);
+    --color-link-hover: var(--color-primary-700);
+    --color-link-underline: var(--color-primary-400);
+    --color-link-hover-underline: var(--color-primary-500);
+    --color-link-visited: var(--color-primary-700);
+    --color-link-visited-underline: var(--color-primary-400);
+    --color-link-focus: var(--color-link-hover);
+    --color-link-focus-underline: var(--color-link-hover);
+
+    --color-icon: var(--color-primary-600);
+    --color-icon-hover: var(--color-primary-700);
+
+    --color-text-primary: var(--color-black);
+    --color-text-secondary: var(--color-neutral-600);
+
+    --codeblock-bg: lch(14% 5 80);
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 70% 20%, lch(90% 25 185 / 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, lch(92% 20 185 / 0.35) 0%, transparent 40%),
+      linear-gradient(160deg, lch(99% 1 185) 0%, lch(97% 2 185) 100%);
   }
 }
