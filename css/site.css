@@ -2,7 +2,7 @@
   color-scheme: dark;
 
   --color-neutral: lch(50% 5 80);
-  --color-accent: lch(65% 55 145);
+  --color-accent: lch(65% 55 165);
 
   --color-white: lch(98% 1 80);
   --color-black: lch(8% 3 80);
@@ -187,12 +187,21 @@ a {
 .site-header-name {
   font-size: 1.25rem;
   font-weight: 700;
+  display: none;
+
+  @media (min-width: 480px) {
+    display: block;
+  }
 }
 
 .site-header-nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+
+  @media (min-width: 480px) {
+    gap: var(--spacing-md);
+  }
 
   > a {
     color: var(--color-text-secondary);
