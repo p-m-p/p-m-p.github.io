@@ -20,179 +20,530 @@
 
   <link rel="icon" href="/img/icon.png">
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
-  <style>.container {
-  min-height: 100svh;
+  <style>/* Hero Section */
+.hero {
+  padding: calc(var(--spacing-3xl) * 2) 0;
+  border-bottom: 1px solid var(--color-border-glass);
+}
+
+.hero-content {
   display: flex;
-  flex-flow: column;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--spacing-xl);
+  width: 100%;
 }
 
-.content {
-  display: flex;
-  flex: 1;
-  flex-flow: column;
+.hero-text {
+  text-align: center;
 }
 
-.inner {
-  max-width: 540px;
-}
-
-.cover {
-  flex: 0;
-
-  img {
-    display: block;
-    height: 440px;
-    object-fit: cover;
-    width: 100%;
-  }
-}
-
-.header {
-  background: var(--color-bg-secondary);
-  padding: var(--spacing-2xl) var(--spacing-md);
+.greeting {
+  font-size: 1.125rem;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-primary-400);
+  margin: 0 0 var(--spacing-2xs);
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 800;
   line-height: 1;
-  margin: 0 0 var(--spacing-xs);
+  margin: 0 0 var(--spacing-sm);
+  letter-spacing: -0.02em;
 }
 
-.subtitle {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin: 0 0 var(--spacing-xs);
+.tagline {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-primary-400);
+  margin: 0 0 var(--spacing-md);
 }
 
 .intro {
+  font-size: 1rem;
   color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin: 0 0 var(--spacing-lg);
+  max-width: 480px;
+  text-wrap: pretty;
 }
 
-.recent-posts {
-  flex: 1;
-  padding: var(--spacing-md);
+.hero-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headshot {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  outline: 8px solid var(--color-primary-500);
+  outline-offset: 4px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-bg-glass);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border-glass);
+    box-shadow: var(--glass-shadow);
+    color: var(--color-icon);
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: var(--color-primary-500);
+      color: white;
+    }
+  }
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-lg);
+
+  span {
+    color: var(--color-primary-400);
+  }
+}
+
+/* Expertise Section */
+.expertise {
+  padding: calc(var(--spacing-3xl) * 1.5) 0;
+  border-bottom: 1px solid var(--color-border-glass);
 
   h2 {
-    font-size: 1.5rem;
-    margin: 0 0 var(--spacing-xs);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 var(--spacing-xl);
+  }
+}
+
+.expertise-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--spacing-xl);
+
+  li {
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 var(--spacing-xs);
+    }
+
+    p {
+      color: var(--color-text-secondary);
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+}
+
+/* Experience Section */
+.experience {
+  padding: var(--spacing-3xl) 0;
+  border-bottom: 1px solid var(--color-border-glass);
+}
+
+.experience-content {
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+.experience-profile {
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 var(--spacing-xl);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    margin: 0 0 var(--spacing-md);
+    text-wrap: pretty;
+
+    &:last-of-type {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
+.experience-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: 500;
+
+  svg {
+    color: var(--color-icon);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  &:hover svg {
+    transform: translateX(4px);
+    color: var(--color-icon-hover);
+  }
+}
+
+.experience-stats {
+  list-style: none;
+  padding: 0;
+  margin: auto 0;
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-xl);
+
+  li {
+    text-align: center;
+  }
+
+  .stat-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-primary-400);
+    background: var(--color-bg-glass);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border-glass);
+    border-radius: 50%;
+    padding-top: 0.1em;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-neutral-400);
+    margin-top: var(--spacing-xs);
+    white-space: nowrap;
+  }
+}
+
+/* Projects Section */
+.projects {
+  padding: var(--spacing-3xl) 0;
+  border-bottom: 1px solid var(--color-border-glass);
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 var(--spacing-sm);
+  }
+}
+
+.projects-intro {
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-xl);
+  line-height: 1.6;
+}
+
+/* Project Tiles */
+.project-tiles {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.project-tile {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 16px;
+  padding: var(--spacing-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.project-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-xs);
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.project-description {
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-md);
+}
+
+.project-meta {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: auto;
+}
+
+.project-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2xs);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  &.project-stars svg {
+    color: lch(75% 70 85);
+  }
+
+  &.project-forks {
+    color: var(--color-neutral-400);
+
+    svg {
+      color: var(--color-neutral-400);
+    }
+  }
+}
+
+.projects-link,
+.posts-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: 500;
+
+  svg {
+    color: var(--color-icon);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  &:hover svg {
+    transform: translateX(4px);
+    color: var(--color-icon-hover);
+  }
+}
+
+/* Recent Posts Section */
+.recent-posts {
+  padding: var(--spacing-3xl) 0;
+  border-bottom: 1px solid var(--color-border-glass);
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.rss-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  color: var(--color-icon);
+  transition: transform 0.2s, background 0.2s, color 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: var(--color-primary-500);
+    color: white;
+  }
+
+  svg {
+    display: block;
   }
 }
 
 .recent-posts-list {
   list-style: none;
   padding: 0;
+  margin: 0 0 var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-md);
 }
 
-.recent-post:not(:first-child) {
-  margin-top: var(--spacing-xl);
+.recent-post {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  transition: border-color 0.2s, transform 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary-600);
+    transform: translateY(-2px);
+  }
 }
 
 .recent-post-title {
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0 0 var(--spacing-xs);
   text-wrap: pretty;
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .recent-post-description {
   color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
 }
 
 .recent-post-date {
-  color: var(--color-text-secondary);
+  color: var(--color-neutral-400);
   font-size: 0.875rem;
-  margin-top: var(--spacing-xs);
+  margin-top: auto;
+  padding-top: var(--spacing-sm);
 }
 
-.social-links {
-  display: flex;
-  gap: var(--spacing-md);
-  list-style: none;
-  padding: 0;
-
-  a {
-    align-items: center;
-    display: inline-flex;
-    gap: var(--spacing-2xs);
-  }
-}
-
-.footer {
-  color: var(--color-text-secondary);
-  background-color: var(--color-bg-secondary);
-  border-top: 1px solid var(--color-border-primary);
-  padding: var(--spacing-md);
-}
-
-@media (width > 960px) {
+/* Responsive */
+@media (min-width: 600px) {
   .container {
-    flex-flow: row;
-    height: 100svh;
+    padding: var(--spacing-xl);
   }
 
-  .content {
-    flex: 0;
-    min-height: 0;
-    min-width: 540px;
+  .expertise-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-3xl);
   }
 
-  .recent-posts {
-    flex: 1;
-    overflow: auto;
+  .project-tiles {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .title {
-    font-size: 3rem;
+  .recent-posts-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-3xl);
   }
 
-  .subtitle {
-    font-size: 1.5rem;
+  .hero-text {
+    flex: none;
+    max-width: 500px;
   }
 
-  .cover {
-    display: block;
-    height: 100%;
-    flex: 1;
+  .experience-content {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: center;
+  }
 
-    img {
-      height: 100%;
-      min-height: unset;
-    }
+  .experience-stats {
+    display: grid;
+  }
+
+  .headshot {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--spacing-2xl);
+  }
+
+  .headshot {
+    width: 300px;
+    height: 300px;
   }
 }
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
 
-  --color-stone: lch(50% 1.5 75);
-  --color-peach: lch(55% 48 38);
+  --color-neutral: lch(50% 5 80);
+  --color-accent: lch(65% 55 165);
 
-  --color-white: lch(99% 4 75);
-  --color-black: lch(2% 4 75);
+  --color-white: lch(98% 1 80);
+  --color-black: lch(8% 3 80);
 
-  --color-primary-50: lch(from var(--color-peach) 95% c h);
-  --color-primary-100: lch(from var(--color-peach) 90% c h);
-  --color-primary-200: lch(from var(--color-peach) 80% c h);
-  --color-primary-300: lch(from var(--color-peach) 70% c h);
-  --color-primary-400: lch(from var(--color-peach) 60% c h);
-  --color-primary-500: lch(from var(--color-peach) l c h);
-  --color-primary-600: lch(from var(--color-peach) 40% c h);
-  --color-primary-700: lch(from var(--color-peach) 30% c h);
-  --color-primary-800: lch(from var(--color-peach) 20% c h);
-  --color-primary-900: lch(from var(--color-peach) 10% c h);
-  --color-primary-950: lch(from var(--color-peach) 5% c h);
+  --color-primary-50: lch(from var(--color-accent) 97% 15 h);
+  --color-primary-100: lch(from var(--color-accent) 94% 25 h);
+  --color-primary-200: lch(from var(--color-accent) 88% 35 h);
+  --color-primary-300: lch(from var(--color-accent) 78% 45 h);
+  --color-primary-400: lch(from var(--color-accent) 70% c h);
+  --color-primary-500: lch(from var(--color-accent) l c h);
+  --color-primary-600: lch(from var(--color-accent) 55% c h);
+  --color-primary-700: lch(from var(--color-accent) 45% c h);
+  --color-primary-800: lch(from var(--color-accent) 35% c h);
+  --color-primary-900: lch(from var(--color-accent) 25% 40 h);
+  --color-primary-950: lch(from var(--color-accent) 15% 25 h);
 
-  --color-neutral-50: lch(from var(--color-stone) 95% c h);
-  --color-neutral-100: lch(from var(--color-stone) 90% c h);
-  --color-neutral-200: lch(from var(--color-stone) 80% c h);
-  --color-neutral-300: lch(from var(--color-stone) 70% c h);
-  --color-neutral-400: lch(from var(--color-stone) 60% c h);
-  --color-neutral-500: lch(from var(--color-stone) l c h);
-  --color-neutral-600: lch(from var(--color-stone) 40% c h);
-  --color-neutral-700: lch(from var(--color-stone) 30% c h);
-  --color-neutral-800: lch(from var(--color-stone) 20% c h);
-  --color-neutral-900: lch(from var(--color-stone) 10% c h);
-  --color-neutral-950: lch(from var(--color-stone) 5% c h);
+  --color-neutral-50: lch(from var(--color-neutral) 97% 2 h);
+  --color-neutral-100: lch(from var(--color-neutral) 94% 3 h);
+  --color-neutral-200: lch(from var(--color-neutral) 88% 4 h);
+  --color-neutral-300: lch(from var(--color-neutral) 78% 5 h);
+  --color-neutral-400: lch(from var(--color-neutral) 65% c h);
+  --color-neutral-500: lch(from var(--color-neutral) l c h);
+  --color-neutral-600: lch(from var(--color-neutral) 40% c h);
+  --color-neutral-700: lch(from var(--color-neutral) 30% 6 h);
+  --color-neutral-800: lch(from var(--color-neutral) 20% 6 h);
+  --color-neutral-900: lch(from var(--color-neutral) 14% 5 h);
+  --color-neutral-950: lch(from var(--color-neutral) 10% 4 h);
 
   --size-0: 0;
   --size-0-5: 0.125rem;
@@ -209,32 +560,31 @@
   --size-11: 2.75rem;
   --size-12: 3rem;
 
-  --color-border-primary: light-dark(var(--color-neutral-200),
-      var(--color-neutral-700));
+  --color-border-primary: lch(from var(--color-accent) 40% 20 h / 0.3);
+  --color-border-glass: rgba(255, 255, 255, 0.1);
 
-  --color-bg-primary: light-dark(var(--color-white), var(--color-neutral-800));
-  --color-bg-secondary: light-dark(var(--color-neutral-50),
-      var(--color-neutral-900));
-  --color-bg-action: light-dark(var(--color-neutral-100),
-      var(--color-neutral-700));
-  --color-bg-action-hover: light-dark(var(--color-primary-100),
-      var(--color-primary-600));
+  --color-bg-primary: var(--color-black);
+  --color-bg-secondary: lch(from var(--color-neutral) 12% 4 h);
+  --color-bg-glass: rgba(255, 255, 255, 0.05);
+  --glass-blur: blur(12px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --color-bg-action: var(--color-neutral-800);
+  --color-bg-action-hover: var(--color-primary-800);
 
-  --color-link: var(--color-text-primary);
-  --color-link-hover: light-dark(var(--color-primary-600),
-      var(--color-primary-100));
-  --color-link-underline: var(--color-primary-400);
-  --color-link-hover-underline: light-dark(var(--color-primary-600),
-      var(--color-primary-300));
-  --color-link-visited: light-dark(var(--color-primary-600),
-      var(--color-primary-100));
-  --color-link-visited-underline: var(--color-primary-400);
+  --color-link: var(--color-primary-400);
+  --color-link-hover: var(--color-primary-300);
+  --color-link-underline: var(--color-primary-600);
+  --color-link-hover-underline: var(--color-primary-400);
+  --color-link-visited: var(--color-primary-500);
+  --color-link-visited-underline: var(--color-primary-700);
   --color-link-focus: var(--color-link-hover);
   --color-link-focus-underline: var(--color-link-hover);
 
-  --color-text-primary: light-dark(var(--color-black), var(--color-white));
-  --color-text-secondary: light-dark(var(--color-neutral-600),
-      var(--color-neutral-200));
+  --color-icon: var(--color-primary-400);
+  --color-icon-hover: var(--color-primary-300);
+
+  --color-text-primary: var(--color-white);
+  --color-text-secondary: var(--color-neutral-300);
 
   --spacing-2xs: var(--size-1);
   --spacing-xs: var(--size-2);
@@ -245,15 +595,7 @@
   --spacing-2xl: var(--size-7);
   --spacing-3xl: var(--size-8);
 
-  --codeblock-bg: var(--color-neutral-900);
-}
-
-.dark {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
+  --codeblock-bg: var(--color-bg-glass);
 }
 
 *,
@@ -264,7 +606,11 @@
 }
 
 body {
-  background-color: var(--color-bg-primary);
+  background:
+    radial-gradient(ellipse at 70% 20%, lch(from var(--color-accent) 30% 40 h / 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, lch(from var(--color-neutral) 20% 10 h / 0.5) 0%, transparent 40%),
+    linear-gradient(160deg, lch(12% 5 80) 0%, lch(6% 3 80) 100%);
+  background-attachment: fixed;
   color: var(--color-text-primary);
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
@@ -273,6 +619,7 @@ body {
   font-variation-settings: "wdth" 100;
   font-weight: 400;
   line-height: 1.5;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -312,6 +659,225 @@ a {
 
 @view-transition {
   navigation: auto;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+}
+
+.site-header {
+  padding: var(--spacing-md) 0;
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+}
+
+.site-header-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: var(--color-text-primary);
+
+  &:visited {
+    color: var(--color-text-primary);
+  }
+
+  &:hover {
+    color: var(--color-primary-400);
+  }
+}
+
+.site-header-headshot {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-primary-500);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.site-header-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: none;
+
+  @media (min-width: 480px) {
+    display: block;
+  }
+}
+
+.site-header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  @media (min-width: 480px) {
+    gap: var(--spacing-md);
+  }
+
+  > a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:visited {
+      color: var(--color-text-secondary);
+    }
+
+    &:hover {
+      color: var(--color-primary-400);
+    }
+  }
+}
+
+.site-header-social {
+  display: flex;
+  gap: var(--spacing-xs);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-bg-glass);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border-glass);
+    color: var(--color-icon);
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      background: var(--color-primary-500);
+      color: white;
+    }
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.site-footer {
+  padding: var(--spacing-2xl) 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-glass);
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  span[aria-hidden] {
+    display: none;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    font-weight: 400;
+  }
+
+  @media (min-width: 600px) {
+    .container {
+      flex-direction: row;
+      gap: var(--spacing-md);
+    }
+
+    span[aria-hidden] {
+      display: inline;
+    }
+  }
+}
+
+/* Light Theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+
+    --color-accent: lch(50% 45 185);
+
+    --color-primary-50: lch(from var(--color-accent) 97% 15 h);
+    --color-primary-100: lch(from var(--color-accent) 94% 25 h);
+    --color-primary-200: lch(from var(--color-accent) 88% 35 h);
+    --color-primary-300: lch(from var(--color-accent) 78% 45 h);
+    --color-primary-400: lch(from var(--color-accent) 45% c h);
+    --color-primary-500: lch(from var(--color-accent) l c h);
+    --color-primary-600: lch(from var(--color-accent) 40% c h);
+    --color-primary-700: lch(from var(--color-accent) 35% c h);
+    --color-primary-800: lch(from var(--color-accent) 28% c h);
+    --color-primary-900: lch(from var(--color-accent) 22% 40 h);
+    --color-primary-950: lch(from var(--color-accent) 15% 25 h);
+
+    --color-border-primary: lch(from var(--color-accent) 50% 20 h / 0.3);
+    --color-border-glass: rgba(0, 0, 0, 0.08);
+
+    --color-bg-primary: lch(98% 1 80);
+    --color-bg-secondary: lch(95% 2 80);
+    --color-bg-glass: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --color-bg-action: var(--color-neutral-200);
+    --color-bg-action-hover: var(--color-primary-200);
+
+    --color-link: var(--color-primary-600);
+    --color-link-hover: var(--color-primary-700);
+    --color-link-underline: var(--color-primary-400);
+    --color-link-hover-underline: var(--color-primary-500);
+    --color-link-visited: var(--color-primary-700);
+    --color-link-visited-underline: var(--color-primary-400);
+    --color-link-focus: var(--color-link-hover);
+    --color-link-focus-underline: var(--color-link-hover);
+
+    --color-icon: var(--color-primary-600);
+    --color-icon-hover: var(--color-primary-700);
+
+    --color-text-primary: var(--color-black);
+    --color-text-secondary: var(--color-neutral-600);
+
+    --codeblock-bg: lch(14% 5 80);
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 70% 20%, lch(90% 25 185 / 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, lch(92% 20 185 / 0.35) 0%, transparent 40%),
+      linear-gradient(160deg, lch(99% 1 185) 0%, lch(97% 2 185) 100%);
+  }
 }</style>
   <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86e36e0634bb461e84a1b6a61f287b46"}'></script>
 
@@ -321,104 +887,171 @@ a {
 <body>
   
 <main class="container">
-  <div class="content">
-    <header class="header">
-      <h1 class="title">Phil Parsons</h1>
-      <p class="subtitle">Web developer. Bike enthusiast.</p>
-      <p class="intro">
-        I'm a web developer from London in the United Kingdom. I work in FinTech and have a primary focus
-        on front-end development with HTML, CSS and JavaScript. Away from the keyboard I enjoy hitting the
-        trails on mountain bikes and offroad motorcycles.
-      </p>
-    </header>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="greeting">Hello, I'm</p>
+        <h1 class="title">Phil Parsons.</h1>
+        <p class="tagline">Principal Engineer & Web Developer</p>
+        <p class="intro">
+          I build high-performance web applications, lead front-end architecture,
+          and create design systems that scale across global organisations.
+        </p>
+        <ul class="social-links">
+          <li><a href="https://github.com/p-m-p" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+          </a></li>
+          <li><a href="https://linkedin.com/in/phil-parsons-webdev" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </a></li>
+        </ul>
+      </div>
+      <div class="hero-image">
+        <picture><source type="image/webp" srcset="/img/vI_4A5wr5c-320.webp 320w"><img loading="lazy" decoding="async" src="/img/vI_4A5wr5c-320.jpeg" alt="Phil Parsons" class="headshot" width="320" height="320"></picture>
+      </div>
+    </div>
+  </section>
 
-    <section class="recent-posts">
-      <h2>Recent posts</h2>
+  <section class="expertise">
+    <ul class="expertise-list">
+      <li>
+        <h2>Web Components</h2>
+        <p>Building reusable, framework-agnostic components using custom elements, shadow DOM, and modern browser APIs.</p>
+      </li>
+      <li>
+        <h2>Front-End Architecture</h2>
+        <p>Designing scalable application structures with a focus on performance, maintainability, and developer experience.</p>
+      </li>
+      <li>
+        <h2>Performance</h2>
+        <p>Optimising web applications for speed and efficiency through modern techniques and tooling.</p>
+      </li>
+    </ul>
+  </section>
 
-      <ol class="recent-posts-list">
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: optimising-websocket-connections-with-a-sharedworker"><a href="/blog/shared-worker-websocket-connections/">Optimising WebSocket connections with a SharedWorker</a></h3>
-          <p class="recent-post-description">With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure stable and efficient connection handling.</p>
-          <div class="recent-post-date"><time datetime="2025-11-14">14 November 2025</time></div>
+  <section class="experience">
+    <div class="experience-content">
+      <div class="experience-profile">
+        <h2>Experience</h2>
+        <p>With over 15 years in software engineering, I've led design system teams and front-end platform architecture at <strong>JPMorganChase</strong>, <strong>Legal & General</strong>, and <strong>Finbourne Technology</strong>, delivering component libraries and tooling that enable product teams to ship faster while maintaining brand consistency.</p>
+        <p>As a consultant, I've driven digital transformations for clients including <strong>Formula 1</strong>, <strong>BNP Paribas</strong>, <strong>IG Index</strong>, and <strong>British Gas</strong> — building real-time data platforms, analytics systems, and mobile applications used by millions.</p>
+        <a href="https://linkedin.com/in/phil-parsons-webdev" class="experience-link">
+          View full profile on LinkedIn
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </div>
+      <ul class="experience-stats">
+        <li>
+          <span class="stat-value">15+</span>
+          <span class="stat-label">Years Experience</span>
         </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: bundling-design-tokens-for-lit-web-components"><a href="/blog/bundling-lit-design-tokens/">Bundling design tokens for Lit web components</a></h3>
-          <p class="recent-post-description">Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.</p>
-          <div class="recent-post-date"><time datetime="2025-09-21">21 September 2025</time></div>
+        <li>
+          <span class="stat-value">3</span>
+          <span class="stat-label">Design Systems</span>
         </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: building-scrollable-tabs-with-experimental-css-features"><a href="/blog/building-scrollable-tabs-with-css/">Building scrollable tabs with experimental CSS features</a></h3>
-          <p class="recent-post-description">New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications</p>
-          <div class="recent-post-date"><time datetime="2025-06-10">10 June 2025</time></div>
+        <li>
+          <span class="stat-value">4</span>
+          <span class="stat-label">Transformations</span>
         </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: does-tdd-have-relevance-in-an-ai-assisted-developer-workflow"><a href="/blog/the-relevance-of-tdd-in-an-ai-workflow/">Does TDD have relevance in an AI assisted developer workflow?</a></h3>
-          <p class="recent-post-description">Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.</p>
-          <div class="recent-post-date"><time datetime="2025-04-27">27 April 2025</time></div>
+        <li>
+          <span class="stat-value">6</span>
+          <span class="stat-label">Financial Institutions</span>
         </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: stop-using-test-ids-and-assert-usability-instead"><a href="/blog/stop-using-test-ids/">Stop using Test IDs and assert usability instead</a></h3>
-          <p class="recent-post-description">The pattern of applying a Test ID to an element to more easily selected it in tests has existed for a while. During that time the tools we use as developers and testers have improved greatly and offer a more user centric approach to asserting our applications behave as expected.</p>
-          <div class="recent-post-date"><time datetime="2025-03-18">18 March 2025</time></div>
-        </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: a-place-for-custom-elements-in-a-world-of-javascript-frameworks"><a href="/blog/custom-elements-in-a-world-of-frameworks/">A place for custom elements in a world of JavaScript frameworks</a></h3>
-          <p class="recent-post-description">Last year, React 19 shipped with full support for custom HTML elements. Being the most popular of the JavaScript frameworks this release provides us with an opportunity to adopt web components in areas like design system component libraries. In this post I take a look at how to provide a good developer experience to aid adoption in this area.</p>
-          <div class="recent-post-date"><time datetime="2025-01-28">28 January 2025</time></div>
-        </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: how-to-create-polymorhpic-web-components"><a href="/blog/how-to-create-polymorphic-web-components/">How to create polymorhpic web components</a></h3>
-          <p class="recent-post-description">The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.</p>
-          <div class="recent-post-date"><time datetime="2025-01-05">05 January 2025</time></div>
-        </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: dont-fouc-up-your-web-components"><a href="/blog/dont-fouc-up-your-web-components/">Don&#39;t FOUC up your web components</a></h3>
-          <p class="recent-post-description">A flash of unstlyed content (FOUC) doesn&#39;t just look bad, it could be hurting your core web vital score. Let&#39;s look at how to use progressive enhancement in web components to prevent such a FOUC up.</p>
-          <div class="recent-post-date"><time datetime="2024-12-20">20 December 2024</time></div>
-        </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: practical-web-component-reactivity-patterns"><a href="/blog/practical-web-component-reactivity-patterns/">Practical web component reactivity patterns</a></h3>
-          <p class="recent-post-description">The web platform provides us with all the tools we need to apply reactivity to our web components. Let&#39;s explore some reactive programming patterns we can use in everyday scenarios to build interactive web pages and applications.</p>
-          <div class="recent-post-date"><time datetime="2024-11-24">24 November 2024</time></div>
-        </li>
-        
-        <li class="recent-post">
-          <h3 class="recent-post-title" style="view-transition-name: generating-entry-points-for-typescript-packages"><a href="/blog/typescript-package-entry-points/">Generating entry points for TypeScript packages</a></h3>
-          <p class="recent-post-description">Consuming NPM packages that export JavaScript Modules (ESM) with bundlers like Vite and Webpack is simple enough but to author a package in TypeScript with ESM only exports there&#39;s a few things that need to be considered.</p>
-          <div class="recent-post-date"><time datetime="2024-10-27">27 October 2024</time></div>
-        </li>
-        
-      </ol>
-    </section>
-
-    <footer class="footer">
-      <p>You can also find me here:</p>
-
-      <ul class="social-links">
-        <li><a href="https://github.com/p-m-p">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
-        Github
-        </a></li>
-        <li><a href="https://linkedin.com/in/phil-parsons-webdev">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="m16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-        LinkedIn
-        </a></li>
       </ul>
-    </footer>
-  </div>
+    </div>
+  </section>
 
-  <div class="cover" =="">
-    <picture><source type="image/webp" srcset="/img/4hsCNQpp5C-4104.webp 4104w"><img loading="lazy" decoding="async" src="/img/4hsCNQpp5C-4104.jpeg" alt="Me throwing a whip on my mountain bike at Bikepark Wales on a typically wet Welsh day in Autumn" width="4104" height="2736"></picture>
+  <section class="projects">
+    <h2>Open Source</h2>
+    <p class="projects-intro">I maintain several open source projects on GitHub, including web component libraries and developer tools.</p>
+
+    <ul class="project-tiles">
+      <li class="project-tile">
+        <h3 class="project-title">
+          <a href="https://github.com/p-m-p/slider">@boxslider</a>
+        </h3>
+        <p class="project-description">A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.</p>
+        <div class="project-meta">
+          <a href="https://github.com/p-m-p/slider/stargazers" class="project-stat project-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>890</span>
+          </a>
+          <a href="https://github.com/p-m-p/slider/forks" class="project-stat project-forks">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="6" r="3"></circle><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"></path><path d="M12 12v3"></path></svg>
+            <span>234</span>
+          </a>
+        </div>
+      </li>
+      <li class="project-tile">
+        <h3 class="project-title">
+          <a href="https://github.com/p-m-p/parsonic">@parsonic</a>
+        </h3>
+        <p class="project-description">Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.</p>
+        <div class="project-meta">
+          <a href="https://github.com/p-m-p/parsonic/stargazers" class="project-stat project-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>4</span>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <a href="https://github.com/p-m-p" class="projects-link">
+      View all projects on GitHub
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+    </a>
+  </section>
+
+  <section class="recent-posts">
+    <div class="section-header">
+      <h2>Recent Writing</h2>
+      <a href="/feed/feed.xml" class="rss-link" aria-label="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+      </a>
+    </div>
+
+    <ol class="recent-posts-list">
+      
+      <li class="recent-post">
+        <h3 class="recent-post-title" style="view-transition-name: optimising-websocket-connections-with-a-sharedworker"><a href="/blog/shared-worker-websocket-connections/">Optimising WebSocket connections with a SharedWorker</a></h3>
+        <p class="recent-post-description">With a SharedWorker we can share a WebSocket connection across multiple browser tabs. Effectively managing connections to the SharedWorker can be tricky but these simple strategies ensure stable and efficient connection handling.</p>
+        <div class="recent-post-date"><time datetime="2025-11-14">14 November 2025</time></div>
+      </li>
+      
+      <li class="recent-post">
+        <h3 class="recent-post-title" style="view-transition-name: bundling-design-tokens-for-lit-web-components"><a href="/blog/bundling-lit-design-tokens/">Bundling design tokens for Lit web components</a></h3>
+        <p class="recent-post-description">Building a design token pipeline that keeps component styles isolated and supports light-dark color schemes requires balancing automation with developer experience. This post demonstrates a Style Dictionary approach that exports JavaScript tokens for Lit elements that maintains CSS as the source of truth for styling.</p>
+        <div class="recent-post-date"><time datetime="2025-09-21">21 September 2025</time></div>
+      </li>
+      
+      <li class="recent-post">
+        <h3 class="recent-post-title" style="view-transition-name: building-scrollable-tabs-with-experimental-css-features"><a href="/blog/building-scrollable-tabs-with-css/">Building scrollable tabs with experimental CSS features</a></h3>
+        <p class="recent-post-description">New overflow and positioning features coming to CSS are making it easier to build common UI patterns with minimal JavaScript. This post explores how to build scrollable tabs using features from the overflow module and anchor positioning draft specifications</p>
+        <div class="recent-post-date"><time datetime="2025-06-10">10 June 2025</time></div>
+      </li>
+      
+      <li class="recent-post">
+        <h3 class="recent-post-title" style="view-transition-name: does-tdd-have-relevance-in-an-ai-assisted-developer-workflow"><a href="/blog/the-relevance-of-tdd-in-an-ai-workflow/">Does TDD have relevance in an AI assisted developer workflow?</a></h3>
+        <p class="recent-post-description">Can the principles of Test-Driven Development (TDD) be applied to AI code generation? Let&#39;s look at the concept of Prompt-Driven Development (PDD), where we guide AI by applying the principles of TDD.</p>
+        <div class="recent-post-date"><time datetime="2025-04-27">27 April 2025</time></div>
+      </li>
+      
+    </ol>
+
+    <a href="/blog/" class="posts-link">
+      View all posts
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+    </a>
+  </section>
+
+  <footer class="site-footer">
+  <div class="container">
+    <p>&copy; Phil Parsons</p>
+    <span aria-hidden="true">&middot;</span>
+    <p xmlns:cc="http://creativecommons.org/ns#">Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a></p>
   </div>
+</footer>
+
 </main>
 
 </body>
