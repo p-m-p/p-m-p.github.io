@@ -107,7 +107,10 @@
     border: 1px solid var(--color-border-glass);
     box-shadow: var(--glass-shadow);
     color: var(--color-icon);
-    transition: transform 0.2s, background 0.2s, color 0.2s;
+    transition:
+      transform 0.2s,
+      background 0.2s,
+      color 0.2s;
 
     &:hover {
       transform: translateY(-3px);
@@ -205,7 +208,9 @@
 
   svg {
     color: var(--color-icon);
-    transition: transform 0.2s, color 0.2s;
+    transition:
+      transform 0.2s,
+      color 0.2s;
   }
 
   &:hover svg {
@@ -218,7 +223,7 @@
   list-style: none;
   padding: 0;
   margin: auto 0;
-  display: none;
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-xl);
 
@@ -348,7 +353,9 @@
 
   svg {
     color: var(--color-icon);
-    transition: transform 0.2s, color 0.2s;
+    transition:
+      transform 0.2s,
+      color 0.2s;
   }
 
   &:hover svg {
@@ -387,7 +394,10 @@
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--color-border-glass);
   color: var(--color-icon);
-  transition: transform 0.2s, background 0.2s, color 0.2s;
+  transition:
+    transform 0.2s,
+    background 0.2s,
+    color 0.2s;
 
   &:hover {
     transform: translateY(-2px);
@@ -417,7 +427,9 @@
   border: 1px solid var(--color-border-glass);
   border-radius: 16px;
   box-shadow: var(--glass-shadow);
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 
   &:hover {
     border-color: var(--color-primary-600);
@@ -490,10 +502,6 @@
     grid-template-columns: 2fr 1fr;
     gap: var(--spacing-2xl);
     align-items: center;
-  }
-
-  .experience-stats {
-    display: grid;
   }
 
   .headshot {
