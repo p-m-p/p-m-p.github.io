@@ -147,6 +147,28 @@ a {
   navigation: auto;
 }
 
+/* Utility Classes */
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+}
+
 .site-header {
   padding: var(--spacing-md) 0;
 
