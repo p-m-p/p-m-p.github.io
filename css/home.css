@@ -199,11 +199,11 @@
 
 .experience-stats {
   list-style: none;
-  padding: 0;
+  padding: var(--spacing-md) 0;
   margin: auto 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-xl);
+  gap: clamp(1.5rem, 4vw, 2.5rem);
 
   li {
     text-align: center;
@@ -213,10 +213,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 5rem;
-    height: 5rem;
+    width: clamp(4.5rem, 12vw, 7rem);
+    height: clamp(4.5rem, 12vw, 7rem);
     margin: 0 auto;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 800;
     line-height: 1;
     color: var(--color-primary-400);
@@ -229,9 +229,9 @@
 
   .stat-label {
     display: block;
-    font-size: 0.875rem;
+    font-size: clamp(0.75rem, 2vw, 0.9375rem);
     color: var(--color-neutral-400);
-    margin-top: var(--spacing-xs);
+    margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
     white-space: nowrap;
   }
 }
