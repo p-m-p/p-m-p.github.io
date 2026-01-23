@@ -811,10 +811,15 @@ function VirtualizedDataGrid() {
   }, [startIndex, endIndex]);
 
   const containerStyle = { height: containerHeight, overflow: "auto" };
-  const virtualContainerStyle = { height: totalRows * rowHeight, position: "relative" };
+  const virtualContainerStyle = {
+    height: totalRows * rowHeight,
+    position: "relative",
+  };
 
   return (
-    <div style={containerStyle} onScroll={(e) => setScrollTop(e.target.scrollTop)}>
+    <div
+      style={containerStyle}
+      onScroll={(e) => setScrollTop(e.target.scrollTop)}>
       <div style={virtualContainerStyle}>
         {visibleRows.map((row, index) => {
           const rowStyle = {
@@ -823,7 +828,7 @@ function VirtualizedDataGrid() {
             height: rowHeight,
             width: "100%",
           };
-          
+
           return (
             <div key={row.id} style={rowStyle}>
               <GridRow row={row} />
@@ -896,37 +901,40 @@ sources and derived state.
 
 ## Integration with Zustand
 
-While building custom stores gives you full control, you can also integrate `useSyncExternalStore` with existing state management libraries like Zustand for even more powerful data grid implementations:
+While building custom stores gives you full control, you can also integrate
+`useSyncExternalStore` with existing state management libraries like Zustand for
+even more powerful data grid implementations:
 
 ```js
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 const useDataGridStore = create(
   subscribeWithSelector((set, get) => ({
     rows: [
-      { id: 1, name: 'John Doe', email: 'john@example.com', age: 28 },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 32 },
-      { id: 3, name: 'Bob Johnson', email: 'bob@example.com', age: 45 }
+      { id: 1, name: "John Doe", email: "john@example.com", age: 28 },
+      { id: 2, name: "Jane Smith", email: "jane@example.com", age: 32 },
+      { id: 3, name: "Bob Johnson", email: "bob@example.com", age: 45 },
     ],
     columns: [
-      { id: 'name', label: 'Name', width: 150 },
-      { id: 'email', label: 'Email', width: 200 },
-      { id: 'age', label: 'Age', width: 80 }
+      { id: "name", label: "Name", width: 150 },
+      { id: "email", label: "Email", width: 200 },
+      { id: "age", label: "Age", width: 80 },
     ],
     sortBy: null,
-    sortDirection: 'asc',
-    filter: '',
-    
+    sortDirection: "asc",
+    filter: "",
+
     // Actions
     updateRows: (newRows) => set({ rows: newRows }),
-    
+
     sortByColumn: (columnId) => {
       const { sortBy, sortDirection, rows } = get();
-      const direction = sortBy === columnId && sortDirection === 'asc' ? 'desc' : 'asc';
-      
+      const direction =
+        sortBy === columnId && sortDirection === "asc" ? "desc" : "asc";
+
       const sortedRows = [...rows].sort((a, b) => {
-        if (direction === 'asc') {
+        if (direction === "asc") {
           return a[columnId] > b[columnId] ? 1 : -1;
         }
         return a[columnId] < b[columnId] ? 1 : -1;
@@ -935,24 +943,24 @@ const useDataGridStore = create(
       set({
         rows: sortedRows,
         sortBy: columnId,
-        sortDirection: direction
+        sortDirection: direction,
       });
     },
-    
+
     setFilter: (filter) => set({ filter }),
-    
+
     // Computed values
     get filteredRows() {
       const { rows, filter } = get();
       if (!filter) return rows;
-      
-      return rows.filter(row => 
-        Object.values(row).some(value => 
-          String(value).toLowerCase().includes(filter.toLowerCase())
-        )
+
+      return rows.filter((row) =>
+        Object.values(row).some((value) =>
+          String(value).toLowerCase().includes(filter.toLowerCase()),
+        ),
       );
-    }
-  }))
+    },
+  })),
 );
 ```
 
@@ -961,44 +969,43 @@ Create selective subscription hooks using Zustand's subscribe method:
 ```jsx
 function useGridRows() {
   return useSyncExternalStore(
-    (callback) => useDataGridStore.subscribe(
-      (state) => state.rows,
-      callback
-    ),
-    () => useDataGridStore.getState().rows
+    (callback) => useDataGridStore.subscribe((state) => state.rows, callback),
+    () => useDataGridStore.getState().rows,
   );
 }
 
 function useGridSort() {
   return useSyncExternalStore(
-    (callback) => useDataGridStore.subscribe(
-      (state) => ({ sortBy: state.sortBy, sortDirection: state.sortDirection }),
-      callback
-    ),
+    (callback) =>
+      useDataGridStore.subscribe(
+        (state) => ({
+          sortBy: state.sortBy,
+          sortDirection: state.sortDirection,
+        }),
+        callback,
+      ),
     () => {
       const { sortBy, sortDirection } = useDataGridStore.getState();
       return { sortBy, sortDirection };
-    }
+    },
   );
 }
 
 function useGridFilter() {
   return useSyncExternalStore(
-    (callback) => useDataGridStore.subscribe(
-      (state) => state.filter,
-      callback
-    ),
-    () => useDataGridStore.getState().filter
+    (callback) => useDataGridStore.subscribe((state) => state.filter, callback),
+    () => useDataGridStore.getState().filter,
   );
 }
 
 function useFilteredRows() {
   return useSyncExternalStore(
-    (callback) => useDataGridStore.subscribe(
-      (state) => [state.rows, state.filter], // Subscribe to dependencies
-      callback
-    ),
-    () => useDataGridStore.getState().filteredRows
+    (callback) =>
+      useDataGridStore.subscribe(
+        (state) => [state.rows, state.filter], // Subscribe to dependencies
+        callback,
+      ),
+    () => useDataGridStore.getState().filteredRows,
   );
 }
 ```
@@ -1035,11 +1042,9 @@ function ZustandGridFilter() {
 function ZustandGridHeader() {
   const { sortBy, sortDirection } = useGridSort();
   const columns = useSyncExternalStore(
-    (callback) => useDataGridStore.subscribe(
-      (state) => state.columns,
-      callback
-    ),
-    () => useDataGridStore.getState().columns
+    (callback) =>
+      useDataGridStore.subscribe((state) => state.columns, callback),
+    () => useDataGridStore.getState().columns,
   );
   const sortByColumn = useDataGridStore((state) => state.sortByColumn);
 
@@ -1048,16 +1053,15 @@ function ZustandGridHeader() {
       <tr>
         {columns.map((column) => {
           const style = { width: column.width };
-          
+
           return (
             <th
               key={column.id}
               style={style}
-              onClick={() => sortByColumn(column.id)}
-            >
+              onClick={() => sortByColumn(column.id)}>
               {column.label}
               {sortBy === column.id && (
-                <span>{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+                <span>{sortDirection === "asc" ? " ↑" : " ↓"}</span>
               )}
             </th>
           );
@@ -1087,9 +1091,13 @@ function ZustandGridBody() {
 This Zustand approach provides several benefits:
 
 - **DevTools Integration**: Built-in Redux DevTools support for debugging
-- **Middleware Support**: Easy integration with persistence, immer, and other middleware
+- **Middleware Support**: Easy integration with persistence, immer, and other
+  middleware
 - **TypeScript Support**: Excellent TypeScript integration out of the box
 - **Computed Values**: Built-in support for derived state with getters
-- **Selective Subscriptions**: Fine-grained subscriptions using `subscribeWithSelector`
+- **Selective Subscriptions**: Fine-grained subscriptions using
+  `subscribeWithSelector`
 
-The combination of Zustand's developer experience with `useSyncExternalStore`'s performance optimizations creates a powerful foundation for complex data grid implementations.
+The combination of Zustand's developer experience with `useSyncExternalStore`'s
+performance optimizations creates a powerful foundation for complex data grid
+implementations.
