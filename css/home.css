@@ -1,6 +1,6 @@
 /* Hero Section */
 .hero {
-  padding: var(--spacing-3xl) 0;
+  padding: calc(var(--spacing-3xl) * 2) 0;
   border-bottom: 1px solid var(--color-border-glass);
 }
 
@@ -523,7 +523,6 @@
     padding: var(--spacing-2xl);
   }
 
-  .hero,
   .expertise,
   .experience,
   .projects,
