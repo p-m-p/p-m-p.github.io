@@ -68,3 +68,19 @@
     font-size: 1.375rem;
   }
 }
+
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--spacing-2xl);
+  }
+
+  .page-header {
+    padding: calc(var(--spacing-3xl) * 1.5) 0;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .post:not(:first-child) {
+    margin-top: var(--spacing-2xl);
+    padding-top: var(--spacing-2xl);
+  }
+}
