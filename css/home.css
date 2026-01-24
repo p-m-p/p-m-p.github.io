@@ -488,6 +488,36 @@
   }
 }
 
+/* Scroll animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .project-tile,
+  .recent-post,
+  .expertise-list li {
+    animation: fade-in-up 1s ease-out both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-tile,
+  .recent-post,
+  .expertise-list li {
+    animation: none;
+  }
+}
+
 @media (min-width: 1024px) {
   .container {
     padding: var(--spacing-2xl);
