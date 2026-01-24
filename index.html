@@ -151,7 +151,7 @@
   gap: var(--spacing-xl);
 
   li {
-    h2 {
+    h3 {
       font-size: 1.125rem;
       font-weight: 600;
       margin: 0 0 var(--spacing-xs);
@@ -687,6 +687,18 @@ a {
 }
 
 /* Utility Classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .container {
   max-width: 1024px;
   margin: 0 auto;
@@ -949,17 +961,18 @@ a {
   </section>
 
   <section class="expertise">
+    <h2 class="visually-hidden">what I focus on</h2>
     <ul class="expertise-list">
       <li>
-        <h2>Web Components</h2>
+        <h3>Web Components</h3>
         <p>Building reusable, framework-agnostic components using custom elements, shadow DOM, and modern browser APIs.</p>
       </li>
       <li>
-        <h2>Front-End Architecture</h2>
+        <h3>Front-End Architecture</h3>
         <p>Designing scalable application structures with a focus on performance, maintainability, and developer experience.</p>
       </li>
       <li>
-        <h2>Performance</h2>
+        <h3>Performance</h3>
         <p>Optimising web applications for speed and efficiency through modern techniques and tooling.</p>
       </li>
     </ul>
