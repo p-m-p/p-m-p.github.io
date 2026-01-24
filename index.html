@@ -22,7 +22,7 @@
   <link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Phil Parsons">
   <style>/* Hero Section */
 .hero {
-  padding: calc(var(--spacing-3xl) * 2) 0;
+  padding: var(--spacing-3xl) 0;
   border-bottom: 1px solid var(--color-border-glass);
 }
 
@@ -83,7 +83,7 @@
   border-radius: 50%;
   object-fit: cover;
   outline: 8px solid var(--color-primary-500);
-  outline-offset: 4px;
+  outline-offset: var(--size-1);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
@@ -133,7 +133,7 @@
 
 /* Expertise Section */
 .expertise {
-  padding: calc(var(--spacing-3xl) * 1.5) 0;
+  padding: var(--spacing-3xl) 0;
   border-bottom: 1px solid var(--color-border-glass);
 
   h2 {
@@ -225,7 +225,7 @@
   margin: auto 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: clamp(2rem, 5vw, 2.5rem);
+  gap: var(--spacing-xl);
 
   li {
     text-align: center;
@@ -253,7 +253,7 @@
     display: block;
     font-size: clamp(0.875rem, 2.5vw, 0.9375rem);
     color: var(--color-neutral-400);
-    margin-top: clamp(0.625rem, 2vw, 0.75rem);
+    margin-top: var(--spacing-xs);
     white-space: nowrap;
   }
 }
@@ -513,6 +513,15 @@
 @media (min-width: 1024px) {
   .container {
     padding: var(--spacing-2xl);
+  }
+
+  .hero,
+  .expertise,
+  .experience,
+  .projects,
+  .recent-posts {
+    padding-top: calc(var(--spacing-3xl) * 1.5);
+    padding-bottom: calc(var(--spacing-3xl) * 1.5);
   }
 
   .headshot {

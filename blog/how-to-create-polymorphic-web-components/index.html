@@ -111,7 +111,7 @@ figcaption {
   }
 
   li {
-    margin: 0 0 var(--spacing-xs);
+    margin: 0 0 var(--spacing-sm);
   }
 
   p code {
@@ -123,7 +123,7 @@ figcaption {
   h4 {
     color: var(--color-text-primary);
     font-weight: 600;
-    margin: var(--spacing-3xl) 0 var(--spacing-md);
+    margin: var(--spacing-2xl) 0 var(--spacing-md);
     text-wrap: pretty;
   }
 
@@ -144,9 +144,9 @@ figcaption {
 
   pre {
     font-size: 0.875rem;
-    margin: 0 0 var(--spacing-3xl);
+    margin: 0 0 var(--spacing-xl);
     overflow: auto;
-    padding: var(--spacing-xs);
+    padding: var(--spacing-sm);
   }
 
   img {
@@ -235,14 +235,25 @@ figure {
 
 @media (width >= 600px) {
   .post-header {
-    padding: var(--spacing-3xl) 0 0;
-    margin: 0 0 var(--spacing-3xl);
+    padding: var(--spacing-xl) 0 0;
+    margin: 0 0 var(--spacing-xl);
   }
 }
 
 @media (width >= 1024px) {
+  .post-header {
+    padding: var(--spacing-2xl) 0 0;
+    margin: 0 0 var(--spacing-2xl);
+  }
+
   .post-content {
     font-size: 1.125rem;
+
+    p,
+    ol,
+    ul {
+      margin-bottom: var(--spacing-lg);
+    }
 
     p {
       code {
@@ -250,8 +261,15 @@ figure {
       }
     }
 
+    h2,
+    h3,
+    h4 {
+      margin-top: var(--spacing-3xl);
+    }
+
     pre {
       padding: var(--spacing-md);
+      margin-bottom: var(--spacing-2xl);
     }
 
     h2 {
