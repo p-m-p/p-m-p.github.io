@@ -36,8 +36,8 @@ figcaption {
 .post-header {
   background: var(--color-bg-glass);
   backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--color-border-glass);
-  border-radius: 16px;
+  border-top: 1px solid var(--color-border-glass);
+  border-bottom: 1px solid var(--color-border-glass);
   box-shadow: var(--glass-shadow);
   margin: 0 0 var(--spacing-md);
   padding: var(--spacing-md) 0 0;
