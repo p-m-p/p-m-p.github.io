@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200, height=630">
+  <title>Social Card Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-accent: lch(65% 55 165);
+      --color-primary-400: lch(from var(--color-accent) 70% 55 h);
+      --color-primary-500: lch(from var(--color-accent) 65% 55 h);
+      --color-white: lch(98% 1 80);
+      --color-text-secondary: lch(78% 5 80);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      font-family: "Noto Sans", sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      width: 1200px;
+      height: 630px;
+      background:
+        radial-gradient(ellipse at 70% 20%, lch(from var(--color-accent) 30% 40 h / 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, lch(20% 10 80 / 0.5) 0%, transparent 40%),
+        linear-gradient(160deg, lch(12% 5 80) 0%, lch(6% 3 80) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 80px;
+      color: var(--color-white);
+    }
+
+    .content {
+      flex: 1;
+      max-width: 700px;
+    }
+
+    .greeting {
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 500;
+      color: var(--color-primary-400);
+      margin-bottom: 8px;
+    }
+
+    .name {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary-400);
+      margin-bottom: 24px;
+    }
+
+    .url {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Post variant */
+    .card.post .content {
+      max-width: 750px;
+    }
+
+    .card.post .post-title {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    .card.post .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--color-text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .card.post .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card.post .author-image {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      outline: 3px solid var(--color-primary-500);
+      outline-offset: 2px;
+    }
+
+    .card.post .author-name {
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .headshot-container {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .headshot {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      object-fit: cover;
+      outline: 10px solid var(--color-primary-500);
+      outline-offset: 6px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .card.post .headshot {
+      width: 200px;
+      height: 200px;
+      outline-width: 8px;
+      outline-offset: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- HOME CARD VARIANT -->
+  <div class="card home" id="home-card">
+    <div class="content">
+      <p class="greeting">Hello, I'm</p>
+      <h1 class="name">Phil Parsons.</h1>
+      <p class="tagline">Principal Engineer & Web Developer</p>
+      <p class="url">philparsons.co.uk</p>
+    </div>
+    <div class="headshot-container">
+      <picture><source type="image/webp" srcset="/img/socialcard/template/vI_4A5wr5c-2672.webp 2672w"><img loading="lazy" decoding="async" src="/img/socialcard/template/vI_4A5wr5c-2672.jpeg" alt="Phil Parsons" class="headshot" width="2672" height="2672"></picture>
+    </div>
+  </div>
+
+  <!-- POST CARD VARIANT (uncomment to use) -->
+  <!--
+  <div class="card post" id="post-card">
+    <div class="content">
+      <h1 class="post-title">Your Post Title Goes Here</h1>
+      <div class="post-meta">
+        <div class="author">
+          <img src="../headshot.jpeg" alt="Phil Parsons" class="author-image">
+          <span class="author-name">Phil Parsons</span>
+        </div>
+        <span>philparsons.co.uk</span>
+      </div>
+    </div>
+    <div class="headshot-container">
+      <img src="../headshot.jpeg" alt="" class="headshot">
+    </div>
+  </div>
+  -->
+</body>
+</html>
