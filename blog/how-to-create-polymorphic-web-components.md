@@ -4,10 +4,11 @@ description:
   The slot element provides us with the tools to create polymorhpic custom
   elements. This post explores how a tab element within a tabbed navigation
   section can be used with a Next.js link component.
+date: 2025-01-05
+social_card: how-to-create-polymorphic-web-components.jpg
 tags:
   - posts
   - web components
-date: 2025-01-05
 ---
 
 ## Polymorphic components

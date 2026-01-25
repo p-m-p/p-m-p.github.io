@@ -18,6 +18,29 @@ jobs:
         with:
           node-version: 24
       - run: pnpm install
+
+      - name: Install Puppeteer browsers
+        run: npx puppeteer browsers install chrome
+
+      - name: Generate missing social cards
+        run: |
+          # Find blog posts without social cards
+          for file in blog/*.md; do
+            slug=$(basename "$file" .md)
+            if [[ ! -f "img/socialcard/${slug}.jpg" ]]; then
+              echo "Generating card for: $slug"
+              node scripts/generate-social-cards.js "$slug"
+            fi
+          done
+
+      - name: Commit social cards
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add img/socialcard/*.jpg blog/*.md
+          git diff --staged --quiet || git commit -m "Generate social cards for new posts [skip ci]"
+          git push || true
+
       - run: pnpm run build
       - uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

@@ -11,6 +11,7 @@ tags:
   - performance
   - hooks
 date: 2025-12-13
+social_card: react-efficient-updates-usesyncexternalstore.jpg
 draft: true
 ---
 

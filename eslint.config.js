@@ -40,7 +40,12 @@ export default [
   },
 
   {
-    files: [".eleventy.js", "_data/**/*.js", "blog/**/*.11tydata.js"],
+    files: [
+      ".eleventy.js",
+      "_data/**/*.js",
+      "blog/**/*.11tydata.js",
+      "scripts/**/*.js",
+    ],
     languageOptions: {
       globals: {
         ...globals.node,

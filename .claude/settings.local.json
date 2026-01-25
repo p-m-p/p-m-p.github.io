@@ -13,7 +13,16 @@
       "WebFetch(domain:preview.themeforest.net)",
       "WebFetch(domain:localhost)",
       "WebFetch(domain:framerusercontent.com)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(sips:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm config:*)",
+      "Bash(npx puppeteer:*)",
+      "Bash(pnpm run generate:social-cards:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }

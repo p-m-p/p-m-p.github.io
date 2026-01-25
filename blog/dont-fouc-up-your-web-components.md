@@ -5,6 +5,7 @@ description:
   your core web vital score. Let's look at how to use progressive enhancement in
   web components to prevent such a FOUC up.
 date: 2024-12-20
+social_card: dont-fouc-up-your-web-components.jpg
 tags:
   - posts
   - web components

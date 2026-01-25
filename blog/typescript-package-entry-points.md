@@ -10,6 +10,7 @@ tags:
   - nodejs
   - typescript
 date: 2024-10-27
+social_card: typescript-package-entry-points.jpg
 ---
 
 ## TypeScript vs JavaScript module resolution
