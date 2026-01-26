@@ -12,7 +12,7 @@ import {
 } from "./projects-config.js";
 
 // Fallback data in case GitHub API is unavailable
-export const fallbackData = [
+const fallbackData = [
   {
     "repo": "slider",
     "title": "@boxslider",
@@ -62,8 +62,7 @@ async function fetchAllProjects() {
 
 async function getProjects() {
   try {
-    const result = await fetchAllProjects();
-    return result;
+    return await fetchAllProjects();
   } catch (error) {
     console.warn("Failed to fetch projects data, using fallback:", error);
     return fallbackData;
