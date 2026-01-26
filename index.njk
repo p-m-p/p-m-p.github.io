@@ -84,34 +84,26 @@ layout: layouts/base.njk
     <p class="projects-intro">I maintain several open source projects on GitHub, including web component libraries and developer tools.</p>
 
     <ul class="project-tiles">
+      {%- for project in projects %}
       <li class="project-tile">
         <h3 class="project-title">
-          <a href="https://github.com/p-m-p/slider">@boxslider</a>
+          <a href="{{ project.url }}">{{ project.title }}</a>
         </h3>
-        <p class="project-description">A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.</p>
+        <p class="project-description">{{ project.description }}</p>
         <div class="project-meta">
-          <a href="https://github.com/p-m-p/slider/stargazers" class="project-stat project-stars">
+          <a href="{{ project.url }}/stargazers" class="project-stat project-stars">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>890</span>
+            <span>{{ project.stars }}</span>
           </a>
-          <a href="https://github.com/p-m-p/slider/forks" class="project-stat project-forks">
+          {%- if project.forks > 0 %}
+          <a href="{{ project.url }}/forks" class="project-stat project-forks">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
-            <span>234</span>
+            <span>{{ project.forks }}</span>
           </a>
+          {%- endif %}
         </div>
       </li>
-      <li class="project-tile">
-        <h3 class="project-title">
-          <a href="https://github.com/p-m-p/parsonic">@parsonic</a>
-        </h3>
-        <p class="project-description">Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.</p>
-        <div class="project-meta">
-          <a href="https://github.com/p-m-p/parsonic/stargazers" class="project-stat project-stars">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>4</span>
-          </a>
-        </div>
-      </li>
+      {%- endfor %}
     </ul>
 
     <a href="https://github.com/p-m-p" class="projects-link">
