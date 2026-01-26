@@ -103,8 +103,17 @@ async function updateProjectsData() {
     const fallbackDataString = JSON.stringify(projects, undefined, 2);
 
     // Replace the fallbackData array in the file
+    // Match the fallbackData array structure specifically
+    const fallbackDataRegex = /const fallbackData = \[\s*\{[\s\S]*?\}\s*\];/;
+
+    if (!fallbackDataRegex.test(currentContent)) {
+      throw new Error(
+        "Could not find fallbackData array in projects.js. File structure may have changed.",
+      );
+    }
+
     const updatedContent = currentContent.replace(
-      /const fallbackData = \[[\s\S]*?\];/,
+      fallbackDataRegex,
       `const fallbackData = ${fallbackDataString};`,
     );
 
