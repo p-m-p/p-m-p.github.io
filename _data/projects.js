@@ -4,27 +4,15 @@
  * Falls back to cached data if API is unavailable
  */
 
-const GITHUB_API = "https://api.github.com";
-const USERNAME = "p-m-p";
-
-// Project definitions with repository names and descriptions
-const projectDefinitions = [
-  {
-    repo: "slider",
-    title: "@boxslider",
-    description:
-      "A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.",
-  },
-  {
-    repo: "parsonic",
-    title: "@parsonic",
-    description:
-      "Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.",
-  },
-];
+// Import shared configuration and functions
+import {
+  USERNAME,
+  projectDefinitions,
+  fetchRepoData,
+} from "./projects-config.js";
 
 // Fallback data in case GitHub API is unavailable
-const fallbackData = [
+export const fallbackData = [
   {
     "repo": "slider",
     "title": "@boxslider",
@@ -42,39 +30,6 @@ const fallbackData = [
     "url": "https://github.com/p-m-p/parsonic"
   }
 ];
-
-/**
- * Fetch repository data from GitHub API
- */
-async function fetchRepoData(repo) {
-  const url = `${GITHUB_API}/repos/${USERNAME}/${repo}`;
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Accept: "application/vnd.github.v3+json",
-        // Use token if available (for higher rate limits)
-        ...(process.env.GITHUB_TOKEN && {
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-        }),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return {
-      stars: data.stargazers_count || 0,
-      forks: data.forks_count || 0,
-      url: data.html_url,
-    };
-  } catch (error) {
-    console.warn(`Failed to fetch data for ${repo}:`, error.message);
-  }
-}
 
 /**
  * Fetch all project data
@@ -107,7 +62,8 @@ async function fetchAllProjects() {
 
 async function getProjects() {
   try {
-    return await fetchAllProjects();
+    const result = await fetchAllProjects();
+    return result;
   } catch (error) {
     console.warn("Failed to fetch projects data, using fallback:", error);
     return fallbackData;
