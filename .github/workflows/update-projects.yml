@@ -34,5 +34,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add _data/projects.js
-          git diff --staged --quiet || git commit -m "Update GitHub projects data [skip ci]"
-          git push || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GitHub projects data [skip ci]"
+            git push
+          fi
