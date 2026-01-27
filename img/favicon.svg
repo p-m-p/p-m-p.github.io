@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: none; stroke: #3cc9ac; stroke-width: 2; }
+    .accent { fill: #3cc9ac; }
+    @media (prefers-color-scheme: light) {
+      .bg { stroke: #1a9c82; }
+      .accent { fill: #1a9c82; }
+    }
+  </style>
+
+  <!-- Shape with bottom-left and top-right more rounded -->
+  <path class="bg" d="
+    M5 1 H23 Q31 1 31 9 V27 Q31 31 27 31 H9 Q1 31 1 23 V5 Q1 1 5 1 Z
+  "/>
+
+  <!-- Offset accent circle -->
+  <circle class="accent" cx="14" cy="18" r="7"/>
+</svg>
