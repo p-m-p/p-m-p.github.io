@@ -17,7 +17,7 @@ const fallbackData = [
     "repo": "slider",
     "title": "@boxslider",
     "description": "A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.",
-    "stars": 890,
+    "stars": 889,
     "forks": 234,
     "url": "https://github.com/p-m-p/slider"
   },
