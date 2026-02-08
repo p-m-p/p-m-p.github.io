@@ -247,7 +247,9 @@ const args = process.argv.slice(2);
 const generateAll = args.includes("--all");
 const specificSlug = args.find((arg) => !arg.startsWith("--"));
 
-const browser = await launch();
+const browser = await launch({
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+});
 const page = await browser.newPage();
 
 // Load headshot as base64
