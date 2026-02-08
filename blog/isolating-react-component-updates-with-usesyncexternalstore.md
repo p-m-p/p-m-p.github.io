@@ -7,6 +7,7 @@ description:
   unnecessary re-renders for better performance.
 date: 2026-01-27
 draft: true
+social_card: isolating-react-component-updates-with-usesyncexternalstore.jpg
 ---
 
 ## The shopping list example
