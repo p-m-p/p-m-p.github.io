@@ -248,7 +248,7 @@ const generateAll = args.includes("--all");
 const specificSlug = args.find((arg) => !arg.startsWith("--"));
 
 const browser = await launch({
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  args: process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
 });
 const page = await browser.newPage();
 
