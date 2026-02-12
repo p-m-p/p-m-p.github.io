@@ -18,7 +18,7 @@ const fallbackData = [
     "title": "@boxslider",
     "description": "A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.",
     "stars": 890,
-    "forks": 234,
+    "forks": 233,
     "url": "https://github.com/p-m-p/slider"
   },
   {
