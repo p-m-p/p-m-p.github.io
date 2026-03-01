@@ -14,6 +14,7 @@ export default function eleventyConfig(eleventyConfig) {
     },
   });
   eleventyConfig.addPassthroughCopy("img");
+  eleventyConfig.addPassthroughCopy(".nojekyll");
 
   eleventyConfig.addBundle("css");
   eleventyConfig.addWatchTarget("css");
