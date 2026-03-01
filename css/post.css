@@ -147,7 +147,7 @@ figure {
   text-align: center;
 }
 
-figure img {
+.post-content figure img {
   background: transparent;
   padding: 0;
 }
