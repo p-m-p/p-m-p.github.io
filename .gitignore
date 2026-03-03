@@ -2,3 +2,4 @@ node_modules
 *.psd
 _site
 .cache
+package-lock.json
