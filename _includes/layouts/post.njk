@@ -47,6 +47,19 @@ layout: layouts/base.njk
     {{ content | safe }}
   </main>
 
+  {%- set relatedPost = collections.posts | relatedPosts(page.url, tags, 1) | first %}
+  {%- if relatedPost %}
+  <aside class="post-read-next">
+    <div class="container">
+      <p class="post-read-next-label">Read next</p>
+      <a href="{{ relatedPost.url }}" class="post-read-next-card">
+        <h2 class="post-read-next-title">{{ relatedPost.data.title }}</h2>
+        <p class="post-read-next-description">{{ relatedPost.data.description }}</p>
+      </a>
+    </div>
+  </aside>
+  {%- endif %}
+
 </article>
 
 {% include "footer.njk" %}

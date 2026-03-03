@@ -44,6 +44,27 @@ export default function eleventyConfig(eleventyConfig) {
     return n < 0 ? array.slice(n) : array.slice(0, n);
   });
 
+  eleventyConfig.addFilter("relatedPosts", (allPosts, currentUrl, currentTags, count) => {
+    const filteredTags = new Set(
+      (currentTags || []).filter((tag) => tag !== "posts"),
+    );
+    return allPosts
+      .filter((post) => post.url !== currentUrl)
+      .map((post) => {
+        const postTags = ((post.data || {}).tags || []).filter(
+          (tag) => tag !== "posts",
+        );
+        const matchCount = postTags.filter((tag) =>
+          filteredTags.has(tag),
+        ).length;
+        return { post, matchCount };
+      })
+      .filter(({ matchCount }) => matchCount > 0)
+      .toSorted((a, b) => b.matchCount - a.matchCount)
+      .slice(0, count || 1)
+      .map(({ post }) => post);
+  });
+
   eleventyConfig.addPreprocessor("drafts", "*", (data) => {
     if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
       return false;
