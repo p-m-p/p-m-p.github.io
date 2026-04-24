@@ -3,6 +3,7 @@ title: "Frontend Has a Talent Problem"
 description: "After interviewing hundreds of frontend engineers, a pattern has emerged: strong experience with frameworks, but weak understanding of the web platform itself. This isn't a React problem—it's a signalling problem in how we hire, evaluate, and develop engineers."
 date: 2026-04-24
 draft: true
+social_card: frontend-has-a-talent-problem.jpg
 ---
 
 Over the last few years, I've interviewed hundreds of frontend engineers across all levels. On paper, many look strong: good companies, modern stacks, years of experience.
