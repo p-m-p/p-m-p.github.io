@@ -9,20 +9,26 @@ draft: true
 social_card: frontend-has-a-talent-problem.jpg
 ---
 
-## This, sort of, isn't just another React rant
+## This isn't another React rant
 
 It's easy to blame React, and even though there's fingers to point in that
-direction, the argument often misses the point. I truly believe that React has
-done good things for industry and, for me, the developer experience with JSX is
-still unmatched.
+direction, the argument often misses the point. I believe that React has done
+some good things for industry and, for me, the developer experience of JSX still
+feels most comfortable in complex app development.
 
-The issue I see is that **frameworks have become the boundary of
-understanding**.
+The issue I see is that **frameworks are the boundary of understanding** and the
+_React developer_ is _the_ common identity that companies reinforce in hiring.
+People joining the industry naturally align to this identity and then fail to
+learn the building blocks of the web platform.
 
-The _React developer_ is a common identity, and companies reinforce it by hiring
-for these developers. People joining the industry align to this identity and
-fail to learn the building blocks of the web platform - good old HTML, CSS, and
-JavaScript.
+## Abstraction without accountability
+
+Framework abstractions hide complexity, of course. It's entirely possible to
+build an app without ever developing a strong understanding of what's happening
+in the browser. AI is accelerating this dynamic and, maybe this is okay in some
+contexts, but not where it really matters.
+
+---
 
 ## We're Measuring the Wrong Things
 
@@ -38,24 +44,6 @@ inherently bad, but they're incomplete signals.
 
 The result is a market where it's entirely possible to look experienced without
 having a strong grasp of the underlying platform.
-
-## Abstraction Without Accountability
-
-Frameworks are designed to hide complexity. That's their job. But hiding
-complexity doesn't remove it—it just moves it somewhere else.
-
-It's now entirely possible to build, ship, and even scale frontend systems
-without ever developing a strong understanding of what's happening underneath.
-You can stay within the guardrails of the framework and remain productive for
-quite a long time.
-
-AI has accelerated this dynamic. It's easier than ever to generate working
-solutions quickly, often without needing to reason too deeply about them.
-
-The trade-off is that the feedback loop has changed. The moments that used to
-force engineers to understand the system have been smoothed over. The gaps don't
-disappear—they just show up later, usually in production, when the abstraction
-stops helping.
 
 ## This Is a System Problem, Not an Individual One
 
