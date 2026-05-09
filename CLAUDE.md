@@ -11,6 +11,8 @@ code in this repository.
 - `pnpm run format` - Format code with Prettier
 - `pnpm run lint` - Lint JavaScript files with ESLint
 - `pnpm run lint:fix` - Lint and auto-fix JavaScript files
+- `pnpm run generate:social-cards` - Generate social cards for all posts that don't already have one
+- `pnpm run generate:social-card` - Generate a social card for a single post (pass slug as argument)
 
 ## Architecture
 
@@ -20,6 +22,7 @@ This is an Eleventy (11ty) static site generator blog built with:
 - **Templates**: Nunjucks templates in `/_includes/layouts/`
 - **Data**: Global data files in `/_data/` with Zod schema validation
 - **Assets**: CSS in `/css/`, JavaScript in `/js/`, images in `/img/`
+- **Scripts**: Node tooling in `/scripts/` (social card generation, project stats)
 - **Output**: Generated site in `/_site/` directory
 
 ### Key Files
@@ -33,6 +36,7 @@ This is an Eleventy (11ty) static site generator blog built with:
 
 - Blog posts use `layouts/post.njk` layout and are tagged as "posts"
 - Posts support `draft: true` frontmatter (excluded from builds)
+- Posts can declare a `social_card:` frontmatter field pointing to an image in `/img/socialcard/`
 - Image optimization is automatic via eleventy-img plugin
 - Syntax highlighting with copy-to-clipboard functionality
 
