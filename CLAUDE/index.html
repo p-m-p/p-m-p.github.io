@@ -9,6 +9,8 @@ code in this repository.</p>
 <li><code>pnpm run format</code> - Format code with Prettier</li>
 <li><code>pnpm run lint</code> - Lint JavaScript files with ESLint</li>
 <li><code>pnpm run lint:fix</code> - Lint and auto-fix JavaScript files</li>
+<li><code>pnpm run generate:social-cards</code> - Generate social cards for all posts that don't already have one</li>
+<li><code>pnpm run generate:social-card</code> - Generate a social card for a single post (pass slug as argument)</li>
 </ul>
 <h2>Architecture</h2>
 <p>This is an Eleventy (11ty) static site generator blog built with:</p>
@@ -17,6 +19,7 @@ code in this repository.</p>
 <li><strong>Templates</strong>: Nunjucks templates in <code>/_includes/layouts/</code></li>
 <li><strong>Data</strong>: Global data files in <code>/_data/</code> with Zod schema validation</li>
 <li><strong>Assets</strong>: CSS in <code>/css/</code>, JavaScript in <code>/js/</code>, images in <code>/img/</code></li>
+<li><strong>Scripts</strong>: Node tooling in <code>/scripts/</code> (social card generation, project stats)</li>
 <li><strong>Output</strong>: Generated site in <code>/_site/</code> directory</li>
 </ul>
 <h3>Key Files</h3>
@@ -30,6 +33,7 @@ code in this repository.</p>
 <ul>
 <li>Blog posts use <code>layouts/post.njk</code> layout and are tagged as &quot;posts&quot;</li>
 <li>Posts support <code>draft: true</code> frontmatter (excluded from builds)</li>
+<li>Posts can declare a <code>social_card:</code> frontmatter field pointing to an image in <code>/img/socialcard/</code></li>
 <li>Image optimization is automatic via eleventy-img plugin</li>
 <li>Syntax highlighting with copy-to-clipboard functionality</li>
 </ul>
