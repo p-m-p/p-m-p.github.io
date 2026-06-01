@@ -1,0 +1,6 @@
+allowBuilds:
+  puppeteer: true
+  sharp: true
+onlyBuiltDependencies:
+  - puppeteer
+  - sharp
