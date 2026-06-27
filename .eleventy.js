@@ -22,17 +22,17 @@ export default function eleventyConfig(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addWatchTarget("js");
 
-  eleventyConfig.addFilter("htmlDateString", (dateObj) => {
-    return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
+  eleventyConfig.addFilter("htmlDateString", (dateObject) => {
+    return DateTime.fromJSDate(dateObject, { zone: "utc" }).toFormat("yyyy-LL-dd");
   });
 
   eleventyConfig.addFilter("urlencode", (value) => {
     return encodeURIComponent(value);
   });
 
-  eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {
+  eleventyConfig.addFilter("readableDate", (dateObject, format, zone) => {
     // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    return DateTime.fromJSDate(dateObj, { zone: zone || "utc" }).toFormat(
+    return DateTime.fromJSDate(dateObject, { zone: zone || "utc" }).toFormat(
       format || "dd LLLL yyyy",
     );
   });
@@ -92,11 +92,11 @@ export default function eleventyConfig(eleventyConfig) {
   });
 
   eleventyConfig.addPlugin(syntaxHighlight);
-  eleventyConfig.amendLibrary("md", (mdLib) => {
-    const defaultRender = mdLib.renderer.rules.fence;
+  eleventyConfig.amendLibrary("md", (mdLibrary) => {
+    const defaultRender = mdLibrary.renderer.rules.fence;
 
-    mdLib.renderer.rules.fence = function fence(...args) {
-      let html = defaultRender(...args);
+    mdLibrary.renderer.rules.fence = function fence(...arguments_) {
+      let html = defaultRender(...arguments_);
 
       html = `<copy-to-clipboard>${html.trim()}</copy-to-clipboard>\n`;
 

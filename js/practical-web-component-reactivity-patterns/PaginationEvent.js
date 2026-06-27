@@ -18,14 +18,14 @@ export class PaginationEvent extends HTMLElement {
     const slot = shadow.querySelector("slot");
 
     // Listen for slot changes to store reference to the animation container
-    slot.addEventListener("slotchange", (ev) => {
-      this.#animationContainer = ev.target.assignedElements()[0];
+    slot.addEventListener("slotchange", (event_) => {
+      this.#animationContainer = event_.target.assignedElements()[0];
       this.#selectionIndicator.textContent = `Page ${this.#animationContainer.activePage + 1} of ${this.#animationContainer.length}`;
     });
 
     // Event listener for page change events to update the status indicator
-    slot.addEventListener("pagechange", (ev) => {
-      const { activePage, totalPages } = ev.detail;
+    slot.addEventListener("pagechange", (event_) => {
+      const { activePage, totalPages } = event_.detail;
 
       this.#selectionIndicator.textContent = `Page ${activePage + 1} of ${totalPages}`;
     });
