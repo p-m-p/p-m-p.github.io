@@ -16,6 +16,13 @@ export class PaginationMutation extends HTMLElement {
     });
   }
 
+  #setSelectedPage() {
+    const page = this.#animationContainer.activePage + 1;
+    const totalPages = this.#animationContainer.length;
+
+    this.#selectionIndicator.textContent = `Page ${page} of ${totalPages}`;
+  }
+
   connectedCallback() {
     // Attach a shadow root using the template
     const shadow = this.attachShadow({ mode: "open" });
@@ -27,11 +34,11 @@ export class PaginationMutation extends HTMLElement {
     this.#selectionIndicator = shadow.querySelector("#status");
 
     // Listen for slot changes to store reference to the animation container
-    shadow.querySelector("slot").addEventListener("slotchange", (ev) => {
+    shadow.querySelector("slot").addEventListener("slotchange", (event_) => {
       // Remove any previous observerations
       this.#observer.disconnect();
 
-      this.#animationContainer = ev.target.assignedElements()[0];
+      this.#animationContainer = event_.target.assignedElements()[0];
       // Add the element to the observer for active-page attribute
       // and child list updates
       this.#observer.observe(this.#animationContainer, {
@@ -58,13 +65,6 @@ export class PaginationMutation extends HTMLElement {
         this.#animationContainer.activePage = nextPage;
       }
     });
-  }
-
-  #setSelectedPage() {
-    const page = this.#animationContainer.activePage + 1;
-    const totalPages = this.#animationContainer.length;
-
-    this.#selectionIndicator.textContent = `Page ${page} of ${totalPages}`;
   }
 
   disconnectedCallback() {

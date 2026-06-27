@@ -8,6 +8,18 @@ export class Pagination extends HTMLElement {
   // NodeList of the pages in the default slot
   #pages = undefined;
 
+  #setSelectedPage(pageIndex) {
+    // Display only page index
+    this.#pages[this.#selectedPageIndex]?.style.setProperty("display", "none");
+    this.#pages[pageIndex]?.style.setProperty("display", "block");
+
+    // Store the new page index
+    this.#selectedPageIndex = pageIndex;
+
+    // Update indicator to show selected page
+    this.#selectionIndicator.textContent = `Page ${pageIndex + 1} of ${this.#pages.length}`;
+  }
+
   connectedCallback() {
     // Attach a shadow root using the template
     const shadow = this.attachShadow({ mode: "open" });
@@ -20,8 +32,8 @@ export class Pagination extends HTMLElement {
 
     // Listen for slot changes to store reference to the pages and
     // set the initial state of the page selection status
-    shadow.querySelector("slot").addEventListener("slotchange", (ev) => {
-      this.#pages = ev.target.assignedElements();
+    shadow.querySelector("slot").addEventListener("slotchange", (event_) => {
+      this.#pages = event_.target.assignedElements();
       // Start by hiding all pages
       for (const page of this.#pages) page.style.setProperty("display", "none");
       this.#setSelectedPage(0);
@@ -40,17 +52,5 @@ export class Pagination extends HTMLElement {
         this.#setSelectedPage(nextPage);
       }
     });
-  }
-
-  #setSelectedPage(pageIndex) {
-    // Display only page index
-    this.#pages[this.#selectedPageIndex]?.style.setProperty("display", "none");
-    this.#pages[pageIndex]?.style.setProperty("display", "block");
-
-    // Store the new page index
-    this.#selectedPageIndex = pageIndex;
-
-    // Update indicator to show selected page
-    this.#selectionIndicator.textContent = `Page ${pageIndex + 1} of ${this.#pages.length}`;
   }
 }
