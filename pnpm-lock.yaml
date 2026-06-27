@@ -49,11 +49,11 @@ importers:
         specifier: ^17.0.0
         version: 17.7.0
       prettier:
-        specifier: 3.8.4
-        version: 3.8.4
+        specifier: 3.8.5
+        version: 3.8.5
       prettier-plugin-jinja-template:
         specifier: ^2.0.0
-        version: 2.2.0(prettier@3.8.4)
+        version: 2.2.0(prettier@3.8.5)
       puppeteer:
         specifier: ^25.0.0
         version: 25.2.1
@@ -1415,8 +1415,8 @@ packages:
     peerDependencies:
       prettier: ^3.0.0
 
-  prettier@3.8.4:
-    resolution: {integrity: sha512-N2MylSdi48+5N/6S5j+maeHbUSIzzZ5uOcX5Hm4QpV8Dkb1HFjfAKTKX6yNPJQD9AhcT3ifHNB66tWTTJDi11Q==}
+  prettier@3.8.5:
+    resolution: {integrity: sha512-zxcTTCedNGJM4R8sj/Cq/F0W/c4iE0afWBcBwMTRtw4WHYP9TWkYjdiH3npPRUYsXQCPR0hTU9yjovOu+E6EQA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3180,11 +3180,11 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-jinja-template@2.2.0(prettier@3.8.4):
+  prettier-plugin-jinja-template@2.2.0(prettier@3.8.5):
     dependencies:
-      prettier: 3.8.4
+      prettier: 3.8.5
 
-  prettier@3.8.4: {}
+  prettier@3.8.5: {}
 
   prismjs@1.30.0: {}
 
