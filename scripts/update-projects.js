@@ -72,7 +72,7 @@ async function updateProjectsData() {
 
     const updatedContent = currentContent.replace(
       fallbackDataRegex,
-      `const fallbackData = ${fallbackDataString};`,
+      () => `const fallbackData = ${fallbackDataString};`,
     );
 
     // Write the updated file

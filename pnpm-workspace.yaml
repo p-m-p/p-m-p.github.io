@@ -1,6 +1,8 @@
 allowBuilds:
   puppeteer: true
   sharp: true
+minimumReleaseAgeExclude:
+  - eslint-plugin-unicorn@71.0.0
 onlyBuiltDependencies:
   - puppeteer
   - sharp

@@ -5,19 +5,19 @@ import path from "node:path";
 import process from "node:process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
-const socialCardDir = path.join(rootDir, "img", "socialcard");
-const blogDir = path.join(rootDir, "blog");
+const rootDirectory = path.join(__dirname, "..");
+const socialCardDirectory = path.join(rootDirectory, "img", "socialcard");
+const blogDirectory = path.join(rootDirectory, "blog");
 
-async function getPostsFromBlogDir() {
-  const files = await readdir(blogDir);
+async function getPostsFromBlogDirectory() {
+  const files = await readdir(blogDirectory);
   const posts = [];
 
   for (const file of files) {
     if (!file.endsWith(".md")) continue;
 
     const slug = file.replace(".md", "");
-    const content = await readFile(path.join(blogDir, file), "utf8");
+    const content = await readFile(path.join(blogDirectory, file), "utf8");
     const titleMatch = content.match(/^title:\s*(.+)$/m);
     const hasSocialCard = /^social_card:/m.test(content);
 
@@ -35,13 +35,13 @@ async function getPostsFromBlogDir() {
 }
 
 async function addSocialCardToFrontmatter(slug) {
-  const filePath = path.join(blogDir, `${slug}.md`);
+  const filePath = path.join(blogDirectory, `${slug}.md`);
   const content = await readFile(filePath, "utf8");
 
   // Find the closing --- of frontmatter and insert social_card before it
   const updated = content.replace(
     /^(---\n[\s\S]*?)(---)/m,
-    `$1social_card: ${slug}.jpg\n$2`,
+    (_, frontmatter, closing) => `${frontmatter}social_card: ${slug}.jpg\n${closing}`,
   );
 
   await writeFile(filePath, updated, "utf8");
@@ -243,9 +243,9 @@ async function generateCard(page, type, headshot, options = {}) {
   await page.evaluateHandle("document.fonts.ready");
 }
 
-const args = process.argv.slice(2);
-const generateAll = args.includes("--all");
-const specificSlug = args.find((arg) => !arg.startsWith("--"));
+const arguments_ = process.argv.slice(2);
+const generateAll = arguments_.includes("--all");
+const specificSlug = arguments_.find((argument) => !argument.startsWith("--"));
 
 const browser = await launch({
   args: process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
@@ -253,7 +253,7 @@ const browser = await launch({
 const page = await browser.newPage();
 
 // Load headshot as base64
-const headshotPath = path.join(rootDir, "img", "headshot.jpeg");
+const headshotPath = path.join(rootDirectory, "img", "headshot.jpeg");
 const headshotBuffer = await readFile(headshotPath);
 const headshot = `data:image/jpeg;base64,${headshotBuffer.toString("base64")}`;
 
@@ -261,13 +261,13 @@ const headshot = `data:image/jpeg;base64,${headshotBuffer.toString("base64")}`;
 console.log("Generating home.jpg...");
 await generateCard(page, "home", headshot);
 await page.screenshot({
-  path: path.join(socialCardDir, "home.jpg"),
+  path: path.join(socialCardDirectory, "home.jpg"),
   type: "jpeg",
   quality: 90,
 });
 
 // Get all posts
-const posts = await getPostsFromBlogDir();
+const posts = await getPostsFromBlogDirectory();
 
 if (specificSlug) {
   // Generate for specific post
@@ -276,7 +276,7 @@ if (specificSlug) {
     console.log(`Generating ${post.slug}.jpg...`);
     await generateCard(page, "post", headshot, { title: post.title });
     await page.screenshot({
-      path: path.join(socialCardDir, `${post.slug}.jpg`),
+      path: path.join(socialCardDirectory, `${post.slug}.jpg`),
       type: "jpeg",
       quality: 90,
     });
@@ -292,7 +292,7 @@ if (specificSlug) {
     console.log(`Generating ${post.slug}.jpg...`);
     await generateCard(page, "post", headshot, { title: post.title });
     await page.screenshot({
-      path: path.join(socialCardDir, `${post.slug}.jpg`),
+      path: path.join(socialCardDirectory, `${post.slug}.jpg`),
       type: "jpeg",
       quality: 90,
     });
