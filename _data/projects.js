@@ -60,7 +60,7 @@ async function fetchAllProjects() {
   return projects;
 }
 
-async function getProjects() {
+export default async function getProjects() {
   try {
     return await fetchAllProjects();
   } catch (error) {
@@ -68,5 +68,3 @@ async function getProjects() {
     return fallbackData;
   }
 }
-
-export default getProjects;
