@@ -3,28 +3,6 @@ export class PageFlip extends HTMLElement {
 
   #activePage = 0;
 
-  get length() {
-    return this.children.length;
-  }
-
-  get activePage() {
-    return this.#activePage;
-  }
-
-  set activePage(pageIndex) {
-    if (this.hasAttribute("active-page")) {
-      this.setAttribute("active-page", pageIndex);
-    } else {
-      this.#setActivePage(pageIndex);
-    }
-  }
-
-  attributeChangedCallback(name, _, newValue) {
-    if (name === "active-page") {
-      this.#setActivePage(Number.parseInt(newValue, 10));
-    }
-  }
-
   #setActivePage(pageIndex) {
     if (pageIndex === this.activePage) {
       return;
@@ -61,5 +39,32 @@ export class PageFlip extends HTMLElement {
         },
       }),
     );
+  }
+
+  get length() {
+    return this.children.length;
+  }
+
+  get activePage() {
+    return this.#activePage;
+  }
+
+  set activePage(pageIndex) {
+    if (this.hasAttribute("active-page")) {
+      this.setAttribute("active-page", pageIndex);
+    } else {
+      this.#setActivePage(pageIndex);
+    }
+  }
+
+  attributeChangedCallback(name, _, newValue) {
+    if (name !== "active-page") {
+      return;
+    }
+
+    const pageIndex = Math.trunc(Number(newValue));
+    if (!Number.isNaN(pageIndex)) {
+      this.#setActivePage(pageIndex);
+    }
   }
 }
