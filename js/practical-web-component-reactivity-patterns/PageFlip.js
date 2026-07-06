@@ -58,8 +58,13 @@ export class PageFlip extends HTMLElement {
   }
 
   attributeChangedCallback(name, _, newValue) {
-    if (name === "active-page") {
-      this.#setActivePage(Math.trunc(Number(newValue)));
+    if (name !== "active-page") {
+      return;
+    }
+
+    const pageIndex = Math.trunc(Number(newValue));
+    if (!Number.isNaN(pageIndex)) {
+      this.#setActivePage(pageIndex);
     }
   }
 }
