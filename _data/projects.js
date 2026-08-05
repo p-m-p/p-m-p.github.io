@@ -25,7 +25,7 @@ const fallbackData = [
     "repo": "parsonic",
     "title": "@parsonic",
     "description": "Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.",
-    "stars": 5,
+    "stars": 4,
     "forks": 0,
     "url": "https://github.com/p-m-p/parsonic"
   }
