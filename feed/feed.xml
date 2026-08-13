@@ -107,7 +107,7 @@ every item in the list. In this example, the time cost remains negligible, but i
 a production app with more complex components and expensive renders this
 compounds into significant performance issues.&lt;/p&gt;
 &lt;figure&gt;
-  &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/_RyxroJk0g-2750.webp 2750w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/_RyxroJk0g-2750.jpeg&quot; alt=&quot;Flame graph showing the cost of reconciling the entire list when toggling one item with parent state&quot; width=&quot;2750&quot; height=&quot;1340&quot;&gt;&lt;/picture&gt;
+  &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/_RyxroJk0g-2750.webp&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/_RyxroJk0g-2750.jpeg&quot; alt=&quot;Flame graph showing the cost of reconciling the entire list when toggling one item with parent state&quot; width=&quot;2750&quot; height=&quot;1340&quot;&gt;&lt;/picture&gt;
   &lt;figcaption&gt;
     Performance trace for toggling one item with parent state
   &lt;/figcaption&gt;
@@ -207,7 +207,7 @@ separation of concerns improves. When you toggle an item, only that specific
 updates for that item. The rest of the list remains unaffected, resulting in a
 more efficient update process.&lt;/p&gt;
 &lt;figure&gt;
-  &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/uxMBSDk9az-2084.webp 2084w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/uxMBSDk9az-2084.jpeg&quot; alt=&quot;Flame graph showing only one component reconciles when toggling one item with per-item subscriptions&quot; width=&quot;2084&quot; height=&quot;1366&quot;&gt;&lt;/picture&gt;
+  &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/uxMBSDk9az-2084.webp&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/uxMBSDk9az-2084.jpeg&quot; alt=&quot;Flame graph showing only one component reconciles when toggling one item with per-item subscriptions&quot; width=&quot;2084&quot; height=&quot;1366&quot;&gt;&lt;/picture&gt;
   &lt;figcaption&gt;
     Performance trace for toggling one item with per-item subscriptions - only one component reconciles
   &lt;/figcaption&gt;
@@ -1307,7 +1307,7 @@ re-usability ensures maintainability without altering behavior.&lt;/li&gt;
 &lt;p&gt;Like TDD, we can define the PDD process as a cycle of three stages:&lt;/p&gt;
 &lt;copy-to-clipboard data-url=&quot;/img/blog/the-relevance-of-tdd-in-an-ai-workflow/pdd.png&quot; class=&quot;ctc-image&quot;&gt;
   &lt;figure&gt;
-    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.webp 737w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.jpeg&quot; alt=&quot;Diagram that shows the three stages of the Prompt-Driven Development process&quot; width=&quot;737&quot; height=&quot;600&quot;&gt;&lt;/picture&gt;
+    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.webp&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/bYcHTdL7uq-737.jpeg&quot; alt=&quot;Diagram that shows the three stages of the Prompt-Driven Development process&quot; width=&quot;737&quot; height=&quot;600&quot;&gt;&lt;/picture&gt;
     &lt;figcaption&gt;
       Prompt, generate, refactor stages of the Prompt-Driven Development process
     &lt;/figcaption&gt;
@@ -1891,7 +1891,7 @@ button will take up less vertical space. When the button replaces the links the
 page beneath the header will shift upwards and causes a cumulative layout shift.&lt;/p&gt;
 &lt;copy-to-clipboard data-url=&quot;/img/blog/dont-fouc-up-your-web-components/cls-comparison.png&quot; class=&quot;ctc-image&quot;&gt;
   &lt;figure&gt;
-    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.webp 1864w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
+    &lt;picture&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.webp&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://philparsons.co.uk/img/thyU8IdrxX-1864.jpeg&quot; alt=&quot;Diagram that shows how the layout shift between the list of links and share button makes the page content move upwards&quot; width=&quot;1864&quot; height=&quot;951&quot;&gt;&lt;/picture&gt;
     &lt;figcaption&gt;
       Cumulative layout shift between the fallback links and share button
     &lt;/figcaption&gt;
