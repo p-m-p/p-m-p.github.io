@@ -1,0 +1,17 @@
+{%- if series %}
+{%- set seriesList = collections.posts | seriesPosts(series.name) %}
+<nav class="post-series" aria-label="Series: {{ series.name }}">
+  <p class="post-series-label">Part {{ series.part }} of {{ seriesList.length }} · {{ series.name }}</p>
+  <ol class="post-series-list">
+    {%- for part in seriesList %}
+    <li value="{{ part.data.series.part }}">
+      {%- if part.url == page.url %}
+      <span aria-current="page">{{ part.data.title }}</span>
+      {%- else %}
+      <a href="{{ part.url }}">{{ part.data.title }}</a>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ol>
+</nav>
+{%- endif %}
