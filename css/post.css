@@ -158,6 +158,35 @@ figure {
   font-style: italic;
 }
 
+.post-series {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 0.75rem;
+  margin: var(--spacing-md) 0 var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+.post-series-label {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.post-series-list {
+  margin: 0;
+  padding-inline-start: 1.5em;
+
+  li {
+    margin: var(--spacing-xs) 0 0;
+  }
+
+  [aria-current="page"] {
+    font-weight: 600;
+  }
+}
+
 #share-fallback {
   background: black;
   border: none;

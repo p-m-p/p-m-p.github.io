@@ -47,14 +47,41 @@ export default function eleventyConfig(eleventyConfig) {
     return n < 0 ? array.slice(n) : array.slice(0, n);
   });
 
+  eleventyConfig.addFilter("seriesPosts", (allPosts, seriesName) => {
+    const parts = allPosts
+      .filter((post) => post.data?.series?.name === seriesName)
+      .toSorted((a, b) => a.data.series.part - b.data.series.part);
+
+    const duplicate = parts.find(
+      (post, index) =>
+        index > 0 &&
+        post.data.series.part === parts[index - 1].data.series.part,
+    );
+    if (duplicate) {
+      throw new Error(
+        `Series "${seriesName}" has more than one post marked as part ${duplicate.data.series.part}`,
+      );
+    }
+
+    return parts;
+  });
+
+  eleventyConfig.addFilter("nextInSeries", (seriesPosts, currentUrl) => {
+    const index = seriesPosts.findIndex((post) => post.url === currentUrl);
+    return index === -1 ? undefined : seriesPosts[index + 1];
+  });
+
   eleventyConfig.addFilter(
     "relatedPosts",
-    (allPosts, currentUrl, currentTags = [], count = 1) => {
+    (allPosts, currentUrl, currentTags = [], count = 1, excludeSeries) => {
       const filteredTags = new Set(
         currentTags.filter((tag) => tag !== "posts"),
       );
       return allPosts
         .filter((post) => post.url !== currentUrl)
+        .filter(
+          (post) => !excludeSeries || post.data?.series?.name !== excludeSeries,
+        )
         .map((post) => {
           const postTags = ((post.data || {}).tags || []).filter(
             (tag) => tag !== "posts",

@@ -44,14 +44,16 @@ layout: layouts/base.njk
 
   <main class="post-content container">
     <p class="post-description">{{ description }}</p>
+    {% include "series-nav.njk" %}
     {{ content | safe }}
   </main>
 
-  {%- set relatedPost = collections.posts | relatedPosts(page.url, tags, 1) | first %}
+  {%- set nextPart = (collections.posts | seriesPosts(series.name) | nextInSeries(page.url)) if series %}
+  {%- set relatedPost = nextPart or (collections.posts | relatedPosts(page.url, tags, 1, series.name if series) | first) %}
   {%- if relatedPost %}
   <aside class="post-read-next">
     <div class="container">
-      <h2 class="post-read-next-label">Read next</h2>
+      <h2 class="post-read-next-label">{{ "Next in the series" if nextPart else "Read next" }}</h2>
       <div class="post-read-next-card">
         <h3 class="post-read-next-title"><a href="{{ relatedPost.url }}">{{ relatedPost.data.title }}</a></h3>
         <p class="post-read-next-description">{{ relatedPost.data.description }}</p>
