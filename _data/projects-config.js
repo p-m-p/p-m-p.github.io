@@ -1,7 +1,7 @@
 /**
- * GitHub Projects Configuration
- * Shared configuration and functions for fetching project data
- */
+GitHub Projects Configuration
+Shared configuration and functions for fetching project data
+*/
 
 export const GITHUB_API = "https://api.github.com";
 export const USERNAME = "p-m-p";
@@ -23,10 +23,10 @@ export const projectDefinitions = [
 ];
 
 /**
- * Fetch repository data from GitHub API
- */
-export async function fetchRepoData(repo) {
-  const url = `${GITHUB_API}/repos/${USERNAME}/${repo}`;
+Fetch repository data from GitHub API
+*/
+export async function fetchRepositoryData(repository) {
+  const url = `${GITHUB_API}/repos/${USERNAME}/${repository}`;
 
   try {
     const response = await fetch(url, {
@@ -51,6 +51,6 @@ export async function fetchRepoData(repo) {
       url: data.html_url,
     };
   } catch (error) {
-    console.warn(`Failed to fetch data for ${repo}:`, error.message);
+    console.warn(`Failed to fetch data for ${repository}:`, error.message);
   }
 }

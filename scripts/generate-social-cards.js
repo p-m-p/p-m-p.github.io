@@ -19,16 +19,16 @@ async function getPostsFromBlogDirectory() {
     const slug = file.replace(".md", "");
     const content = await readFile(path.join(blogDirectory, file), "utf8");
     const titleMatch = content.match(/^title:\s*(.+)$/m);
+    if (!titleMatch) continue;
+
     const hasSocialCard = /^social_card:/m.test(content);
 
-    if (titleMatch) {
-      // Handle multi-line titles (remove quotes if present)
-      let title = titleMatch[1].trim();
-      if (title.startsWith('"') || title.startsWith("'")) {
-        title = title.slice(1, -1);
-      }
-      posts.push({ slug, title, hasSocialCard });
+    // Handle multi-line titles (remove quotes if present)
+    let title = titleMatch[1].trim();
+    if (title.startsWith('"') || title.startsWith("'")) {
+      title = title.slice(1, -1);
     }
+    posts.push({ slug, title, hasSocialCard });
   }
 
   return posts;
@@ -41,14 +41,15 @@ async function addSocialCardToFrontmatter(slug) {
   // Find the closing --- of frontmatter and insert social_card before it
   const updated = content.replace(
     /^(---\n[\s\S]*?)(---)/m,
-    (_, frontmatter, closing) => `${frontmatter}social_card: ${slug}.jpg\n${closing}`,
+    (_, frontmatter, closing) =>
+      `${frontmatter}social_card: ${slug}.jpg\n${closing}`,
   );
 
   await writeFile(filePath, updated, "utf8");
   console.log(`  Added social_card to ${slug}.md`);
 }
 
-async function generateCard(page, type, headshot, options = {}) {
+async function generateCard(type, options = {}) {
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -206,7 +207,8 @@ async function generateCard(page, type, headshot, options = {}) {
   </style>
 </head>
 <body>
-  ${type === "home"
+  ${
+    type === "home"
       ? `
   <div class="card home">
     <div class="content">
@@ -234,7 +236,7 @@ async function generateCard(page, type, headshot, options = {}) {
     </div>
   </div>
   `
-    }
+  }
 </body>
 </html>`;
 
@@ -259,7 +261,7 @@ const headshot = `data:image/jpeg;base64,${headshotBuffer.toString("base64")}`;
 
 // Generate home card
 console.log("Generating home.jpg...");
-await generateCard(page, "home", headshot);
+await generateCard("home");
 await page.screenshot({
   path: path.join(socialCardDirectory, "home.jpg"),
   type: "jpeg",
@@ -274,7 +276,7 @@ if (specificSlug) {
   const post = posts.find((p) => p.slug === specificSlug);
   if (post) {
     console.log(`Generating ${post.slug}.jpg...`);
-    await generateCard(page, "post", headshot, { title: post.title });
+    await generateCard("post", { title: post.title });
     await page.screenshot({
       path: path.join(socialCardDirectory, `${post.slug}.jpg`),
       type: "jpeg",
@@ -290,7 +292,7 @@ if (specificSlug) {
   // Generate for all posts
   for (const post of posts) {
     console.log(`Generating ${post.slug}.jpg...`);
-    await generateCard(page, "post", headshot, { title: post.title });
+    await generateCard("post", { title: post.title });
     await page.screenshot({
       path: path.join(socialCardDirectory, `${post.slug}.jpg`),
       type: "jpeg",

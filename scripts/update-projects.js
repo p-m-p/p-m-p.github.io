@@ -1,36 +1,36 @@
 #!/usr/bin/env node
 
 /**
- * Update GitHub Projects Data
- * Fetches current repository statistics from GitHub API and updates _data/projects.js
- */
+Update GitHub Projects Data
+Fetches current repository statistics from GitHub API and updates _data/projects.js
+*/
 
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import {
   projectDefinitions,
-  fetchRepoData,
+  fetchRepositoryData as fetchRepositoryData,
 } from "../_data/projects-config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Fetch all project data with live stats
- */
+Fetch all project data with live stats
+*/
 async function fetchAllProjects() {
   const projects = await Promise.all(
     projectDefinitions.map(async (project) => {
-      const repoData = await fetchRepoData(project.repo);
-      
-      if (!repoData) {
+      const repositoryData = await fetchRepositoryData(project.repo);
+
+      if (!repositoryData) {
         throw new Error(`Failed to fetch data for ${project.repo}`);
       }
-      
+
       return {
         ...project,
-        ...repoData,
+        ...repositoryData,
       };
     }),
   );
@@ -39,8 +39,8 @@ async function fetchAllProjects() {
 }
 
 /**
- * Update the projects.js data file
- */
+Update the projects.js data file
+*/
 async function updateProjectsData() {
   try {
     console.log("Fetching GitHub repository data...");

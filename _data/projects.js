@@ -1,45 +1,47 @@
 /**
- * GitHub Projects Data
- * Fetches repository statistics from GitHub API
- * Falls back to cached data if API is unavailable
- */
+GitHub Projects Data
+Fetches repository statistics from GitHub API
+Falls back to cached data if API is unavailable
+*/
 
 // Import shared configuration and functions
 import {
   USERNAME,
   projectDefinitions,
-  fetchRepoData,
+  fetchRepositoryData as fetchRepositoryData,
 } from "./projects-config.js";
 
 // Fallback data in case GitHub API is unavailable
 const fallbackData = [
   {
-    "repo": "slider",
-    "title": "@boxslider",
-    "description": "A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.",
-    "stars": 893,
-    "forks": 230,
-    "url": "https://github.com/p-m-p/slider"
+    repo: "slider",
+    title: "@boxslider",
+    description:
+      "A zero-dependency, lightweight content slider with multiple transition effects for modern browsers.",
+    stars: 893,
+    forks: 230,
+    url: "https://github.com/p-m-p/slider",
   },
   {
-    "repo": "parsonic",
-    "title": "@parsonic",
-    "description": "Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.",
-    "stars": 4,
-    "forks": 0,
-    "url": "https://github.com/p-m-p/parsonic"
-  }
+    repo: "parsonic",
+    title: "@parsonic",
+    description:
+      "Standalone web components for common website patterns including copy-to-clipboard, share buttons, and theme switching.",
+    stars: 4,
+    forks: 0,
+    url: "https://github.com/p-m-p/parsonic",
+  },
 ];
 
 /**
- * Fetch all project data
- */
+Fetch all project data
+*/
 async function fetchAllProjects() {
   const projects = await Promise.all(
     projectDefinitions.map(async (project) => {
-      const repoData = await fetchRepoData(project.repo);
+      const repositoryData = await fetchRepositoryData(project.repo);
 
-      if (repoData === undefined) {
+      if (repositoryData === undefined) {
         // Use fallback data if fetch failed
         const fallback = fallbackData.find((p) => p.repo === project.repo);
         return {
@@ -52,7 +54,7 @@ async function fetchAllProjects() {
 
       return {
         ...project,
-        ...repoData,
+        ...repositoryData,
       };
     }),
   );
