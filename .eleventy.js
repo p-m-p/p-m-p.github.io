@@ -23,19 +23,22 @@ export default function eleventyConfig(eleventyConfig) {
   eleventyConfig.addWatchTarget("js");
 
   eleventyConfig.addFilter("htmlDateString", (dateObject) => {
-    return DateTime.fromJSDate(dateObject, { zone: "utc" }).toFormat("yyyy-LL-dd");
+    return DateTime.fromJSDate(dateObject, { zone: "utc" }).toFormat(
+      "yyyy-LL-dd",
+    );
   });
 
   eleventyConfig.addFilter("urlencode", (value) => {
     return encodeURIComponent(value);
   });
 
-  eleventyConfig.addFilter("readableDate", (dateObject, format, zone) => {
-    // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    return DateTime.fromJSDate(dateObject, { zone: zone || "utc" }).toFormat(
-      format || "dd LLLL yyyy",
-    );
-  });
+  eleventyConfig.addFilter(
+    "readableDate",
+    (dateObject, format = "dd LLLL yyyy", zone = "utc") => {
+      // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+      return DateTime.fromJSDate(dateObject, { zone }).toFormat(format);
+    },
+  );
 
   eleventyConfig.addFilter("head", (array, n) => {
     if (!Array.isArray(array) || array.length === 0) {
@@ -44,26 +47,29 @@ export default function eleventyConfig(eleventyConfig) {
     return n < 0 ? array.slice(n) : array.slice(0, n);
   });
 
-  eleventyConfig.addFilter("relatedPosts", (allPosts, currentUrl, currentTags, count) => {
-    const filteredTags = new Set(
-      (currentTags || []).filter((tag) => tag !== "posts"),
-    );
-    return allPosts
-      .filter((post) => post.url !== currentUrl)
-      .map((post) => {
-        const postTags = ((post.data || {}).tags || []).filter(
-          (tag) => tag !== "posts",
-        );
-        const matchCount = postTags.filter((tag) =>
-          filteredTags.has(tag),
-        ).length;
-        return { post, matchCount };
-      })
-      .filter(({ matchCount }) => matchCount > 0)
-      .toSorted((a, b) => b.matchCount - a.matchCount)
-      .slice(0, count || 1)
-      .map(({ post }) => post);
-  });
+  eleventyConfig.addFilter(
+    "relatedPosts",
+    (allPosts, currentUrl, currentTags = [], count = 1) => {
+      const filteredTags = new Set(
+        currentTags.filter((tag) => tag !== "posts"),
+      );
+      return allPosts
+        .filter((post) => post.url !== currentUrl)
+        .map((post) => {
+          const postTags = ((post.data || {}).tags || []).filter(
+            (tag) => tag !== "posts",
+          );
+          const matchCount = postTags.filter((tag) =>
+            filteredTags.has(tag),
+          ).length;
+          return { post, matchCount };
+        })
+        .filter(({ matchCount }) => matchCount > 0)
+        .toSorted((a, b) => b.matchCount - a.matchCount)
+        .slice(0, count)
+        .map(({ post }) => post);
+    },
+  );
 
   eleventyConfig.addPreprocessor("drafts", "*", (data) => {
     if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
