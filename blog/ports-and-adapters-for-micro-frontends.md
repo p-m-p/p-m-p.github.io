@@ -17,24 +17,92 @@ series:
   part: 1
 ---
 
-**TODO: summary for skimmers.** Three or four sentences a senior reader can
-take away without reading on: a panel is defined by what it needs, not where it
-runs. The panel depends only on a port; adapters fulfil the port for each host.
-Mention the series and the companion repository.
+Micro-frontend architecture for enterprise level web applications is an
+effective approach when many teams are building features over a centralised
+platform, but it takes planning and discipline in the execution to get right. In
+this series of posts I will cover how to apply hexagonal architecture (ports and
+adapters) to these micro-frontends so that they can be developed and tested in
+isolation.
 
-## The problem with panels that know where they live
+## The problem with micro-frontends that know where they live
 
-**TODO:** Introduce the invented trading workstation: a shell hosting dockable
-panels, and the quote panel (live prices, submit an order). Show what goes
-wrong when a panel imports the shell's notification service, reads settings
-from a global, and calls GraphQL directly:
+I will use a trading platform as an illustration of the concepts covered in
+these posts but the ideas are portable to any large web app. Within the app the
+micro-frontends will need to interact with each other and the core app or shell.
+The shell loads the micro-frontends and makes available a set of capabilities
+such as sending messages to other frontends and managing global state like
+account settings.
 
-- It can't be developed without running the whole shell and backend.
-- It can't be tested without a deployed environment.
-- It can't be reused in another host, such as an older desktop app.
+These shared capabilities come in the form of singleton modules loaded by the
+shell and made available to the micro-frontends as separate packages. Teams run
+a development version of the shell on their machine and build their panels using
+the shared capabilities.
 
-A short "before" code sample of a tightly coupled panel would set up the
-contrast for the rest of the series.
+{% raw %}
+
+```tsx
+// Shared third-party singleton: the shell owns the version and the query client
+import { useMutation } from "@tanstack/react-query";
+
+// Shared first-party singleton: the shell configures the endpoint and auth
+import { api } from "@shell/api";
+
+// Shared first-party singleton: only works when the shell has loaded it and
+// rendered its notification UI
+import { useNotifications } from "@shell/notifications";
+
+type Bid = { instrumentId: string; price: number; quantity: number };
+
+export function OrderEntry({ instrumentId }: { instrumentId: string }) {
+  // Throws without the shell's notification provider above it
+  const { notify } = useNotifications();
+
+  // Throws without the shell's QueryClientProvider above it
+  const submitBid = useMutation({
+    // The panel knows the platform's API route and payload
+    mutationFn: (bid: Bid) => api.post("/orders/bids", bid),
+    onSuccess: (_data, { price }) =>
+      notify({ type: "success", message: `Bid submitted at ${price}` }),
+    onError: () =>
+      notify({ type: "error", message: "Bid could not be submitted" }),
+  });
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        submitBid.mutate({
+          instrumentId,
+          price: Number(form.get("price")),
+          quantity: Number(form.get("quantity")),
+        });
+      }}>
+      <label>
+        Bid price
+        <input name="price" type="number" min="0" step="any" required />
+      </label>
+      <label>
+        Quantity
+        <input name="quantity" type="number" min="1" required />
+      </label>
+      <button disabled={submitBid.isPending}>Submit bid</button>
+    </form>
+  );
+}
+```
+
+{% endraw %}
+
+This is a common approach and it can be done well with the right abstractions
+and use of testing utilities like MSW but over time the coupling to the platform
+across the micro-frontend will inevitably make it difficult to maintain with
+changes to both first and third party dependencies present in multipel locations
+across the codebase.
+
+With an interface defined at the edges of the micro-frontends that abstracts
+state changes coming in and actions going out we can build, test, and deploy
+them independently.
 
 ## Hexagonal architecture in front-end terms
 
@@ -67,14 +135,14 @@ TypeScript, built up in two halves.
 
 ### Panel domain: data and actions
 
-**TODO:** The panel's own business capabilities live on the port, not just
-shell services:
+**TODO:** The panel's own business capabilities live on the port, not just shell
+services:
 
 - **Data:** quotes for a set of instruments, with live updates.
 - **Actions:** `submitOrder`, and an editing action such as amending an order.
 
-The panel calls these without knowing how they're carried out. Code sample:
-the domain part of the port interface.
+The panel calls these without knowing how they're carried out. Code sample: the
+domain part of the port interface.
 
 ### Platform services
 
