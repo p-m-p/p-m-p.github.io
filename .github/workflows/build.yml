@@ -24,9 +24,10 @@ jobs:
 
       - name: Generate missing social cards
         run: |
-          # Find blog posts without social cards
+          # Find published blog posts without social cards
           for file in blog/*.md; do
             slug=$(basename "$file" .md)
+            if grep -q '^draft: true' "$file"; then continue; fi
             if [[ ! -f "img/socialcard/${slug}.jpg" ]]; then
               echo "Generating card for: $slug"
               node scripts/generate-social-cards.js "$slug"
