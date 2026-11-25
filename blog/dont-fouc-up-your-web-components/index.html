@@ -180,6 +180,35 @@ figure {
   font-style: italic;
 }
 
+.post-series {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 0.75rem;
+  margin: var(--spacing-md) 0 var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+.post-series-label {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.post-series-list {
+  margin: 0;
+  padding-inline-start: 1.5em;
+
+  li {
+    margin: var(--spacing-xs) 0 0;
+  }
+
+  [aria-current="page"] {
+    font-weight: 600;
+  }
+}
+
 #share-fallback {
   background: black;
   border: none;
@@ -1031,6 +1060,8 @@ a {
 
   <main class="post-content container">
     <p class="post-description">A flash of unstlyed content (FOUC) doesn&#39;t just look bad, it could be hurting your core web vital score. Let&#39;s look at how to use progressive enhancement in web components to prevent such a FOUC up.</p>
+    
+
     <h2>What is FOUC and how does it apply to web components?</h2>
 <p>A <a href="https://en.wikipedia.org/wiki/Flash_of_un-styled_content">flash of un-styled content</a> (FOUC) occurs when content on a web page is
 visible before it has had styling applied to it. This can happen for a few

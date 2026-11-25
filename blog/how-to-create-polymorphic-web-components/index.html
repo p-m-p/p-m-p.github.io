@@ -180,6 +180,35 @@ figure {
   font-style: italic;
 }
 
+.post-series {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 0.75rem;
+  margin: var(--spacing-md) 0 var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+.post-series-label {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.post-series-list {
+  margin: 0;
+  padding-inline-start: 1.5em;
+
+  li {
+    margin: var(--spacing-xs) 0 0;
+  }
+
+  [aria-current="page"] {
+    font-weight: 600;
+  }
+}
+
 #share-fallback {
   background: black;
   border: none;
@@ -1031,6 +1060,8 @@ a {
 
   <main class="post-content container">
     <p class="post-description">The slot element provides us with the tools to create polymorhpic custom elements. This post explores how a tab element within a tabbed navigation section can be used with a Next.js link component.</p>
+    
+
     <h2>Polymorphic components</h2>
 <p>React frameworks often have a concept of component polymorphism. You can see
 examples of this in the <code>component</code> prop of <a href="https://mui.com/material-ui/guides/composition/#component-prop">MUI</a> and
