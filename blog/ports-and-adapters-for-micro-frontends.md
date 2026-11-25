@@ -106,24 +106,48 @@ them independently.
 
 ## Hexagonal architecture in front-end terms
 
-**TODO:** Explain ports and adapters from first principles for readers who
-haven't met it. Link to Alistair Cockburn's original article. Translate the
-server-side framing:
+Alistair Cockburn described
+[hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture),
+or ports and adapters, in 2005 as a way for an application "to be developed and
+tested in isolation from its eventual run-time devices and databases". Replace
+devices and databases with the shell and its shared modules and the same goal
+applies to a micro-frontend, or panel. The pattern has three parts:
 
-- The **application core** is the panel: its UI, logic and state.
-- A **port** is the interface describing everything the panel needs from
-  outside.
-- An **adapter** fulfils the port for one host.
-- Dependencies point inwards: adapters know about the panel, the panel never
-  knows about adapters.
+- **The application** is the panel's logic and state: the bid it builds from the
+  user's input and what it does when the bid succeeds or fails. The order entry
+  form drives it and ships with it as one panel.
+- **A port** is an interface that describes what the panel needs from the
+  outside, in the panel's own terms. Order entry needs to submit a bid and
+  notify the user of the outcome.
+- **An adapter** implements the port for one host. In the production shell,
+  submitting a bid calls the shell's API. In Storybook it can resolve straight
+  away, or reject to show the error state, without making a request.
 
-Keep it concrete. Avoid the abstract hexagon talk until the diagram.
+In Cockburn's article the UI sits outside the application and drives it through
+a port, which means tests can take its place. The same is true here: the panel's
+UI only reads state and calls actions, and never reaches past the port. The UI
+is also part of what a micro-frontend ships, so it needs testing too. In
+Storybook and the test harness the real UI stays in place and the adapter behind
+the port changes.
+
+The important change is the direction of the dependencies. `OrderEntry` imports
+`@shell/api` and `@shell/notifications`, so the panel depends on the shell. With
+a port the dependency is inverted. The panel defines the interface, each adapter
+depends on that interface to implement it and the host chooses which adapter to
+provide when it mounts the panel. The panel never imports an adapter, so it
+doesn't know which host it's running in.
+
+The port covers traffic in both directions. State changes come in, such as the
+user selecting a different instrument in another panel, and actions go out, such
+as submitting a bid. The number of sides on the hexagon has no meaning, it just
+leaves room to draw an adapter for each host.
 
 <copy-to-clipboard data-url="/img/blog/ports-and-adapters-for-micro-frontends/panel-hexagon.png" class="ctc-image">
   <figure>
-    <img src="/img/blog/ports-and-adapters-for-micro-frontends/panel-hexagon.png" alt="Diagram of a quote panel at the centre of a hexagon with its port on the boundary, surrounded by four adapters: production shell, Storybook, test harness and legacy desktop app">
+    <img src="/img/blog/ports-and-adapters-for-micro-frontends/panel-hexagon.png" alt="Diagram of an order entry panel inside a hexagon labelled panel port, state in and actions out. Four adapters point inwards to the port: production shell using the shell API and notifications, Storybook using in-memory fakes, test harness using a mocked backend and legacy desktop app using a web view and message bridge">
     <figcaption>
-      The quote panel depends only on its port; each host supplies an adapter
+      The order entry panel depends only on its port; each host supplies an
+      adapter
     </figcaption>
   </figure>
 </copy-to-clipboard>
