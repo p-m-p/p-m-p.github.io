@@ -211,7 +211,7 @@ on `OrderEntryState`.
 
 The port is plain TypeScript with no dependency on React. To use it from
 components, React context provides the port and a hook covers each value the
-component reads and each action it can take.
+component reads and each action it can take, along with that action's progress.
 
 ```ts
 // order-entry/hooks.ts
@@ -240,15 +240,20 @@ function useSelector<T>(selector: (state: OrderEntryState) => T): T {
 
 // State in
 export const useInstrumentId = () => useSelector((state) => state.instrumentId);
-export const useIsSubmitting = () => useSelector((state) => state.isSubmitting);
 
-// Actions out
-export const useSubmitBid = () => useOrderEntryPort().actions.submitBid;
+// Action out, with its progress coming back in
+export function useSubmitBid() {
+  const { submitBid } = useOrderEntryPort().actions;
+  const isSubmitting = useSelector((state) => state.isSubmitting);
+
+  return { submitBid, isSubmitting };
+}
 ```
 
-`useOrderEntryPort` and `useSelector` aren't exported, so components never see
-the shape of the state or the port. If either one changes then the hooks change
-with it and the components stay the same.
+`useSubmitBid` returns the action and its progress together, in a similar shape
+to `useMutation`. `useOrderEntryPort` and `useSelector` aren't exported, so
+components never see the shape of the state or the port. If either one changes
+then the hooks change with it and the components stay the same.
 
 The context value is the port rather than the state, so it doesn't change when
 the state does. Each hook selects a single value and the component only
@@ -261,12 +266,11 @@ With the hooks in place, `OrderEntry` no longer imports anything from the shell.
 
 ```tsx
 // order-entry/order-entry.tsx
-import { useInstrumentId, useIsSubmitting, useSubmitBid } from "./hooks";
+import { useInstrumentId, useSubmitBid } from "./hooks";
 
 export function OrderEntry() {
   const instrumentId = useInstrumentId();
-  const isSubmitting = useIsSubmitting();
-  const submitBid = useSubmitBid();
+  const { submitBid, isSubmitting } = useSubmitBid();
 
   return (
     <form
