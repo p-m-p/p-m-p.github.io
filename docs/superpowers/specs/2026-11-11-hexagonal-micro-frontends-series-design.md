@@ -2,14 +2,14 @@
 
 ## Intent
 
-A three-part blog series showing how ports and adapters (hexagonal
-architecture) let a micro-frontend panel run unchanged in any host: a
-production shell, Storybook, an end-to-end test harness and a web view inside a
-legacy desktop application. The series draws on Phil's real design experience
-but is written as a general pattern, illustrated with an invented example.
+A three-part blog series showing how ports and adapters (hexagonal architecture)
+let a micro-frontend run unchanged in any host: a production shell, Storybook,
+an end-to-end test harness and a web view inside a legacy desktop application.
+The series draws on Phil's real design experience but is written as a general
+pattern, illustrated with an invented example.
 
-The core idea every post serves: **a panel is defined by what it needs, not
-where it runs.** Hosting, backend, tests and legacy embedding all become
+The core idea every post serves: **a micro-frontend is defined by what it needs,
+not where it runs.** Hosting, backend, tests and legacy embedding all become
 swappable adapters.
 
 ## Audience
@@ -20,8 +20,8 @@ All levels of engineer:
   the port's shape, how adapters divide up, the testing strategy and honest
   trade-offs.
 - **Less experienced engineers** need hexagonal architecture explained from
-  first principles, through concrete panel code rather than abstract hexagon
-  diagrams.
+  first principles, through concrete micro-frontend code rather than abstract
+  hexagon diagrams.
 - **Architecture researchers** want evidence that the pattern holds up under
   real-world constraints.
 
@@ -30,21 +30,22 @@ from fundamentals.
 
 ## Hard constraint
 
-**No reference to Phil's employer, company, product, team or role**, current
-or past, anywhere in the series: not in the prose, code, diagrams, file names,
-social cards or front matter. No "at work we…" or "in my current role"
-framing. The pattern is presented on its own merits. Lessons and costs are
-framed as consequences of the pattern ("this approach creates a data parity
-problem"), not as anecdotes.
+**No reference to Phil's employer, company, product, team or role**, current or
+past, anywhere in the series: not in the prose, code, diagrams, file names,
+social cards or front matter. No "at work we…" or "in my current role" framing.
+The pattern is presented on its own merits. Lessons and costs are framed as
+consequences of the pattern ("this approach creates a data parity problem"), not
+as anecdotes.
 
 ## Goals
 
 - Explain ports and adapters for front-end engineers using one running example
   across all three posts.
-- Show the full architecture: panel port, platform services, panel domain data
-  and actions, base panel, external store, and four host adapters.
-- Demonstrate the payoff concretely: the same panel code in four hosts, and in
-  Storybook with no GraphQL, shell or network at all.
+- Show the full architecture: micro-frontend port, platform services,
+  micro-frontend domain data and actions, base micro-frontend, external store,
+  and four host adapters.
+- Demonstrate the payoff concretely: the same micro-frontend code in four hosts,
+  and in Storybook with no GraphQL, shell or network at all.
 - Include an honest account of costs, including the unsolved end-to-end test
   data parity problem and the direction being explored.
 
@@ -52,8 +53,8 @@ problem"), not as anecdotes.
 
 - Not a Module Federation, Apollo GraphQL, Storybook or Playwright tutorial.
   These appear only as adapter implementation details, with links out.
-- Not a complete application inside the posts. Code samples are focused
-  excerpts from the companion repository.
+- Not a complete application inside the posts. Code samples are focused excerpts
+  from the companion repository.
 - Not a re-explanation of `useSyncExternalStore` rendering behaviour. Link to
   [Isolating React component updates with useSyncExternalStore](/blog/isolating-react-component-updates-with-usesyncexternalstore/)
   instead.
@@ -69,28 +70,28 @@ problem"), not as anecdotes.
 ## The running example (invented)
 
 A fictional **trading workstation**: a shell application hosting dockable
-panels. The example panel is a **quote panel** that displays live prices for a
-set of instruments and lets the user submit an order.
+micro-frontends. The example micro-frontend is a **quote micro-frontend** that
+displays live prices for a set of instruments and lets the user submit an order.
 
-The **panel port** describes everything the panel needs:
+The **micro-frontend port** describes everything the micro-frontend needs:
 
-- **Panel domain:** quote data (query and live updates) and actions
+- **Micro-frontend domain:** quote data (query and live updates) and actions
   (`submitOrder`, plus one editing action such as updating an order).
 - **Platform services:** notifications, user settings, the event bus for
-  inter-panel messages (for example, selecting an instrument in another panel)
-  and theming, including the data grid theme.
+  messages between micro-frontends (for example, selecting an instrument in
+  another micro-frontend) and theming, including the data grid theme.
 
-The panel's UI and logic consume these only through hooks and never know which
-host they run in.
+The micro-frontend's UI and logic consume these only through hooks and never
+know which host they run in.
 
 **Adapters** (one per host):
 
-| Host | How the port is fulfilled |
-| --- | --- |
-| Production shell | Panel loaded with Module Federation. Data and actions via a GraphQL client (Apollo) that the adapter owns; platform services from the shell. |
-| Storybook | In-memory fakes. No GraphQL, shell or network. Any state can be shown, such as rejected orders or stale prices. |
-| Test harness, tier 1 | Mocked backend with deterministic data. |
-| Legacy desktop web view | Panel hosted in a web view in an older desktop application. Actions and data routed through the desktop app's own services across a message bridge, not GraphQL. |
+| Host                    | How the port is fulfilled                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Production shell        | Micro-frontend loaded with Module Federation. Data and actions via a GraphQL client (Apollo) that the adapter owns; platform services from the shell.                     |
+| Storybook               | In-memory fakes. No GraphQL, shell or network. Any state can be shown, such as rejected orders or stale prices.                                                           |
+| Test harness, tier 1    | Mocked backend with deterministic data.                                                                                                                                   |
+| Legacy desktop web view | Micro-frontend hosted in a web view in an older desktop application. Actions and data routed through the desktop app's own services across a message bridge, not GraphQL. |
 
 Tier 2 end-to-end tests run against the deployed production shell.
 
@@ -101,44 +102,46 @@ diagrams, matching the existing posts.
 
 ### Part 1: Ports and adapters for micro-frontends
 
-- The problem: a panel coupled to its shell, backend and framework can't be
-  developed, tested or reused anywhere else.
+- The problem: a micro-frontend coupled to its shell, backend and framework
+  can't be developed, tested or reused anywhere else.
 - Hexagonal architecture from first principles, explained in front-end terms
   rather than the original server-side framing.
-- Defining the quote panel's port: domain data, actions and platform services.
-- Why the API client belongs in the adapter, not the panel.
-- **Diagram:** the panel hexagon with its port and the four adapters around it.
-  Reused in Part 3.
-- Close with the payoff preview: one panel, four hosts.
+- Defining the quote micro-frontend's port: domain data, actions and platform
+  services.
+- Why the API client belongs in the adapter, not the micro-frontend.
+- **Diagram:** the micro-frontend hexagon with its port and the four adapters
+  around it. Reused in Part 3.
+- Close with the payoff preview: one micro-frontend, four hosts.
 - This post must stand alone as the design reference.
 
-### Part 2: Building the base panel
+### Part 2: Building the base micro-frontend
 
-- The panel context: providing the port's implementation to the React tree.
-- Hooks as the panel's only access to the outside world.
-- The base panel: holds the port's abstractions, creates and owns the external
-  store, exposes the shared hooks.
+- The micro-frontend context: providing the port's implementation to the React
+  tree.
+- Hooks as the micro-frontend's only access to the outside world.
+- The base micro-frontend: holds the port's abstractions, creates and owns the
+  external store, exposes the shared hooks.
 - **Extension and factory, as Phil designed it:**
-  - The base panel port is generic. Panel-specific state and actions sit
-    outside the base and are supplied as type parameters.
-  - A concrete panel extends the base interface with its own state and
+  - The base micro-frontend port is generic. Micro-frontend-specific state and
+    actions sit outside the base and are supplied as type parameters.
+  - A concrete micro-frontend extends the base interface with its own state and
     actions, for example
-    `interface QuotePanelPort extends PanelPort<QuoteState, QuoteActions>`.
-  - A factory creates the panel from the parts an adapter supplies (the
+    `interface QuoteMicroFrontendPort extends MicroFrontendPort<QuoteState, QuoteActions>`.
+  - A factory creates the micro-frontend from the parts an adapter supplies (the
     domain implementations and platform services). The factory builds the
-    external store and the hooks, so concrete panels never manage the store's
-    lifecycle.
-- How the quote panel adds its own state, actions and hooks on top of the
-  generic base.
+    external store and the hooks, so concrete micro-frontends never manage the
+    store's lifecycle.
+- How the quote micro-frontend adds its own state, actions and hooks on top of
+  the generic base.
 - Why an external store: non-React sources such as event bus messages and live
-  prices update state without re-rendering everything, and panel logic is
-  testable without React. Link to the `useSyncExternalStore` post for the
+  prices update state without re-rendering everything, and micro-frontend logic
+  is testable without React. Link to the `useSyncExternalStore` post for the
   rendering detail.
 
-### Part 3: One panel, many hosts
+### Part 3: One micro-frontend, many hosts
 
-- Walk through each adapter for the same quote panel: Storybook, the tier 1
-  harness, the production shell, and the legacy desktop web view.
+- Walk through each adapter for the same quote micro-frontend: Storybook, the
+  tier 1 harness, the production shell, and the legacy desktop web view.
 - The two end-to-end test tiers and what each one proves.
 - **The cost: test data parity.** The same specs run in both tiers, so mocked
   and live data must produce the same assertions. Data either comes from shared
@@ -146,9 +149,9 @@ diagrams, matching the existing posts.
 - **Applying the pattern to tests:** a test port as the direction being
   explored.
   - `mount` extends a Playwright test fixture, in a style similar to Storybook's
-    Component Story Format. In tier 1 it mounts the panel in the harness. In
-    tier 2 it signs in to the deployed shell and drags the panel into the
-    workspace.
+    Component Story Format. In tier 1 it mounts the micro-frontend in the
+    harness. In tier 2 it signs in to the deployed shell and drags the
+    micro-frontend into the workspace.
   - Setup functions describe the starting state. Tier 1 seeds the mocks. Tier 2
     reaches the state through the application or its APIs.
   - Assertions are driven by the same configuration the setup used.
@@ -157,32 +160,33 @@ diagrams, matching the existing posts.
 
 ## Companion repository
 
-A runnable version of the quote panel, linked from every post. The posts'
-code samples are excerpts from it and must match it exactly, so **the
+A runnable version of the quote micro-frontend, linked from every post. The
+posts' code samples are excerpts from it and must match it exactly, so **the
 repository is built before the posts are written**. It is a separate project
 with its own implementation plan.
 
 Contents:
 
-- The panel port, base panel factory, panel context and hooks.
-- The quote panel.
-- Adapters: Storybook (in-memory fakes), tier 1 test harness (mocked
-  backend), and a small demo shell that loads the panel with Module
-  Federation.
-- A simulated legacy host: an iframe or separate page that talks to the panel
-  over `postMessage`, standing in for the desktop web view bridge.
+- The micro-frontend port, base micro-frontend factory, micro-frontend context
+  and hooks.
+- The quote micro-frontend.
+- Adapters: Storybook (in-memory fakes), tier 1 test harness (mocked backend),
+  and a small demo shell that loads the micro-frontend with Module Federation.
+- A simulated legacy host: an iframe or separate page that talks to the
+  micro-frontend over `postMessage`, standing in for the desktop web view
+  bridge.
 - Playwright tests written against the test port (`mount` fixture and setup
   functions), running in tier 1 against the harness and in tier 2 against the
   demo shell.
 
 Constraints:
 
-- The same no-employer rule applies: invented domain, no identifying names,
-  and no code copied from Phil's work.
-- Fake data only. The demo shell's "backend" can be a small mock GraphQL
-  server so the Apollo-based adapter is real.
-- Public repository on Phil's GitHub account, matching the blog's tooling
-  (pnpm, TypeScript, ESLint, Prettier).
+- The same no-employer rule applies: invented domain, no identifying names, and
+  no code copied from Phil's work.
+- Fake data only. The demo shell's "backend" can be a small mock GraphQL server
+  so the Apollo-based adapter is real.
+- Public repository on Phil's GitHub account, matching the blog's tooling (pnpm,
+  TypeScript, ESLint, Prettier).
 
 ## Site conventions
 
@@ -196,8 +200,8 @@ Constraints:
   ```
 
 - Tags: `react`, `typescript`, plus a new `architecture` tag.
-- Diagrams as PNGs in `/img/blog/<slug>/` inside `<figure>` with descriptive
-  alt text, following existing posts.
+- Diagrams as PNGs in `/img/blog/<slug>/` inside `<figure>` with descriptive alt
+  text, following existing posts.
 - Social cards generated with `pnpm run generate:social-card <slug>`.
 - Prose checked with vale and codespell.
 
@@ -208,24 +212,24 @@ Constraints:
 - No reference to his employer or work.
 - Test data parity is the cost to cover, with the test port as the direction
   being explored.
-- In Storybook the panel needs no GraphQL or any backend.
-- Panels use both interface extension and a factory: generic base, with
-  panel state and actions as type parameters, and the factory building the
-  panel from adapter-supplied parts.
+- In Storybook the micro-frontend needs no GraphQL or any backend.
+- Micro-frontends use both interface extension and a factory: generic base, with
+  micro-frontend state and actions as type parameters, and the factory building
+  the micro-frontend from adapter-supplied parts.
 - A companion repository.
 
 ## Claude's calls (open to override)
 
-- The companion repository is built first, and its contents are as listed
-  above.
-- The legacy host is simulated with `postMessage` rather than a real desktop
-  web view.
+- The companion repository is built first, and its contents are as listed above.
+- The legacy host is simulated with `postMessage` rather than a real desktop web
+  view.
 - The demo shell uses a small mock GraphQL server.
-- The legacy host in the posts is "a web view in an older desktop
-  application", with .NET only as an example.
+- The legacy host in the posts is "a web view in an older desktop application",
+  with .NET only as an example.
 
 - Working titles and the three-part split above.
-- The invented trading workstation and quote panel as the running example.
+- The invented trading workstation and quote micro-frontend as the running
+  example.
 - TypeScript for all code samples.
 - One reusable diagram rather than several.
 - New `architecture` tag.

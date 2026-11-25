@@ -20,9 +20,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 377417052,
       "version": 1,
       "versionNonce": 889889831,
@@ -165,9 +163,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 868917541,
       "version": 1,
       "versionNonce": 1580204802,
@@ -354,9 +350,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1582606475,
       "version": 1,
       "versionNonce": 1355284120,
@@ -405,9 +399,9 @@
     {
       "id": "el61",
       "type": "text",
-      "x": 81.11999999999998,
+      "x": 57.98,
       "y": 407.34999999999997,
-      "width": 277.76000000000005,
+      "width": 324.05,
       "height": 20,
       "angle": 0,
       "strokeColor": "#495057",
@@ -428,8 +422,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "mounts the panel in the harness",
-      "originalText": "mounts the panel in the harness",
+      "text": "mounts the micro-frontend in the harness",
+      "originalText": "mounts the micro-frontend in the harness",
       "fontSize": 16,
       "fontFamily": 1,
       "textAlign": "center",
@@ -491,9 +485,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1133715788,
       "version": 1,
       "versionNonce": 1703124359,
@@ -542,9 +534,9 @@
     {
       "id": "el65",
       "type": "text",
-      "x": 580.8,
+      "x": 572.9,
       "y": 407.34999999999997,
-      "width": 358.40000000000003,
+      "width": 374.19,
       "height": 20,
       "angle": 0,
       "strokeColor": "#495057",
@@ -565,8 +557,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "signs in, drags the panel into the shell",
-      "originalText": "signs in, drags the panel into the shell",
+      "text": "signs in, drags the micro-frontend into the shell",
+      "originalText": "signs in, drags the micro-frontend into the shell",
       "fontSize": 16,
       "fontFamily": 1,
       "textAlign": "center",
@@ -716,9 +708,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 367539492,
       "version": 1,
       "versionNonce": 27369502,
@@ -781,9 +771,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 292511127,
       "version": 1,
       "versionNonce": 1417404349,

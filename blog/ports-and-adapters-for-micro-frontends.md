@@ -1,10 +1,10 @@
 ---
 title: Ports and adapters for micro-frontends
 description:
-  TODO — one or two sentences. A micro-frontend panel coupled to its shell,
-  backend and framework can't run anywhere else. Hexagonal architecture lets the
-  same panel run in a production shell, Storybook, a test harness and a legacy
-  desktop app without changing a line.
+  TODO — one or two sentences. A micro-frontend coupled to its shell, backend
+  and framework can't run anywhere else. Hexagonal architecture lets the same
+  micro-frontend run in a production shell, Storybook, a test harness and a
+  legacy desktop app without changing a line.
 date: 2026-11-11
 draft: true
 tags:
@@ -35,8 +35,8 @@ account settings.
 
 These shared capabilities come in the form of singleton modules loaded by the
 shell and made available to the micro-frontends as separate packages. Teams run
-a development version of the shell on their machine and build their panels using
-the shared capabilities.
+a development version of the shell on their machine and build their
+micro-frontends using the shared capabilities.
 
 {% raw %}
 
@@ -59,7 +59,7 @@ export function OrderEntry({ instrumentId }: { instrumentId: string }) {
 
   // Throws without the shell's QueryClientProvider above it
   const submitBid = useMutation({
-    // The panel knows the platform's API route and payload
+    // The micro-frontend knows the platform's API route and payload
     mutationFn: (bid: Bid) => api.post("/orders/bids", bid),
     onSuccess: (_data, { price }) =>
       notify({ type: "success", message: `Bid submitted at ${price}` }),
@@ -111,84 +111,85 @@ Alistair Cockburn described
 or ports and adapters, in 2005 as a way for an application "to be developed and
 tested in isolation from its eventual run-time devices and databases". Replace
 devices and databases with the shell and its shared modules and the same goal
-applies to a micro-frontend, or panel. The pattern has three parts:
+applies to a micro-frontend. The pattern has three parts:
 
-- **The application** is the panel's logic and state: the bid it builds from the
-  user's input and what it does when the bid succeeds or fails. The order entry
-  form drives it and ships with it as one panel.
-- **A port** is an interface that describes what the panel needs from the
-  outside, in the panel's own terms. Order entry needs to submit a bid and
-  notify the user of the outcome.
+- **The application** is the micro-frontend's logic and state: the bid it builds
+  from the user's input and what it does when the bid succeeds or fails. The
+  order entry form drives it and ships with it.
+- **A port** is an interface that describes what the micro-frontend needs from
+  the outside, in its own terms. Order entry needs to submit a bid and notify
+  the user of the outcome.
 - **An adapter** implements the port for one host. In the production shell,
   submitting a bid calls the shell's API. In Storybook it can resolve straight
   away, or reject to show the error state, without making a request.
 
 In Cockburn's article the UI sits outside the application and drives it through
-a port, which means tests can take its place. The same is true here: the panel's
-UI only reads state and calls actions, and never reaches past the port. The UI
-is also part of what a micro-frontend ships, so it needs testing too. In
-Storybook and the test harness the real UI stays in place and the adapter behind
-the port changes.
+a port, which means tests can take its place. The same is true here: the
+micro-frontend's UI only reads state and calls actions, and never reaches past
+the port. The UI is also part of what a micro-frontend ships, so it needs
+testing too. In Storybook and the test harness the real UI stays in place and
+the adapter behind the port changes.
 
 The important change is the direction of the dependencies. `OrderEntry` imports
-`@shell/api` and `@shell/notifications`, so the panel depends on the shell. With
-a port the dependency is inverted. The panel defines the interface, each adapter
-depends on that interface to implement it and the host chooses which adapter to
-provide when it mounts the panel. The panel never imports an adapter, so it
-doesn't know which host it's running in.
+`@shell/api` and `@shell/notifications`, so the micro-frontend depends on the
+shell. With a port the dependency is inverted. The micro-frontend defines the
+interface, each adapter depends on that interface to implement it and the host
+chooses which adapter to provide when it mounts the micro-frontend. The
+micro-frontend never imports an adapter, so it doesn't know which host it's
+running in.
 
 The port covers traffic in both directions. State changes come in, such as the
-user selecting a different instrument in another panel, and actions go out, such
-as submitting a bid. The number of sides on the hexagon has no meaning, it just
-leaves room to draw an adapter for each host.
+user selecting a different instrument in another micro-frontend, and actions go
+out, such as submitting a bid. The number of sides on the hexagon has no
+meaning, it just leaves room to draw an adapter for each host.
 
-<copy-to-clipboard data-url="/img/blog/ports-and-adapters-for-micro-frontends/panel-hexagon.png" class="ctc-image">
+<copy-to-clipboard data-url="/img/blog/ports-and-adapters-for-micro-frontends/micro-frontend-hexagon.png" class="ctc-image">
   <figure>
-    <img src="/img/blog/ports-and-adapters-for-micro-frontends/panel-hexagon.png" alt="Diagram of an order entry panel inside a hexagon labelled panel port, state in and actions out. Four adapters point inwards to the port: production shell using the shell API and notifications, Storybook using in-memory fakes, test harness using a mocked backend and legacy desktop app using a web view and message bridge">
+    <img src="/img/blog/ports-and-adapters-for-micro-frontends/micro-frontend-hexagon.png" alt="Diagram of an order entry micro-frontend inside a hexagon labelled port, state in and actions out. Four adapters point inwards to the port: production shell using the shell API and notifications, Storybook using in-memory fakes, test harness using a mocked backend and legacy desktop app using a web view and message bridge">
     <figcaption>
-      The order entry panel depends only on its port; each host supplies an
+      The order entry micro-frontend depends only on its port; each host supplies an
       adapter
     </figcaption>
   </figure>
 </copy-to-clipboard>
 
-## Defining the panel port
+## Defining the port
 
-**TODO:** The heart of the post. Walk through the quote panel's port in
+**TODO:** The heart of the post. Walk through the quote micro-frontend's port in
 TypeScript, built up in two halves.
 
-### Panel domain: data and actions
+### Domain: data and actions
 
-**TODO:** The panel's own business capabilities live on the port, not just shell
-services:
+**TODO:** The micro-frontend's own business capabilities live on the port, not
+just shell services:
 
 - **Data:** quotes for a set of instruments, with live updates.
 - **Actions:** `submitOrder`, and an editing action such as amending an order.
 
-The panel calls these without knowing how they're carried out. Code sample: the
-domain part of the port interface.
+The micro-frontend calls these without knowing how they're carried out. Code
+sample: the domain part of the port interface.
 
 ### Platform services
 
-**TODO:** What the host provides to every panel:
+**TODO:** What the host provides to every micro-frontend:
 
 - Notifications.
 - User settings.
-- The event bus for inter-panel messages, such as another panel selecting an
-  instrument.
+- The event bus for messages between micro-frontends, such as another one
+  selecting an instrument.
 - Theming, including the data grid theme.
 
 Code sample: the platform services part of the port interface.
 
 ## Why the API client belongs in the adapter
 
-**TODO:** The panel never creates or imports a GraphQL client. The production
-adapter owns the Apollo client and uses it to fulfil the port's data and
-actions, so the host controls endpoints, authentication and caching. Other
+**TODO:** The micro-frontend never creates or imports a GraphQL client. The
+production adapter owns the Apollo client and uses it to fulfil the port's data
+and actions, so the host controls endpoints, authentication and caching. Other
 adapters don't need GraphQL at all. Make the point that GraphQL is one way of
-fulfilling the port, not a dependency of the panel.
+fulfilling the port, not a dependency of the micro-frontend.
 
-## One panel, four hosts
+## One micro-frontend, four hosts
 
 **TODO:** Preview the payoff without the detail (that's part 3). A short table
 or list of the four adapters and what each one provides:
@@ -202,5 +203,5 @@ or list of the four adapters and what each one provides:
 
 ## What's next
 
-**TODO:** Point to part 2, building the base panel that turns the port into
-hooks and a store. Link to the companion repository.
+**TODO:** Point to part 2, building the base micro-frontend that turns the port
+into hooks and a store. Link to the companion repository.

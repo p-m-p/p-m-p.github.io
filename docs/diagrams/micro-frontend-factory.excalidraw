@@ -20,9 +20,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 459548541,
       "version": 1,
       "versionNonce": 1407370780,
@@ -85,9 +83,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 821484221,
       "version": 1,
       "versionNonce": 2071121445,
@@ -186,9 +182,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1117702939,
       "version": 1,
       "versionNonce": 1204194593,
@@ -309,9 +303,9 @@
     {
       "id": "el32",
       "type": "rectangle",
-      "x": 390,
+      "x": 370,
       "y": 140,
-      "width": 220,
+      "width": 260,
       "height": 100,
       "angle": 0,
       "strokeColor": "#6741d9",
@@ -323,9 +317,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 831348490,
       "version": 1,
       "versionNonce": 1483814021,
@@ -338,9 +330,9 @@
     {
       "id": "el33",
       "type": "text",
-      "x": 419.91999999999996,
+      "x": 382.8,
       "y": 161.85,
-      "width": 160.16000000000003,
+      "width": 234.41,
       "height": 27.5,
       "angle": 0,
       "strokeColor": "#6741d9",
@@ -361,8 +353,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "createPanel()",
-      "originalText": "createPanel()",
+      "text": "createMicroFrontend()",
+      "originalText": "createMicroFrontend()",
       "fontSize": 22,
       "fontFamily": 1,
       "textAlign": "center",
@@ -412,7 +404,7 @@
       "type": "arrow",
       "x": 300,
       "y": 190,
-      "width": 90,
+      "width": 70,
       "height": 0,
       "angle": 0,
       "strokeColor": "#e03131",
@@ -441,7 +433,7 @@
           0
         ],
         [
-          90,
+          70,
           0
         ]
       ],
@@ -468,9 +460,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 335435268,
       "version": 1,
       "versionNonce": 794924381,
@@ -519,9 +509,9 @@
     {
       "id": "el38",
       "type": "text",
-      "x": 770.72,
+      "x": 738.23,
       "y": 97.75,
-      "width": 98.56,
+      "width": 163.54,
       "height": 20,
       "angle": 0,
       "strokeColor": "#495057",
@@ -542,8 +532,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "panel state",
-      "originalText": "panel state",
+      "text": "micro-frontend state",
+      "originalText": "micro-frontend state",
       "fontSize": 16,
       "fontFamily": 1,
       "textAlign": "center",
@@ -569,9 +559,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1647935551,
       "version": 1,
       "versionNonce": 1396890189,
@@ -656,9 +644,9 @@
     {
       "id": "el42",
       "type": "arrow",
-      "x": 610,
+      "x": 630,
       "y": 170,
-      "width": 90,
+      "width": 70,
       "height": 75,
       "angle": 0,
       "strokeColor": "#6741d9",
@@ -687,7 +675,7 @@
           0
         ],
         [
-          90,
+          70,
           -75
         ]
       ],
@@ -700,9 +688,9 @@
     {
       "id": "el43",
       "type": "arrow",
-      "x": 610,
+      "x": 630,
       "y": 210,
-      "width": 90,
+      "width": 70,
       "height": 75,
       "angle": 0,
       "strokeColor": "#6741d9",
@@ -731,7 +719,7 @@
           0
         ],
         [
-          90,
+          70,
           75
         ]
       ],
@@ -824,9 +812,9 @@
     {
       "id": "el46",
       "type": "rectangle",
-      "x": 700,
+      "x": 680,
       "y": 430,
-      "width": 240,
+      "width": 280,
       "height": 90,
       "angle": 0,
       "strokeColor": "#2f9e44",
@@ -838,9 +826,7 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1209049395,
       "version": 1,
       "versionNonce": 1606470038,
@@ -853,9 +839,9 @@
     {
       "id": "el47",
       "type": "text",
-      "x": 752.24,
+      "x": 707,
       "y": 446.85,
-      "width": 135.52,
+      "width": 226.01,
       "height": 27.5,
       "angle": 0,
       "strokeColor": "#2f9e44",
@@ -876,8 +862,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Quote panel",
-      "originalText": "Quote panel",
+      "text": "Quote micro-frontend",
+      "originalText": "Quote micro-frontend",
       "fontSize": 22,
       "fontFamily": 1,
       "textAlign": "center",
